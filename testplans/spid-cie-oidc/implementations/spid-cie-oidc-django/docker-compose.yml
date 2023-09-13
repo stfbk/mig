@@ -11,13 +11,13 @@ services:
       - ../config/mig-t/msg_def.json:/opt/BurpSuiteCommunity/msg_def.json
     ports:
       - 8080:8080
-      - 5005:5005 # To enable java debugger
+      #- 5005:5005 # To enable java debugger
     networks:
       - oidcfed
     environment:
       - DISPLAY
-      - INSTALL4J_JAVA_HOME="/usr/lib/jvm/openjdk-11" # To enable java debugger
-      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" # To enable java debugger
+      #- INSTALL4J_JAVA_HOME="/usr/lib/jvm/openjdk-11" # To enable java debugger
+      #- JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" # To enable java debugger
     stdin_open: true
     tty: true
 
