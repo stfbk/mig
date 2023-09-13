@@ -1,0 +1,69 @@
+{
+  "test suite": {
+    "name": "AA",
+    "description": "JSON in JWT parameter type",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the AA metadata contain a correct type of issuer claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the issuer claim in the 'oauth_authorization_server' entity type is an URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "metadata.oauth_authorization_server.issuer",
+                    "matches regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the AA metadata contain a correct logo_uri claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the logo_uri claim is an URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "metadata.federation_entity.logo_uri",
+                    "matches regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,251 @@
+{
+  "test suite": {
+    "name": "RP",
+    "description": "HTTP parameter type",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the token request use HTTP POST",
+        "description": "The token request sent by the RP must be sent in HTTP POST",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "POST",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
+        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity expose the resolve entity statement endpoint",
+        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Resolve Entity Statement response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Introspection Request contain correct type of client id of the RP making the request",
+        "description": "The Introspection request made by the RP is taken and the value of the client_id parameter is an URI",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_id=https:\\/\\/((:)?www\\.)?([-a-zA-Z0-9@%._\\+~#=:]{2,256})(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Introspection Request contain correct type token",
+        "description": "The Introspection request made by the RP is taken and the type of the token parameter is a JWT",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "token=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Revocation Request contain correct type of client assertion",
+        "description": "The Revocation request made by the RP is taken and the value of the client_assertion parameter is a signed JWT structure",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_assertion=([\\w]+)\\.([\\w]+)\\.([\\w\\-]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Revocation Request contain correct type of client_id of the RP making the request",
+        "description": "The Revocation request made by the RP is taken and the value of the client_id parameter is an URI that identifies the RP",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_id=https:\\/\\/((:)?www\\.)?([-a-zA-Z0-9@%._\\+~#=:]{2,256})(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Revocation Request contain correct type of token for which the request is made",
+        "description": "The Revocation request made by the RP is taken and the value of the token parameter is a JWT.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "token=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the client_assertion in the token request contain a JWT",
+        "description": "The client_assertion parameter in the token request sent by the RP must be a JWT",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_assertion=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP contain a valid Access Token in the UserInfo request",
+        "description": "The UserInfo request from the RP is taken and analyzed. In the Authorization field of the head there must be a valid Access Token",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo request",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "Authorization:\\s?Bearer\\s?([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the client_id in the token request contain an HTTPS URL",
+        "description": "The client_id parameter in the URL of the token request is taken and checked to be an HTTPS URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_id=https:\\/\\/((:)?www\\.)?([-a-zA-Z0-9@%._\\+~#=:]{2,256})(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

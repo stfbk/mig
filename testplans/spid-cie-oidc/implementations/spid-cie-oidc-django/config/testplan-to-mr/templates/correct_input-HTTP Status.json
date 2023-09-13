@@ -1,0 +1,22 @@
+{
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "passive",
+    "sessions": [
+      "s1"
+    ],
+    "operations": [
+      {
+        "message type": "var2",
+        "checks": [
+          {
+            "in": "var3",
+            "check regex": "HTTP/?\\d?\\.?\\d?\\svar4",
+            "is present": "true"
+          }
+        ]
+      }
+    ]
+  }
+}

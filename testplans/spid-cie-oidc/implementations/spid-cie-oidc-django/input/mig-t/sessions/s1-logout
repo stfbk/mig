@@ -1,0 +1,7 @@
+open | http://relying-party.org:8001/oidc/rp/landing |
+click | xpath=/html/body/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div/span[2]/a |
+click | xpath=/html/body/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div/span[2]/div/ul/li[2]/a |
+type | id=id_username | user
+type | id=id_password | oidcuser
+click | xpath=/html/body/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div[1]/form/fieldset/div/div/div/div[3]/button/span[2] |
+click | id=agree |

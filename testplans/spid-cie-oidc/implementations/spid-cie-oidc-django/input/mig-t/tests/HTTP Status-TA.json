@@ -1,0 +1,75 @@
+{
+  "test suite": {
+    "name": "TA",
+    "description": "HTTP Status",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
+        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity's trust mark status endpoint correctly response to valid Trust Marks",
+        "description": "In order to check if the trust mark status endpoint of a TA or SA correctly verifies valid trust marks, a valid trust mark can be sent to the endpoint and the response analyzed",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Trust Mark status response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity return a correct HTTP code in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

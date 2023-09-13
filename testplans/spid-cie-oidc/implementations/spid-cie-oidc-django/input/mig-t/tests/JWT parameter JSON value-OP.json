@@ -1,0 +1,519 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "JWT parameter JSON value",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct acr_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'acr_values_supported' in the 'openid_provider' subclaim (metadata type) parameter is checked to be [https://www.spid.gov.it/SpidL1, https://www.spid.gov.it/SpidL2, https://www.spid.gov.it/SpidL3]",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.acr_values_supported[0]",
+                    "is in": [
+                      "https://www.spid.gov.it/SpidL1",
+                      "https://www.spid.gov.it/SpidL2",
+                      "https://www.spid.gov.it/SpidL3"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct code_challenge_methods_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'code_challenge_methods_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked to be 'S256'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.code_challenge_methods_supported[0]",
+                    "is in": [
+                      "S256"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct grant_types_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'grant_types_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked to be [refresh_token, authorization_code]",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.grant_types_supported[0]",
+                    "is in": [
+                      "refresh_token",
+                      "authorization_code"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct id_token_encryption_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'id_token_encryption_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked to be ['RSA-OAEP', 'RSA-OAEP-256']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.id_token_encryption_alg_values_supported[0]",
+                    "is in": [
+                      "RSA-OAEP",
+                      "RSA-OAEP-256"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct id_token_encryption_enc_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'id_token_encryption_enc_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked to be ['A128CBC-HS256', 'A256CBC-HS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.id_token_encryption_enc_values_supported[0]",
+                    "is in": [
+                      "A128CBC-HS256",
+                      "A256CBC-HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct id_token_signing_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'id_token_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked to be ['RS256', 'RS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.id_token_signing_alg_values_supported[0]",
+                    "is in": [
+                      "RS256",
+                      "RS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain a correct issuer parameter",
+        "description": "In this test the OP metadata are taken and the presence of the 'issuer' parameter in the 'openid_provider' subclaim (metadata type) is checked to be the URL of the OP",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.issuer",
+                    "is in": [
+                      "https://cie-provider.org:8002/oidc/op"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct request_object_signing_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'request_object_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked to be ['RS256', 'RS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.request_object_signing_alg_values_supported[0]",
+                    "is in": [
+                      "RS256",
+                      "RS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct response_modes_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'response_modes_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked to be [form_post, query]",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.response_modes_supported[0]",
+                    "is in": [
+                      "form_post",
+                      "query"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct response_types_supported claim",
+        "description": "In this test the OP metadata are taken and the presence of the 'response_types_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must be present and must be set to 'code'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.response_types_supported[0]",
+                    "is in": [
+                      "code"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct revocation_endpoint_auth_methods_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'revocation_endpoint_auth_methods_supported' parameter in the 'openid_provider' subclaim (metadata type) is 'private_key_jwt'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.revocation_endpoint_auth_methods_supported",
+                    "is in": [
+                      "private_key_jwt"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct scopes_supported claim",
+        "description": "In this test the OP metadata are taken and the value of the 'scopes_supported' parameter in the 'openid_provider' subclaim (metadata type) is [openid, offline_access, profile, email]",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.scopes_supported[0]",
+                    "is in": [
+                      "openid",
+                      "offline_access",
+                      "profile",
+                      "email"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct subject_types_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'subject_types_supported' parameter in the 'openid_provider' subclaim (metadata type) is 'pairwise'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.subject_types_supported[0]",
+                    "is in": [
+                      "pairwise"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct userinfo_encryption_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'userinfo_encryption_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is ['RSA-OAEP', 'RSA-OAEP-256']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.userinfo_encryption_alg_values_supported[0]",
+                    "is in": [
+                      "RSA-OAEP",
+                      "RSA-OAEP-256"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct userinfo_encryption_enc_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'userinfo_encryption_enc_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is ['A128CBC-HS256', 'A256CBC-HS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.userinfo_encryption_enc_values_supported[0]",
+                    "is in": [
+                      "A128CBC-HS256",
+                      "A256CBC-HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain correct userinfo_signing_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'userinfo_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is ['RS256', 'RS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.userinfo_signing_alg_values_supported[0]",
+                    "is in": [
+                      "RS256",
+                      "RS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

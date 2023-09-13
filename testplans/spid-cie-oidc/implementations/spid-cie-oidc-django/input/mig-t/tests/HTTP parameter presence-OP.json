@@ -1,0 +1,185 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "HTTP parameter presence",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP contain correct state parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'state' as query parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "url",
+                "is present": "true",
+                "check param": "state"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP correctly contain the code parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'code' as query parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "url",
+                "is present": "true",
+                "check param": "code"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP contain iss parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'iss' as query parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "url",
+                "is present": "true",
+                "check param": "iss"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain access token",
+        "description": "The Token response is analyzed and the presence of the access token is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check": "access_token"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain the ID token",
+        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of the ID token",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check": "id_token"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain the token type",
+        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of the token type",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check": "token_type"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP issue the access tokens when requested",
+        "description": "In this test an authentication request with scope 'openid' is made. Once received the code, the RP tries to exchange it in the token endpoint and the response must contain the access token.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check": "access_token"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP issue the expires_in in a token response",
+        "description": "In this test an RP makes a correct authentication request and, once received the code, the RP tries to exchange it in the token endpoint. The response is then analyzed and it must contain the expires_in parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check": "expires_in"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

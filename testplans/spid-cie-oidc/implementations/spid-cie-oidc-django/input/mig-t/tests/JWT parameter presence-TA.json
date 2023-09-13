@@ -1,0 +1,763 @@
+{
+  "test suite": {
+    "name": "TA",
+    "description": "JWT parameter presence",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does entity configuration contain the exp parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.exp",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the iat parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iat",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the iss parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iss parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the jwks parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the jwks parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.jwks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the metadata parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the metadata parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the sub parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the sub parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.sub",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity configuration of the Trust Anchor contain the constraints parameter in its decoded payload",
+        "description": "To accomplish this test, the Entity configuration of the TA is taken, the payload is decoded (Base64 encoding) and the presence of the constraints parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.constraints",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Federation Configuration contain the TA public keys",
+        "description": "The Federation configuration must contain, among others, the TA public keys. To check the presence of those keys, the Entity Configuration is taken from the TA's '.well-known/openid-federation' endpoint and the response is analyzed, in the returned JWT the claim 'jwks' must be present",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.jwks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does TA's Entity configuration contain the trust_marks_issuers parameter",
+        "description": "To accomplish this test, the Entity configuration of the TA is taken, the payload is decoded (Base64 encoding) and the presence of the trust_marks_issuers parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.trust_marks_issuers",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the constraints parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the constraints parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.constraints",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the exp parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the exp parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.exp",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the iat parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iat",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statement issued by the TA contain the iss parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iss parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the jwks parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the jwks parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.jwks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the metadata_policy parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the metadata_policy parameter is checked. It must be a JSON Object",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata_policy",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the TA's metadata policy for an RP contain the jwks parameter",
+        "description": "In order to check the compliance of a metadata policy issued by the TA, an entity statement for an RP must be fetched in the TA's fetch endpoint. Once obtained the entity statement, the metadata_policy parameter is taken and the presence of the jwks parameter inside the openid_relying_party type is checked. It must contain the RP JWKS related to the OIDC Core operations",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.jwks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the sub parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the sub parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.sub",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the trust_marks parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the trust_marks parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.trust_marks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the constraints parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the constraints parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.constraints",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the exp parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the exp parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.exp",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the iat parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iat",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statement issued by the TA contain the iss parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iss parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the jwks parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the jwks parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.jwks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the metadata_policy parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the metadata_policy parameter is checked. It must be a JSON Object",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata_policy",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the sub parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the sub parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.sub",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the trust_marks parameter",
+        "description": "In order to check if the TA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the trust_marks parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.trust_marks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

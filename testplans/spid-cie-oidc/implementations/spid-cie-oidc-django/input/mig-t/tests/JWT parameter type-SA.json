@@ -1,0 +1,233 @@
+{
+  "test suite": {
+    "name": "SA",
+    "description": "JWT parameter type",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does entity configuration contain a correct exp parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "\"exp\":\\d+"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain a correct iat parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "\"iat\":\\d+"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct exp parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the exp parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "exp.\\d+"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct iat parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the iat parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "exp.\\d+"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the metadata parameter contain a JSON Object",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "\"metadata\":\\{(\\s*\"[^\"]*\"\\s*:\\s*(?:\"[^\"]*\",?|\\[[\\S\\s]*\\],?|\\{[\\S\\s]*\\},?)\\s*)*\\}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity configuration of the SA contain a correct trust_marks parameter",
+        "description": "The entity configuration of the SA is taken from its own web endpoint '.well-known/openid-federation', and the configuration metadata are analyzed. Among them, the 'trust_marks' parameter must be present and must be a JSON array containing the Trust Marks.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "trust_marks.^\\[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct exp parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the exp parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "exp.\\d+"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct iat parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the iat parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "exp.\\d+"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

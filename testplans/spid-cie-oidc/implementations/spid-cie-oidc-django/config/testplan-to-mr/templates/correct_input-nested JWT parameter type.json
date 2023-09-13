@@ -1,0 +1,35 @@
+{
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "passive",
+    "sessions": [
+      "s1"
+    ],
+    "operations": [
+      {
+        "message type": "var2",
+        "decode operation": [
+          {
+            "from": "var3",
+            "type": "jwt",
+            "decode param": "var4",
+            "decode operation": [
+              {
+                "from": "jwt var5",
+                "type": "jwt",
+                "decode param": "$.var6[0].var7",
+                "check": [
+                  {
+                    "in": "var8",
+                    "check regex": "var9"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

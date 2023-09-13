@@ -1,0 +1,141 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "HTTP parameter type",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the UserInfo Endpoint create a signed and encrypted JWT",
+        "description": "The UserInfo response is taken and the presence of a signed and encrypted JWE in the body of the response is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+$",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP contain the correct type of code parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'code' as query parameter and it must be a UUID.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "url",
+                "check regex": "(?<=code=)[a-zA-Z0-9]+(?=&)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
+        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity expose the resolve entity statement endpoint",
+        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Resolve Entity Statement response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain a valid access token",
+        "description": "In this test a correct Token request is sent and the response is analyzed. It must contain the access token parameter and its value must be a JWT",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "(?<=\\\"access_token\\\":\\s?)\\\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\\\"",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain a valid ID token",
+        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of a valid ID token",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "(?<=\\\"id_token\\\":\\s?)\\\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\\\"",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

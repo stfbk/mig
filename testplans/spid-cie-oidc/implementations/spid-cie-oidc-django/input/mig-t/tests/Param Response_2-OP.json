@@ -1,0 +1,60 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "Param Response_2",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP require PKCE",
+        "description": "An authentication request with empty code_challenge and code_challenge_method parameter is sent and the response analyzed. If the OP accepts the request, than plain PKCE is accepted and a protection against attacks like CSRF and authorization code injection attacks is missing",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "message operations": [
+              {
+                "from": "url",
+                "edit": "code_challenge",
+                "in": ""
+              },
+              {
+                "from": "url",
+                "edit": " code_challenge_method",
+                "in": ""
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s302"
+              },
+              {
+                "in": "head",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

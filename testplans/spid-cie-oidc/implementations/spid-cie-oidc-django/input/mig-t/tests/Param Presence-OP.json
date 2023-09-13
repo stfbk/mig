@@ -1,0 +1,52 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "Param Presence",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Introspection Endpoint Response have the active parameter",
+        "description": "To test that the Introspection response of the OP's correctly answers to valid tokens, a valid one is sent and the response is analyzed. It must contain the 'active' parameter",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection request",
+            "message operations": [
+              {
+                "from": "url",
+                "edit": "token",
+                "in": "XXX"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check": "active"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

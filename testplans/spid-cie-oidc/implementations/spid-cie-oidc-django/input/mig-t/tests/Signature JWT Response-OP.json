@@ -1,0 +1,264 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "Signature JWT Response",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP's token endpoint refuse assertions signed with a wrong key",
+        "description": "In this test a classic flow is accomplished and, when exchanging the code for an access token, the signature is done with a wrong key. The OP's response is analyzed",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt sign": "XXX"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP refuse wrongly signed Authentication Requests",
+        "description": "This test aims to check if the OP correctly handles the signature of the Authentication request: once received the request, the JWT token must be split in its 3 parts (header, payload, signature), base64url decoded and the signature must be verified. In order to test if the OP really checks the signature, the Authentication request is intercepted before arriving to the OP and the signature is changed. If the OP grants the tokens anyway, than it did not check the signature.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt sign": "1A9Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s302"
+              },
+              {
+                "in": "url",
+                "check": "unauthorized_client"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP verify the signature of the client assertion in the Introspection request",
+        "description": "Since the OP has to verify the client assertion in the Introspection Request, this test consist in intercepting a legitimate request, take the JWT of the client assertion and modify the signature of it in order to make it wrong. If the OP Accepts the request anyway, than it does not verify the signature of the assertion.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "client_assertion",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt sign": "1A9Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP verify the signature of the client assertion in the Revocation request",
+        "description": "Since the OP has to verify the client assertion in the Revocation Request, this test consist in intercepting a legitimate request, take the JWT of the client assertion and modify the signature of it in order to make it wrong. If the OP Accepts the request anyway, than it does not verify the signature of the assertion.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "client_assertion",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt sign": "1A9Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made with a wrong signature return a Token Error response",
+        "description": "In this test a classic flow is accomplished and, when exchanging the code for an access token, the client_assertion parameter is taken and the signature is substitute with a wrong one. The OP's response is analyzed",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt sign": "1A9Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

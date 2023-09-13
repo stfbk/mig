@@ -1,0 +1,67 @@
+{
+  "test suite": {
+    "name": "RP",
+    "description": "JWT parameter values",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does entity configuration RP contain a correct sub parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the sub parameter is checked. Its value must be equal to the one in the iss parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.sub",
+                    "is": "XXX"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP Authentication Request's JWT contain a correct 'iss' parameter",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the 'iss' parameter is checked to be the RP's client_id",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is": "http://relying-party.org:8001"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "test suite": {
+    "name": "RP",
+    "description": "JSON in JWT parameter type",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct type of 'client_id' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'client_id' parameter is an HTTPS URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "metadata.openid_relying_party.client_id",
+                    "matches regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct type grant_types claim",
+        "description": "In this test the RP metadata are taken and the 'grant_types' parameter is a JSON array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "metadata.openid_relying_party.grant_types",
+                    "matches regex": "^\\{(\\s*\"[^\"]*\"\\s*:\\s*(?:\"[^\"]*\",?|\\[[\\S\\s]*\\],?|\\{[\\S\\s]*\\},?)\\s*)*\\}$",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct type logo_uri claim",
+        "description": "In this test the RP metadata in the RP Entity Configuration are taken and the value of the logo_uri claim in the 'federation_entity' entity type is an URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "metadata.federation_entity.logo_uri",
+                    "matches regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain the 'response_types' parameter as a json",
+        "description": "In this test the RP metadata are taken and the 'response_types' parameter in the 'openid_relying_party' is a JSON array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "metadata.openid_relying_party.response_types",
+                    "matches regex": "^\\[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

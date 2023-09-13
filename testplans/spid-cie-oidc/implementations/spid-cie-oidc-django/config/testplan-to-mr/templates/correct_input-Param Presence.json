@@ -1,0 +1,43 @@
+{
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "active",
+    "sessions": [
+      "s1"
+    ],
+    "operations": [
+      {
+        "session": "s1",
+        "action": "start"
+      },
+      {
+        "action": "intercept",
+        "from session": "s1",
+        "then": "forward",
+        "message type": "var2",
+        "message operations": [
+          {
+            "from": "var3",
+            "edit": "var4",
+            "in": "var5"
+          }
+        ]
+      },
+      {
+        "action": "intercept",
+        "from session": "s1",
+        "then": "forward",
+        "message type": "var6",
+        "checks": [
+          {
+            "in": "var7",
+            "key_var7": "var8",
+            "is present": "true"
+          }
+        ]
+      }
+    ],
+    "result": "correct flow s1"
+  }
+}

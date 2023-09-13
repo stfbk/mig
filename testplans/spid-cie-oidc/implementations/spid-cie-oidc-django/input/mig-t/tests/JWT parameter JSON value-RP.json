@@ -1,0 +1,326 @@
+{
+  "test suite": {
+    "name": "RP",
+    "description": "JWT parameter JSON value",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'client_registration_types' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'client_registration_types' parameter is 'automatic'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.client_registration_types[0]",
+                    "is in": [
+                      "automatic"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct grant_types claim",
+        "description": "In this test the RP metadata are taken and the value of the 'grant_types' parameter contains 'authorization_code' and 'refresh_token'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.grant_types[0]",
+                    "is in": [
+                      "authorization_code",
+                      "refresh_token"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'id_token_encrypted_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'id_token_encrypted_response_alg' parameter is ['RSA-OAEP', 'RSA-OAEP-256']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.id_token_encrypted_response_alg",
+                    "is in": [
+                      "RSA-OAEP",
+                      "RSA-OAEP-256"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'id_token_encrypted_response_enc' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'id_token_encrypted_response_enc' parameter is ['A128CBC-HS256', 'A256CBC-HS512'].",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.id_token_encrypted_response_enc",
+                    "is in": [
+                      "A128CBC-HS256",
+                      "A256CBC-HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'id_token_signed_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'id_token_signed_response_alg' parameter is ['RS256', 'RS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.id_token_signed_response_alg",
+                    "is in": [
+                      "RS256",
+                      "RS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'token_endpoint_auth_method' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'token_endpoint_auth_method' parameter is 'one_of': 'private_key_jwt'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.token_endpoint_auth_method",
+                    "is in": [
+                      "private_key_jwt"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'userinfo_encrypted_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'userinfo_encrypted_response_alg' parameter is ['RSA-OAEP', 'RSA-OAEP-256']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.userinfo_encrypted_response_alg",
+                    "is in": [
+                      "RSA-OAEP",
+                      "RSA-OAEP-256"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'userinfo_encrypted_response_enc' parameter",
+        "description": "In this test the RP metadata are taken and the presence of the 'userinfo_encrypted_response_enc' parameter is ['A128CBC-HS256', 'A256CBC-HS512'].",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.userinfo_encrypted_response_enc",
+                    "is in": [
+                      "A128CBC-HS256",
+                      "A256CBC-HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct 'userinfo_signed_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'userinfo_signed_response_alg' parameter is ['RS256', 'RS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.userinfo_signed_response_alg",
+                    "is in": [
+                      "RS256",
+                      "RS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain in the 'response_types' the value 'code'",
+        "description": "In this test the RP metadata are taken and the 'response_types' parameter in the 'openid_relying_party' contains the value 'code'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.response_types[0]",
+                    "is in": [
+                      "code"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

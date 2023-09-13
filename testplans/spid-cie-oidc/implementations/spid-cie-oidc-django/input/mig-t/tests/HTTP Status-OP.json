@@ -1,0 +1,119 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "HTTP Status",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
+        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the revocation endpoint return an empty HTTP 200 OK response upon a correct revocation request",
+        "description": "A correct flow is accomplished and, once received the token, a request is made to the revocation endpoint. The response is then analyzed and has to be an empty HTTP 200 OK",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP handle a correct token request",
+        "description": "In this test a normal flow is accomplished and is tried to obtain an Access Token. All requests are well-formed and the Responses of the OP are analyzed.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the HTTP status of a token response correct?",
+        "description": "This test verifies whether the HTTP status of a token response is 200.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity return a correct HTTP code in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

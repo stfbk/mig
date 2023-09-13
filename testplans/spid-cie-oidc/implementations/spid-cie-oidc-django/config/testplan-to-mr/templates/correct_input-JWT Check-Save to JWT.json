@@ -1,0 +1,58 @@
+{
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "active",
+    "sessions": [
+      "s1"
+    ],
+    "operations": [
+      {
+        "session": "s1",
+        "action": "start"
+      },
+      {
+        "action": "intercept",
+        "from session": "s1",
+        "then": "forward",
+        "message type": "var2",
+        "decode operations": [
+          {
+            "from": "var3",
+            "decode param": "var4",
+            "type": "jwt",
+            "edits": [
+              {
+                "in": "var5",
+                "jwt save": "$.var6",
+                "as": "var_12"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "action": "intercept",
+        "from session": "s1",
+        "then": "forward",
+        "message type": "var7",
+        "decode operations": [
+          {
+            "from": "var8",
+            "decode param": "var9",
+            "type": "jwt",
+            "checks": [
+              {
+                "use variable": "true",
+                "in": "var_10",
+                "check": "var_12",
+                "contains": "var_11"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "result": "correct flow s1"
+  }
+}
