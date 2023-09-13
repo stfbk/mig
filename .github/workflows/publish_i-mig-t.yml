@@ -7,8 +7,6 @@ name: publish_i-mig-t
 
 on:
   push:
-    branches: [ "master" ]
-    # Publish semver tags as releases.
     tags:
       - '*' # Only if the commit has a tag
   workflow_dispatch:
