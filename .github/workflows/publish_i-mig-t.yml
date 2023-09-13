@@ -11,8 +11,6 @@ on:
     # Publish semver tags as releases.
     tags:
       - '*' # Only if the commit has a tag
-  pull_request:
-    branches: [ "master" ]
   workflow_dispatch:
     
 env:
