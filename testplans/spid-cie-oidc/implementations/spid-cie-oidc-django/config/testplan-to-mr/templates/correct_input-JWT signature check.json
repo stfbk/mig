@@ -9,7 +9,7 @@
     "operations": [
       {
         "message type": "var2",
-        "decode operations": [ 
+        "decode operations": [
           {
             "from": "var3",
             "decode param": "var4",

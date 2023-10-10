@@ -26,14 +26,11 @@
                 "jwt from": "var5",
                 "jwt edit": "var6",
                 "value": "var7"
+              },
+              {
+                "jwt sign": "var8"
               }
             ]
-          },
-          {
-            "from": "var3",
-            "decode param": "var4",
-            "type": "jwt",
-            "jwt check sig": "var8"
           }
         ]
       },
@@ -54,6 +51,6 @@
         ]
       }
     ],
-    "result": "correct flow s1"
+    "result": "assert_only"
   }
 }

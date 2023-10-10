@@ -26,7 +26,7 @@
                     "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "jwt check sig": "XXX"
+                    "jwt check sig": "X_chiave_SA"
                   }
                 ]
               }
@@ -56,7 +56,7 @@
                     "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "jwt check sig": "XXX"
+                    "jwt check sig": "X_chiave_SA"
                   }
                 ]
               }

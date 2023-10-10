@@ -7,52 +7,6 @@
   "tests": [
     {
       "test": {
-        "name": "Does the OP check the client_id in the request",
-        "description": "In this test the client_id parameter in the URL of the token request is removed and the response analyzed",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_id=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_request"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
         "name": "Does the OP refuse Authentication Requests without the code_challenge parameter",
         "description": "The 'code_challenge' parameter in an authentication request is part of the PKCE protocol and is useful against various attacks. In order to test if the OP checks this parameter, an authorization request is sent without the client_id in the JWT and the answer is analyzed",
         "type": "active",
@@ -72,8 +26,8 @@
             "message operations": [
               {
                 "from": "url",
-                "edit": "code_challenge",
-                "in": ""
+                "in": "",
+                "edit": "code_challenge"
               }
             ]
           },
@@ -94,7 +48,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -118,8 +72,8 @@
             "message operations": [
               {
                 "from": "url",
-                "edit": "code_challenge_method",
-                "in": ""
+                "in": "",
+                "edit": "code_challenge_method"
               }
             ]
           },
@@ -140,7 +94,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -164,8 +118,8 @@
             "message operations": [
               {
                 "from": "url",
-                "edit": "request",
-                "in": ""
+                "in": "",
+                "edit": "request"
               }
             ]
           },
@@ -186,7 +140,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -210,8 +164,8 @@
             "message operations": [
               {
                 "from": "url",
-                "edit": "request",
-                "in": "example"
+                "in": "example",
+                "edit": "request"
               }
             ]
           },
@@ -232,7 +186,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -256,8 +210,8 @@
             "message operations": [
               {
                 "from": "url",
-                "edit": "scope",
-                "in": ""
+                "in": "",
+                "edit": "scope"
               }
             ]
           },
@@ -278,7 +232,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -302,8 +256,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=client_assertion_type=)([^&]+)",
-                "in": ""
+                "in": "",
+                "edit regex": "(?<=client_assertion_type=)([^&]+)"
               }
             ]
           },
@@ -324,99 +278,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP accept introspection requests without the client id",
-        "description": "To test if an OP verifies the presence of the client id of the RP in the Introspection request, a request without the client id is sent and the response is analyzed.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Introspection request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_id=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Introspection response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
-              },
-              {
-                "in": "body",
-                "check": "invalid_client"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "How does the OP behave when receiving an introspection request without the token",
-        "description": "An introspection request without a token is sent and the introspection response analyzed",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Introspection request",
-            "message operations": [
-              {
-                "from": "url",
-                "edit": "token",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Introspection response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_request"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -440,8 +302,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=client_assertion_type=)([^&]+)",
-                "in": "1A9Z"
+                "in": "X_chiave_core_RP",
+                "edit regex": "(?<=client_assertion_type=)([^&]+)"
               }
             ]
           },
@@ -462,7 +324,53 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP accept introspection requests without the client id",
+        "description": "To test if an OP verifies the presence of the client id of the RP in the Introspection request, a request without the client id is sent and the response is analyzed.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=client_id=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
+              },
+              {
+                "in": "body",
+                "check": "invalid_client"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
       }
     },
     {
@@ -486,8 +394,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=client_id=)([^&]+)",
-                "in": "https://www.example.com/"
+                "in": "https://www.example.com/",
+                "edit regex": "(?<=client_id=)([^&]+)"
               }
             ]
           },
@@ -508,7 +416,53 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "How does the OP behave when receiving an introspection request without the token",
+        "description": "An introspection request without a token is sent and the introspection response analyzed",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection request",
+            "message operations": [
+              {
+                "from": "url",
+                "in": "",
+                "edit": "token"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
       }
     },
     {
@@ -532,8 +486,8 @@
             "message operations": [
               {
                 "from": "url",
-                "edit": "token",
-                "in": "1a9Z"
+                "in": "X_chiave_core_RP",
+                "edit": "token"
               }
             ]
           },
@@ -554,53 +508,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP accept revocation request without the client assertion",
-        "description": "In order to verify if the OP checks the presence of the client_assertion parameter in a revocation request, such a request is sent without the client_assertion and the OP's response is analyzed",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Revocation request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_assertion=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Revocation response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
-              },
-              {
-                "in": "body",
-                "check": "invalid_client"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -624,8 +532,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=client_assertion_type=)([^&]+)",
-                "in": ""
+                "in": "",
+                "edit regex": "(?<=client_assertion_type=)([^&]+)"
               }
             ]
           },
@@ -646,53 +554,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP accept Revocation Requests without the client id",
-        "description": "To test if an OP verifies the presence of the client id of the RP in the Revocation request, a request without the client id is sent and the response is analyzed.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Revocation request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_id=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Revocation response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
-              },
-              {
-                "in": "body",
-                "check": "invalid_client"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -716,8 +578,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=client_assertion_type=)([^&]+)",
-                "in": "urn-ietf"
+                "in": "urn-ietf",
+                "edit regex": "(?<=client_assertion_type=)([^&]+)"
               }
             ]
           },
@@ -738,7 +600,99 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP accept revocation request without the client assertion",
+        "description": "In order to verify if the OP checks the presence of the client_assertion parameter in a revocation request, such a request is sent without the client_assertion and the OP's response is analyzed",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=client_assertion=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
+              },
+              {
+                "in": "body",
+                "check": "invalid_client"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP accept Revocation Requests without the client id",
+        "description": "To test if an OP verifies the presence of the client id of the RP in the Revocation request, a request without the client id is sent and the response is analyzed.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=client_id=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
+              },
+              {
+                "in": "body",
+                "check": "invalid_client"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
       }
     },
     {
@@ -762,8 +716,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=client_id=)([^&]+)",
-                "in": "https://www.example.com/"
+                "in": "https://www.example.com/",
+                "edit regex": "(?<=client_id=)([^&]+)"
               }
             ]
           },
@@ -784,513 +738,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made without the client_assertion parameter return a Token Error response",
-        "description": "This test consists in sending a token request without the client_assertion parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_assertion=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
-              },
-              {
-                "in": "body",
-                "check": "invalid_client"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made without the client_assertion_type parameter return a Token Error response",
-        "description": "This test consists in sending a token request without the client_assertion_type parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_assertion_type=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_request"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP require the client_id in the token request",
-        "description": "This test consists in sending a token request without the client_id parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_id=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
-              },
-              {
-                "in": "body",
-                "check": "invalid_client"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made without the code parameter return a Token Error response",
-        "description": "This test consists in sending a token request without the code parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=code=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_grant"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made without the code_verifier parameter return a Token Error response",
-        "description": "This test consists in sending a token request without the code_verifier parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=code_verifier=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_grant"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made without the grant_type parameter return a Token Error response",
-        "description": "This test consists in sending a token request without the grant_type parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=grant_type=)([^&]+)",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_grant"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made with an incorrect client_assertion_type parameter return a Token Error response",
-        "description": "This test consists in sending a token request with a wrong client_assertion_type parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=client_assertion_type=)([^&]+)",
-                "in": "urn-aert"
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_request"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made with an incorrect code parameter (i.e., not belonging to that client ID or a random code) return a Token Error response",
-        "description": "This test consists in sending a token request with a wrong code parameter (thus not for that client ID or a random code) and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=code=)([^&]+)",
-                "in": "1A9Z"
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_grant"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token response to a token request made with an incorrect code_verifier parameter return a Token Error response",
-        "description": "This test consists in sending a token request with a wrong code_verifier parameter and analyzing the token response. The response must be a Token Error response.",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=code_verifier=)([^&]+)",
-                "in": "1A9Z"
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_request"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "How does the OP behave when the token in the userinfo request is missing",
-        "description": "A userinfo request without the 'Authorization: Bearer ...' field is made and the response analyzed",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "UserInfo request",
-            "message operations": [
-              {
-                "from": "head",
-                "edit": "Authorization",
-                "in": ""
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "UserInfo response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "invalid_request"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP checks that the token request contains the grant_type parameter set correctly",
-        "description": "In order to validate if the OP checks the token request sent by the RP, in this test we send the grant_type parameter in the request set to and invalid value, just like 'example' and analyze the response",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token request",
-            "message operations": [
-              {
-                "from": "body",
-                "edit": "(?<=grant_type=)([^&]+)",
-                "in": "example"
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
-              },
-              {
-                "in": "body",
-                "check": "unsupported_grant_type"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     },
     {
@@ -1314,8 +762,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=token=)([^&]+)",
-                "in": ""
+                "in": "",
+                "edit regex": "(?<=token=)([^&]+)"
               }
             ]
           },
@@ -1336,7 +784,559 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made without the client_assertion_type parameter return a Token Error response",
+        "description": "This test consists in sending a token request without the client_assertion_type parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=client_assertion_type=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made with an incorrect client_assertion_type parameter return a Token Error response",
+        "description": "This test consists in sending a token request with a wrong client_assertion_type parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "urn-aert",
+                "edit regex": "(?<=client_assertion_type=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made without the client_assertion parameter return a Token Error response",
+        "description": "This test consists in sending a token request without the client_assertion parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=client_assertion=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
+              },
+              {
+                "in": "body",
+                "check": "invalid_client"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP check the client_id in the request",
+        "description": "In this test the client_id parameter in the URL of the token request is removed and the response analyzed",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=client_id=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP require the client_id in the token request",
+        "description": "This test consists in sending a token request without the client_id parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=client_id=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
+              },
+              {
+                "in": "body",
+                "check": "invalid_client"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made without the code_verifier parameter return a Token Error response",
+        "description": "This test consists in sending a token request without the code_verifier parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=code_verifier=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_grant"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made with an incorrect code_verifier parameter return a Token Error response",
+        "description": "This test consists in sending a token request with a wrong code_verifier parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "X_chiave_core_RP",
+                "edit regex": "(?<=code_verifier=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made without the code parameter return a Token Error response",
+        "description": "This test consists in sending a token request without the code parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=code=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_grant"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made with an incorrect code parameter (i.e., not belonging to that client ID or a random code) return a Token Error response",
+        "description": "This test consists in sending a token request with a wrong code parameter (thus not for that client ID or a random code) and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "X_chiave_core_RP",
+                "edit regex": "(?<=code=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_grant"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token response to a token request made without the grant_type parameter return a Token Error response",
+        "description": "This test consists in sending a token request without the grant_type parameter and analyzing the token response. The response must be a Token Error response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "",
+                "edit regex": "(?<=grant_type=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP checks that the token request contains the grant_type parameter set correctly",
+        "description": "In order to validate if the OP checks the token request sent by the RP, in this test we send the grant_type parameter in the request set to and invalid value, just like 'example' and analyze the response",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "example",
+                "edit regex": "(?<=grant_type=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "unsupported_grant_type"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    },
+    {
+      "test": {
+        "name": "How does the OP behave when the token in the userinfo request is missing",
+        "description": "A userinfo request without the 'Authorization: Bearer ...' field is made and the response analyzed",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "UserInfo request",
+            "message operations": [
+              {
+                "from": "head",
+                "in": "",
+                "edit": "Authorization"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "UserInfo response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
       }
     }
   ]

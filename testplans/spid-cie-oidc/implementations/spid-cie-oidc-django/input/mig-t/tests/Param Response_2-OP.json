@@ -26,13 +26,13 @@
             "message operations": [
               {
                 "from": "url",
-                "edit": "code_challenge",
-                "in": ""
+                "in": "",
+                "edit": "code_challenge"
               },
               {
                 "from": "url",
-                "edit": " code_challenge_method",
-                "in": ""
+                "in": "",
+                "edit": "code_challenge_method"
               }
             ]
           },
@@ -53,7 +53,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     }
   ]

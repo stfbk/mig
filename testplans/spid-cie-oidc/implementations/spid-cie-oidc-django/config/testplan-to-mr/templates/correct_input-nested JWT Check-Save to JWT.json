@@ -51,7 +51,7 @@
                     "use variable": "true",
                     "in": "var_14",
                     "check": "var_15",
-                    "is": "var_16"
+                    "contains": "var_16"
                   }
                 ]
               }

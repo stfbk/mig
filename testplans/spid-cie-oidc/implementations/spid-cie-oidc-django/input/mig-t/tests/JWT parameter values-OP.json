@@ -25,7 +25,7 @@
                   {
                     "in": "payload",
                     "check": "$.sub",
-                    "is": "XXX"
+                    "is": "X_url_OP_2"
                   }
                 ]
               }
@@ -54,7 +54,7 @@
                   {
                     "in": "payload",
                     "check": "$.aud[0]",
-                    "is": "http://relying-party.org:8001"
+                    "is": "X_url_OP_2"
                   }
                 ]
               }

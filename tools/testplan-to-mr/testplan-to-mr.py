@@ -1,7 +1,7 @@
 from copy import deepcopy
-from logging import LogRecord
 import sys
 import os
+from os.path import dirname, join
 import pandas as pd
 import regex as re
 import json
@@ -12,7 +12,7 @@ import logging #used for errors
     The program takes the test suite and populates the parameter "tests" with the tests created. Previous tests are deleted.
 """
 
-OUT_DIR = "machine-readable-testplan"
+OUT_DIR_SINGLE = "machine-readable-testplan/single/"
 
 #System function - shouldn't need update as the table changed.
 def handle_exception(exc_type, exc_value, exc_traceback):
@@ -33,6 +33,16 @@ def handle_exception(exc_type, exc_value, exc_traceback):
     logging.critical("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
 
     print("Some error occoured. Reporting to the administrator...\nPlease, restart the application.")
+
+def _create_if_not_exist(path: str):
+    """Creates a folder or file given a path.
+
+    Args:
+      path: The path to the folder or file to create.
+    """
+
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 def _check_key_exists(d: dict, key:str, new_value):
     """
@@ -87,6 +97,7 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
     count = 0
     dict_sum = {}
     session1_test = []
+    entity_test = []
 
     # Filter for the entity (rows where entity under test = entity)
     for entity in entities:
@@ -100,22 +111,19 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
 
             if tests:
                 session1_test.extend(tests)
-
-            # Populate the correct test suite
-            testSuite = {"test suite":{"name":entity , "description":pattern ,"filter messages": True}, "tests":tests}
-
-            json_objects = json.dumps(testSuite, indent = 2)
-            if tests and entity != "ALL":
-                with open(os.path.join(wd, OUT_DIR, f'{pattern}-{entity}.json'), 'w') as outfile:
+                entity_test.extend(tests)
+        
+        #Test by entity
+        entitySuite = {"test suite":{"name":entity , "description":"All the test available for this entity" ,"filter messages": True}, "tests":entity_test}
+        json_objects = json.dumps(entitySuite, indent = 2)
+        if entity_test and entity != "ALL":
+            with open(os.path.join(wd, OUT_DIR_SINGLE+'/'+entity, f'All_{entity}.json'), 'w') as outfile:
                     outfile.write(json_objects)
-
-            count = count + len(tests)
-            
-            dict_sum = {k: dict_sum.get(k, 0) + supported_pattern.get(k, 0) for k in set(dict_sum) | set(supported_pattern)}
+        entity_test = []
     
     testSuite = {"test suite":{"name":"Session_1" , "description":f"All the entities and the available patterns: {' ,'.join([*dict_sum.keys()])}" ,"filter messages": True}, "tests":session1_test}
     json_objects = json.dumps(testSuite, indent = 2)
-    with open(os.path.join(wd, OUT_DIR, 'ALL_Session1.json'), 'w') as outfile:
+    with open(os.path.join(wd, OUT_DIR_SINGLE, 'ALL_Session1.json'), 'w') as outfile:
         outfile.write(json_objects)
 
 def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
@@ -165,8 +173,10 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
                 var = "var"+str(index) if index < 10 else "var_"+str(index)
                 if "body" in message_split and item == "body":
                     _check_key_exists(template, "key_"+var, "check")
+                    _check_key_exists(template, "edit_"+var, "edit regex")
                 else:
                     _check_key_exists(template, "key_"+var, "check param")
+                    _check_key_exists(template, "edit_"+var, "edit")
                 #Next if is for SPID                      
                 if var == "var2" and (item == "Entity Configuration response" or item == "Entity Statement response"):
                     _check_value_exists(template, var, item + " " + entity)
@@ -184,6 +194,14 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
             if temp:
                 log_value.warning(f'Values missing in table {temp} for Pattern: {row["Pattern name"]} and UID: {row["UID"]}')
 
+            #print a test suite for each row if not ALL
+            if row['Entity under test'] != 'ALL':
+                singleSuite = {"test suite":{"name":"Single test" , "description":"One test only" ,"filter messages": True}, "tests":template}
+                json_objects = json.dumps(singleSuite, indent = 2)
+                _create_if_not_exist(join(OUT_DIR_SINGLE, row["Entity under test"]))
+                with open(os.path.join(wd, OUT_DIR_SINGLE+'/'+row['Entity under test'], f'{row["UID"]}.json'), 'w') as outfile:
+                        outfile.write(json_objects)
+
             tests.append(template)
 
             count_test[row["Pattern name"]] = count_test.setdefault(row["Pattern name"],0 ) + 1
@@ -192,29 +210,6 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
             log_pattern.warning(f'Empty test on Pattern: {row["Pattern name"]} and UID: {row["UID"]}')
     
     return tests, count_test
-
-#FOR TESTING
-def createPassive(entities: list, df_tests: pd.DataFrame):
-    patterns = [item for item in set(list(df_tests.loc[df_tests["Type MIG"]=="Passive", "Pattern name"])) if isinstance(item, str) and "/" not in item]
-    s1 = []
-    # Filter for the entity (rows where entity under test = entity)
-    for entity in entities:
-        # Filter for the type of the test
-        for pattern in patterns:
-            # Returns the rows where entity under test is the entity and the type of the column is the wanted type
-            filtered = df_tests[((df_tests["Entity under test"] == entity) | (df_tests["Entity under test"] == "ALL")) 
-                                & (df_tests["Pattern name"] == pattern) & (df_tests["Type MIG"] == "Passive")]
-
-            tests, supported_pattern = createJson(filtered, pattern, entity)
-
-            s1 = s1 + tests
-    
-    # Populate the correct test suite
-    testSuite = {"test suite":{"name":"ALL" , "description":"ALL" ,"filter messages": True}, "tests":s1}
-    json_objects = json.dumps(testSuite, indent = 2)
-    if tests and entity != "ALL":
-        with open(os.path.join(wd, OUT_DIR, 'ALL_Passive.json'), 'w') as outfile:
-            outfile.write(json_objects)
 
 def main():
     #Returns a dataframe
@@ -240,7 +235,6 @@ def main():
 
     # Create filtered dataframe
     createTestsfromCsv(entitiesToTest, patternsToTest, df_tests)
-    createPassive(entitiesToTest, df_tests)
 
 if __name__ == "__main__":
     """
@@ -259,6 +253,8 @@ if __name__ == "__main__":
     log_value = logging.getLogger('testplan.missingValue')
 
     sys.excepthook = handle_exception
+
+    _create_if_not_exist(OUT_DIR_SINGLE)
 
     main()
 

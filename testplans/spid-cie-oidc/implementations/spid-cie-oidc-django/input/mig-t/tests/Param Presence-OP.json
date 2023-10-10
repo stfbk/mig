@@ -39,8 +39,8 @@
             "checks": [
               {
                 "in": "body",
-                "is present": "true",
-                "check": "active"
+                "key_var7": "active",
+                "is present": "true"
               }
             ]
           }

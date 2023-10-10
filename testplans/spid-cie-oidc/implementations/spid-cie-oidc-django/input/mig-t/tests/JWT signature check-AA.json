@@ -21,7 +21,7 @@
                 "from": "body",
                 "decode param": "[\\s\\S]*",
                 "type": "jwt",
-                "jwt check sig": "XXX"
+                "jwt check sig": "X_chiave_AA"
               }
             ]
           }

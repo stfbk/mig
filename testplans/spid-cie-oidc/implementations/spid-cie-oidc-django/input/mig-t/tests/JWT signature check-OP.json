@@ -21,7 +21,7 @@
                 "from": "body",
                 "decode param": "[\\s\\S]*",
                 "type": "jwt",
-                "jwt check sig": "XXX"
+                "jwt check sig": "X_chiave_OP"
               }
             ]
           }
@@ -44,7 +44,7 @@
                 "from": "body",
                 "decode param": "(?<=\"id_token\": \")[^\"]+",
                 "type": "jwt",
-                "jwt check sig": "XXX"
+                "jwt check sig": "X_chiave_core_OP"
               }
             ]
           }
@@ -67,7 +67,7 @@
                 "from": "body",
                 "decode param": "(?<=\"access_token\": \")[^\"]+",
                 "type": "jwt",
-                "jwt check sig": "XXX"
+                "jwt check sig": "X_chiave_core_OP"
               }
             ]
           }

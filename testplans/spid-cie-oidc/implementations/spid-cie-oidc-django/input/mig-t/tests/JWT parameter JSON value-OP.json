@@ -218,7 +218,7 @@
                     "in": "payload",
                     "check": "$.metadata.openid_provider.issuer",
                     "is in": [
-                      "https://cie-provider.org:8002/oidc/op"
+                      "X_url_OP_2"
                     ]
                   }
                 ]

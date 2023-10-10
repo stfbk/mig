@@ -22,15 +22,15 @@
             "action": "intercept",
             "from session": "s1",
             "then": "forward",
-            "message type": "Entity Configuration response SA",
+            "message type": "Entity Statement response OP",
             "decode operations": [
               {
-                "from": "body",
-                "decode param": "[\\s\\S]*",
+                "from": "url",
+                "decode param": "client_assertion",
                 "type": "jwt",
                 "edits": [
                   {
-                    "in": "payload",
+                    "jwt from": "payload",
                     "jwt save": "$.iss",
                     "as": "conf_iss"
                   }
@@ -42,18 +42,18 @@
             "action": "intercept",
             "from session": "s1",
             "then": "forward",
-            "message type": "Entity Statement response OP",
+            "message type": "Entity Configuration response SA",
             "decode operations": [
               {
-                "from": "url",
-                "decode param": "client_assertion",
+                "from": "body",
+                "decode param": "[\\s\\S]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "use variable": "true",
                     "in": "payload",
-                    "check": "conf_iss",
-                    "contains": "iss"
+                    "check": "$.iss",
+                    "contains": "conf_iss"
                   }
                 ]
               }
@@ -80,15 +80,15 @@
             "action": "intercept",
             "from session": "s1",
             "then": "forward",
-            "message type": "Entity Configuration response SA",
+            "message type": "Entity Statement response RP",
             "decode operations": [
               {
-                "from": "body",
-                "decode param": "[\\s\\S]*",
+                "from": "url",
+                "decode param": "client_assertion",
                 "type": "jwt",
                 "edits": [
                   {
-                    "in": "payload",
+                    "jwt from": "payload",
                     "jwt save": "$.iss",
                     "as": "conf_iss"
                   }
@@ -100,18 +100,18 @@
             "action": "intercept",
             "from session": "s1",
             "then": "forward",
-            "message type": "Entity Statement response RP",
+            "message type": "Entity Configuration response SA",
             "decode operations": [
               {
-                "from": "url",
-                "decode param": "client_assertion",
+                "from": "body",
+                "decode param": "[\\s\\S]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "use variable": "true",
                     "in": "payload",
-                    "check": "conf_iss",
-                    "contains": "iss"
+                    "check": "$.iss",
+                    "contains": "conf_iss"
                   }
                 ]
               }

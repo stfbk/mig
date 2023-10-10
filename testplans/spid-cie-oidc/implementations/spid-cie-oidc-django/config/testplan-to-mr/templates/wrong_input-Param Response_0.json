@@ -19,7 +19,7 @@
         "message operations": [
           {
             "from": "var3",
-            "edit": "var4",
+            "edit_var3": "var4",
             "in": "var5"
           }
         ]
@@ -32,11 +32,12 @@
         "checks": [
           {
             "in": "var7",
-            "check regex": "HTTP/?\\d?\\.?\\d?\\svar8"
+            "check regex": "HTTP/?\\d?\\.?\\d?\\svar8",
+            "is present": "true"
           }
         ]
       }
     ],
-    "result": "correct flow s1"
+    "result": "assert_only"
   }
 }

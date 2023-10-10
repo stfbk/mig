@@ -26,8 +26,8 @@
             "message operations": [
               {
                 "from": "body",
-                "edit": "(?<=client_assertion=)([^&]+)",
-                "in": ""
+                "in": "",
+                "edit regex": "(?<=client_assertion=)([^&]+)"
               }
             ]
           },
@@ -48,7 +48,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "assert_only"
       }
     }
   ]

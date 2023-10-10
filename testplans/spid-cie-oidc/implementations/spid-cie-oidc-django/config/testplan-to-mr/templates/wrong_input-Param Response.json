@@ -19,7 +19,7 @@
         "message operations": [
           {
             "from": "var3",
-            "edit": "var4",
+            "edit_var3": "var4",
             "in": "var5"
           }
         ]
@@ -41,6 +41,6 @@
         ]
       }
     ],
-    "result": "correct flow s1"
+    "result": "assert_only"
   }
 }

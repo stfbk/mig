@@ -305,7 +305,7 @@
         ],
         "operations": [
           {
-            "message type": "Entity Statement response TA",
+            "message type": "Entity Statement response OP",
             "decode operations": [
               {
                 "from": "body",

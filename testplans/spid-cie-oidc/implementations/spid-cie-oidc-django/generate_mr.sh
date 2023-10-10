@@ -9,7 +9,7 @@ fi
 docker run \
 	--rm \
 	-v ${PWD}/../..:/testplan-to-mr/input \
-	-v ${PWD}/input/mig-t/tests:/testplan-to-mr/machine-readable-testplan \
+	-v ${PWD}/input/mig-t/tests/single:/testplan-to-mr/machine-readable-testplan/single \
 	testplan-to-mr 
 
 # docker run \
