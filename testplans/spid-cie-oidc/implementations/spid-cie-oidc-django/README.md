@@ -37,12 +37,6 @@ bash build_and_run.sh
 <details>
 Execute the infrastructure with the Windows Subsystem for Linux, using the same command defined for Linux.
 
-If you encounter problems, another script is available specially crafted for windows wsl:
-
-```bash
-bash run_win_wsl.sh
-```
-
 </details>
 
 ### MacOS (ARM)
