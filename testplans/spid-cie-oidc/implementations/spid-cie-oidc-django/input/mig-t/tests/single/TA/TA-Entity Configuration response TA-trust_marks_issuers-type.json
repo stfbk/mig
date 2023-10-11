@@ -1,0 +1,37 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does TA's Entity configuration's trust_marks_issuers parameter contain a JSON Array",
+        "description": "To accomplish this test, the Entity configuration of the TA is taken, the payload is decoded (Base64 encoding) and the trust_marks_issuers parameter must be a JSON Array.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response TA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "\"trust_marks_issuers\":\\s*((?:\\{\\s*|\\s*,\\s*)\"([^\\[\\]]+)\"\\s*:\\s*(\\[[^\\]]+\\])(?:\\s*\\s*|\\s*))*\\}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

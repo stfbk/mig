@@ -1,0 +1,48 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Trust Mark contain correct value for organization_type claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the value of the organization_type claim can be 'public' or 'private'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operation": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode param": "[\\s\\S]*",
+                "decode operation": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "organization_type",
+                        "is in": [
+                          "public",
+                          "private"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP refuse Authentication Requests signed with a non-asymmetric method",
+        "description": "This test aims to check if the OP correctly handles the signature of the Authentication request: If the OP is not able to decrypt the signature, than the public key of the RP is wrong or, otherwise, the algorithm used is not known. If, instead, the OP is able to decrypt the signature, it can mean that the public key is correct and the algorithm known, or that the RP used a symmetric algorithm and the RP's key is the same key used to sign the JWT. In the latter case the confidentiality and integrity of the message cannot be trusted. In this case, the OP must check the 'alg' parameter in the JWT Header and, if it corresponds to a symmetric algorithm or to 'none', it must refuse the authentication request. In order to accomplish this test, a crafted RP could set in its metadata a symmetric key, use it to sign the JWT and send an Authentication Request. Another way to accomplish the test is by intercepting the request, changing the parameter and the signature.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "header",
+                    "jwt edit": "alg",
+                    "value": "none"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication error response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s302"
+              },
+              {
+                "in": "head",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

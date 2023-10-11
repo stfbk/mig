@@ -1,0 +1,31 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the token_type of a token response set correctly?",
+        "description": "This test verifies whether the token_type of a token response is Bearer.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is": "Bearer",
+                "check": "token_type"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

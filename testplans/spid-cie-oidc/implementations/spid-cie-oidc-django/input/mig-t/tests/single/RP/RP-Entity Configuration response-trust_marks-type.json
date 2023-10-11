@@ -1,0 +1,37 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP's entity configuration contain a correct trust_marks parameter",
+        "description": "To accomplish this test, the Entity configuration of the RP is taken, the payload is decoded (Base64 encoding) and the trust_marks parameter is checked, it must be a JSON array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "\"trust_marks\":\\s*\\[\\s*\\{\\s*\"\\w*\":\\s*\".*\"(,\\s*.*\")*\\s*\\}\\s*\\]"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

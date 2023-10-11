@@ -1,0 +1,37 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP's entity configuration contain a correct authority_hints parameter",
+        "description": "To accomplish this test, the Entity configuration of the OP is taken, the payload is decoded (Base64 encoding) and the authority_hints parameter is checked, it must be an array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "\"authority_hints\":\\[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

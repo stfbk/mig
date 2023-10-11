@@ -94,7 +94,6 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
                 26  COR002        OIDC Core                RP       ...  NaN         False       x
 
     """
-    count = 0
     dict_sum = {}
     session1_test = []
     entity_test = []
@@ -107,7 +106,7 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
             filtered = df_tests[((df_tests["Entity under test"] == entity) | (df_tests["Entity under test"] == "ALL")) 
                                 & (df_tests["Pattern name"] == pattern)]
 
-            tests, supported_pattern = createJson(filtered, pattern, entity)
+            tests = createJson(filtered, entity)
 
             if tests:
                 session1_test.extend(tests)
@@ -126,7 +125,7 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
     with open(os.path.join(wd, OUT_DIR_SINGLE, 'ALL_Session1.json'), 'w') as outfile:
         outfile.write(json_objects)
 
-def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
+def createJson(table: pd.DataFrame, entity: str) -> list:
     """
         This function creates the Jsons of the tests that will be added to the file of the corresponding test testType and entity. 
         All the characteristics of the test suite must already be in the file, this function only creates tests (in the "tests" 
@@ -136,7 +135,6 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
     """
 
     tests = []
-    count_test = {}
 
     for index, row in table.iterrows():
         """
@@ -147,7 +145,7 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
         testType = [t.lower().replace(" ", "_") for t in set(table["Type"])][0]
         
         try:
-            openfile = open(os.path.join(wd, "input", "implementations", "spid-cie-oidc-django", "config", "testplan-to-mr", "templates", f'{testType}-{row["Pattern name"]}.json'), 'r')
+            openfile = open(os.path.join(wd, "input", "templates", f'{testType}-{row["Pattern name"]}.json'), 'r')
         except(FileNotFoundError):
             log_pattern.debug(f'TemplateNotFound: {testType}-{row["Pattern name"]}.json ')
             continue
@@ -196,7 +194,9 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
 
             #print a test suite for each row if not ALL
             if row['Entity under test'] != 'ALL':
-                singleSuite = {"test suite":{"name":"Single test" , "description":"One test only" ,"filter messages": True}, "tests":template}
+                t = []
+                t.append(template)
+                singleSuite = {"test suite":{"name":"Single test" , "description":"One test only" ,"filter messages": True}, "tests":t}
                 json_objects = json.dumps(singleSuite, indent = 2)
                 _create_if_not_exist(join(OUT_DIR_SINGLE, row["Entity under test"]))
                 with open(os.path.join(wd, OUT_DIR_SINGLE+'/'+row['Entity under test'], f'{row["UID"]}.json'), 'w') as outfile:
@@ -204,12 +204,11 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
 
             tests.append(template)
 
-            count_test[row["Pattern name"]] = count_test.setdefault(row["Pattern name"],0 ) + 1
         #if exists but its empty
         else:
             log_pattern.warning(f'Empty test on Pattern: {row["Pattern name"]} and UID: {row["UID"]}')
     
-    return tests, count_test
+    return tests
 
 def main():
     #Returns a dataframe

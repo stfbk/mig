@@ -1,0 +1,31 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the client_id in the token request identifies the RP",
+        "description": "The client_id parameter in the URL of the token request is taken. This parameter must identify the RP",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "body",
+                "is": "X_https_RP",
+                "check": "client_id"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

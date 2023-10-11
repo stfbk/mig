@@ -1,0 +1,31 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Entity's trust mark status endpoint correctly response to valid Trust Marks with claim 'active'",
+        "description": "In order to check if the trust mark status endpoint of a TA or SA correctly verifies valid trust marks, a valid trust mark can be sent to the endpoint and the response analyzed",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Trust Mark status response",
+            "checks": [
+              {
+                "in": "body",
+                "is": "true",
+                "check": "active"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the client_id in the token request contain an HTTPS URL",
+        "description": "The client_id parameter in the URL of the token request is taken and checked to be an HTTPS URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_id=https:\\/\\/((:)?www\\.)?([-a-zA-Z0-9@%._\\+~#=:]{2,256})(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
