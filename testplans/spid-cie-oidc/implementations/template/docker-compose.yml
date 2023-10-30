@@ -1,0 +1,115 @@
+version: "3"
+
+services:
+  burpsuite:
+    #image: i-mig-t # Use this if you build locally
+    image: ghcr.io/stfbk/mig-i-mig-t:latest
+    volumes:
+      - /tmp/.X11-unix/:/tmp/.X11-unix/
+      - /etc/localtime:/etc/localtime:ro
+      - "$HOME/.Xauthority:/root/.Xauthority:rw"
+      - ../config/mig-t/msg_def.json:/opt/BurpSuiteCommunity/msg_def.json
+    ports:
+      - 8080:8080
+      #- 5005:5005 # To enable java debugger
+    networks:
+      - oidcfed
+    environment:
+      - DISPLAY
+      #- INSTALL4J_JAVA_HOME="/usr/lib/jvm/openjdk-11" # To enable java debugger
+      #- JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" # To enable java debugger
+    stdin_open: true
+    tty: true
+
+  trust-anchor.org:
+    image: ghcr.io/italia/spid-cie-oidc-django:latest
+    # build:
+    # context: .
+    # dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./examples-docker/federation_authority:/django-project
+    networks:
+      - oidcfed
+    command: |
+      bash -c "dpkg --configure -a
+      apt-get update
+      apt-get install iptables redsocks curl lynx -qy
+      echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 8080;type = http-connect; }' > /etc/redsocks.conf &&
+      /usr/sbin/redsocks -c /etc/redsocks.conf &
+      iptables -t nat -A OUTPUT -p tcp --dport 8002 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8001 -j REDIRECT --to-port 12345 &&
+      cd /django-project/ &&
+      python3 manage.py migrate &&
+      python3 manage.py loaddata dumps/example.json &&
+      python3 manage.py runserver 0.0.0.0:8000"
+    privileged: true
+    environment:
+      - PROXY_SERVER=burpsuite
+      - PROXY_PORT=8080
+
+  cie-provider.org:
+    image: ghcr.io/italia/spid-cie-oidc-django:latest
+    # build:
+    # context: .
+    # dockerfile: ./Dockerfile
+    expose:
+      - 8002
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./examples-docker/provider:/django-project
+    networks:
+      - oidcfed
+    depends_on:
+      - trust-anchor.org
+    command: |
+      bash -c "dpkg --configure -a
+      apt-get update
+      apt-get install iptables redsocks curl lynx -qy
+      echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 8080;type = http-connect; }' > /etc/redsocks.conf &&
+      /usr/sbin/redsocks -c /etc/redsocks.conf &
+      iptables -t nat -A OUTPUT -p tcp --dport 8001 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8000 -j REDIRECT --to-port 12345 &&
+      cd /django-project/ &&
+      python3 manage.py migrate &&
+      python3 manage.py loaddata dumps/example.json &&
+      python3 manage.py runserver 0.0.0.0:8002"
+    privileged: true
+    environment:
+      - PROXY_SERVER=burpsuite
+      - PROXY_PORT=8080
+
+## Your RP here
+  relying-party.org:
+    image: your-rp # The name of the container you are using
+    # build:
+    # context: .
+    # dockerfile: ./Dockerfile
+    expose:
+      - 8005
+    ports:
+      - "8005:8005"
+    # if you need volumes
+    #volumes:
+    #  - ./yourvolume/
+    networks:
+      - oidcfed
+    depends_on:
+      - trust-anchor.org
+    # Commands needed to redirect the ourgoing traffic (to the OP and TA) to the proxy
+    command: |
+      bash -c "apt-get update
+      apt-get install iptables redsocks curl lynx -qy
+      echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 8080;type = http-connect; }' > /etc/redsocks.conf &&
+      /usr/sbin/redsocks -c /etc/redsocks.conf &
+      iptables -t nat -A OUTPUT -p tcp --dport 8002 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8000 -j REDIRECT --to-port 12345"
+    privileged: true
+    environment:
+      - PROXY_SERVER=burpsuite
+      - PROXY_PORT=8080
+
+networks:
+  oidcfed:
