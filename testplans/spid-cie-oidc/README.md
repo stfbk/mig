@@ -46,7 +46,13 @@ Your RP should now be working with the spid-cie-oidc-django OP, try a SSO login 
 
 ### Step 4: Create custom session track
 
-TODO: explain how to write session track and add it to input/mig-t/sessions
+You should write a Session Track for your RP, the session track is a list of actions that the browser will need to do to complete an authentication on your RP. This is needed to trigger all the messages that will be then intercepted by the proxy.
+
+You can start from an existing session, such as [s_CIE](implementations/spid-cie-oidc-django/input/mig-t/sessions/s_CIE) of spid-cie-oidc-django, and change the part of your RP.
+
+> if you need more details on how to write a session track, check [this section](https://github.com/stfbk/mig-t/blob/main/doc/language.md#session-track-user-actions) of the mig-t documentation
+
+> if you plan to push your RP on the mig repo, please put the session inside `input/mig-t/sessions/` folder.
 
 ### Step 5: Edit message definition
 
