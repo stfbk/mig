@@ -1,0 +1,40 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT Access Token contain the \"typ\" parameter valid in the Header",
+        "description": "The Access Token present in the Token response is analyzed and the presence of the \"type\" parameter in the header is checked. Moreover, its value must be set to \"at+jwt\", if it is not, than the Access Token is not compliant",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"access_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.typ",
+                    "url decode": false,
+                    "is": "at+jwt"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

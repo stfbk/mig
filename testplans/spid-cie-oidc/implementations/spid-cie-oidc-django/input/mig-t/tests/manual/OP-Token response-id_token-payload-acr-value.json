@@ -1,0 +1,67 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT ID Token contain the \"acr\" parameter valid in the Payload",
+        "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the presence of the \"acr\" parameter in the Payload is checked. It must be equal or superior to the acr send from the RP in the Authentication Request.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.acr_values",
+                    "as": "saved_acr"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"id_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "use variable": "true",
+                    "in": "payload",
+                    "check": "$.acr",
+                    "is": "saved_acr"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP accept GET requests with a wrong serialization method",
+        "description": "An authentication request is sent with the GET method and the parameters (scope, code_challenge, code_challenge_method and request) are inserted in the body of the request, using the application/x-www-form-urlencoded format",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "message operations": [
+              {
+                "from": "head",
+                "edit regex": "\b(GET|POST)\b",
+                "in": "GET"
+              },
+              {
+                "from": "head",
+                "add": "Content-Type",
+                "in": "application/x-www-form-urlencoded"
+              },
+              {
+                "from": "url",
+                "remove parameter": "?client_id"
+              },
+              {
+                "from": "url",
+                "remove parameter": "response_type"
+              },
+              {
+                "from": "url",
+                "save": "scope",
+                "as": "saved_scope"
+              },
+              {
+                "from": "url",
+                "remove parameter": "scope"
+              },
+              {
+                "from": "body",
+                "add": "scope=",
+                "in": "scope="
+              },
+              {
+                "from": "body",
+                "add": "scope=",
+                "use": "saved_scope"
+              },
+              {
+                "from": "url",
+                "save": "code_challenge",
+                "as": "saved_code_challenge"
+              },
+              {
+                "from": "url",
+                "remove parameter": "code_challenge"
+              },
+              {
+                "from": "body",
+                "add": "&code_challenge=",
+                "in": "&code_challenge="
+              },
+              {
+                "from": "body",
+                "add": "&code_challenge=",
+                "use": "saved_code_challenge"
+              },
+              {
+                "from": "url",
+                "save": "code_challenge_method",
+                "as": "saved_code_challenge_method"
+              },
+              {
+                "from": "url",
+                "remove parameter": "code_challenge_method"
+              },
+              {
+                "from": "body",
+                "add": "&code_challenge_method=",
+                "in": "&code_challenge_method="
+              },
+              {
+                "from": "body",
+                "add": "&code_challenge_method=",
+                "use": "saved_code_challenge_method"
+              },
+              {
+                "from": "url",
+                "save": "request",
+                "as": "saved_request"
+              },
+              {
+                "from": "url",
+                "remove parameter": "request"
+              },
+              {
+                "from": "body",
+                "add": "&request=",
+                "in": "&request="
+              },
+              {
+                "from": "body",
+                "add": "&request=",
+                "use": "saved_request"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication error response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s302"
+              },
+              {
+                "in": "head",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

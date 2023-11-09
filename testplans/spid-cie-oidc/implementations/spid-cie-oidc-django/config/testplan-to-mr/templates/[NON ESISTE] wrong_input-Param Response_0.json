@@ -32,8 +32,7 @@
         "checks": [
           {
             "in": "var7",
-            "check regex": "HTTP/?\\d?\\.?\\d?\\svar8",
-            "is present": "true"
+            "check regex": "HTTP/?\\d?\\.?\\d?\\svar8"
           }
         ]
       }

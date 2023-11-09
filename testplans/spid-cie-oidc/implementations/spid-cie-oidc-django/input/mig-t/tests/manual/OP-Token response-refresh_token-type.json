@@ -1,0 +1,62 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP issue a correct type of refresh tokens when requested",
+        "description": "In this test an RP makes an authentication request with scope \"openid offline_access\". Once received the code, the RP tries to exchange it in the token endpoint and the response must contain a JWT refresh token.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.acr_values",
+                    "value": "https://www.spid.gov.it/SpidL1"
+                  },
+                  {
+                    "jwt sign": "X_key_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "(?<=\\\"refresh_token\\\":\\s?)\\\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\\\"",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

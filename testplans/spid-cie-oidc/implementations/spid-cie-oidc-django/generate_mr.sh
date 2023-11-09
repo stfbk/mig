@@ -13,8 +13,10 @@
 docker run \
 	--rm \
 	-v ${PWD}/../..:/testplan-to-mr/input \
-	-v ${PWD}/config/testplan-to-mr/templates:/testplan-to-mr/input/templates \
-	-v ${PWD}/input/mig-t/tests/single:/testplan-to-mr/machine-readable-testplan/single \
+	-v ${PWD}/:/testplan-to-mr/config_file/ \
+	-v ${PWD}/input/mig-t/tests/single:/testplan-to-mr/tests/single \
+	-v ${PWD}/input/mig-t/tests/manual:/testplan-to-mr/tests/manual \
+	-v ${PWD}/input/mig-t/configured_tests:/testplan-to-mr/configured_tests \
 	ghcr.io/stfbk/mig-testplan-to-mr:latest # testplan-to-mr # if builded locally 
 
 wait

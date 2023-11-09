@@ -1,0 +1,78 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP correctly handles the prompt parameter set to \"consent login\" in the case of SSO",
+        "description": "In the case of the prompt parameter set to \"consent login\" in an authentication request, the OP should send an authentication request to the user in any case. In order to verify this behavior, an authentication request while a SSO session is active is accomplished and the action of the OP verified. It should show a login page and ask for the credentials. (a SSO session can be simulated by performing a first authentication without a logout and then another authentication request. In both authentication set the prompt parameter to consent login)",
+        "type": "active",
+        "sessions": [
+          "s1-SSO"
+        ],
+        "operations": [
+          {
+            "session": "s1-SSO",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-SSO",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.prompt",
+                    "value": "consent login"
+                  },
+                  {
+                    "jwt sign": "X_chiave_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-SSO",
+            "then": "forward",
+            "message type": "UserInfo request"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-SSO",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.prompt",
+                    "value": "consent login"
+                  },
+                  {
+                    "jwt sign": "X_chiave_core_RP"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1-SSO"
+      }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT Refresh Token contain correct type of \"exp\" parameter in the Payload",
+        "description": "The Refresh Token present in the Token Response is analyzed and the value of the \"exp\" parameter in the Payload is a timestamp",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.acr_values",
+                    "value": "https://www.spid.gov.it/SpidL1"
+                  },
+                  {
+                    "jwt sign": "X_key_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"refresh_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check regex": "\"exp\":\\d+"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

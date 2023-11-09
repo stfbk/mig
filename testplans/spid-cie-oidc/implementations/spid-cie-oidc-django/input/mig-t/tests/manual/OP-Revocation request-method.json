@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP verify the HTTP method of the Revocation request",
+        "description": "The revocation request must be sent via HTTP POST",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "checks": [
+              {
+                "in": "head",
+                "check": "POST",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

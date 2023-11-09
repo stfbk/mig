@@ -1,0 +1,58 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Authentication error response contain the error_description parameter",
+        "description": "The Authentication error response is analyzed and the presence of the error_description is checked",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "header",
+                    "jwt edit": "alg",
+                    "value": "none"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication error response",
+            "checks": [
+              {
+                "in": "head",
+                "check": "error_description="
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

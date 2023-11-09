@@ -1,0 +1,63 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP correctly sign the Refresh Token",
+        "description": "Tokens issued by an OP must have the structure of JWT Tokens. In particular, this structure is composed by three base64url encoded strings separated by dots, namely the header, payload and signature. The signature is made using the OP's private key, in such a way to be decrypted using its public key. In this test an offline_access flow is performed and the obtained Refresh token is analyzed. In order to test if the OP correctly signed the signature part of the JWT, the Refresh token is passed to a signature verifier correctly configured. (verify the signature of the refresh token)",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.acr_values",
+                    "value": "https://www.spid.gov.it/SpidL1"
+                  },
+                  {
+                    "jwt sign": "X_key_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode param": "(?<=\"refresh_token\": \")[^\"]+",
+                "jwt check sig": "X_key_core_OP"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the UserInfo Response's JWS contain a correct aud parameter in the payload",
+        "description": "The JWS Token contained in the encrypted payload of the JWE in the UserInfo response body is taken and analyzed. If the 'aud' parameter in the payload is set to the RP's identifier, then it is compliant with the specification.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "X_key_jwe",
+                "from": "body",
+                "type": "jwt",
+                "decode param": "[\\s\\S]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "decode param": "[\\s\\S]*",
+                    "force regex": true,
+                    "type": "jwt",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check regex": "aud",
+                        "is": "X_url_RP"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

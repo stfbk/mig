@@ -25,15 +25,15 @@
               {
                 "jwt from": "var5",
                 "jwt save": "$.var6",
-                "as": "var_12"
+                "as": "var9"
               }
             ],
             "checks": [
               {
                 "use variable": "true",
-                "in": "var_10",
-                "check": "$.var_11",
-                "contains": "var_12"
+                "in": "var7",
+                "check": "$.var8",
+                "contains": "var9"
               }
             ]
           }

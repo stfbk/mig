@@ -1,0 +1,83 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP really revoke the Token after a request",
+        "description": "Once obtained a token, it is directly sent to the revocation endpoint. In order to verify that the token is really revoked, a new request to the UserInfo endpoint can be made. If the response contains the claims requested, than the token is still valid.",
+        "type": "active",
+        "sessions": [
+          "s1",
+          "s1-revoked"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "message operations": [
+              {
+                "from": "body",
+                "save": "(?<=\"access_token\": \")[^\"]+",
+                "as": "saved_access_token"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation response"
+          },
+          {
+            "session": "s1",
+            "action": "pause"
+          },
+          {
+            "session": "s1-revoked",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-revoked",
+            "then": "forward",
+            "message type": "UserInfo request",
+            "message operations": [
+              {
+                "from": "head",
+                "edit regex": "(?<=Authorization:\\sBearer\\s)([^ \\n]+)",
+                "use": "saved_access_token"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-revoked",
+            "then": "forward",
+            "message type": "UserInfo response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_grant"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

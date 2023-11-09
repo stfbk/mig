@@ -1,0 +1,61 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Introspection Endpoint returns false on expired tokens",
+        "description": "To test that the Introspection response of the OP's correctly identifies expired tokens, an expired one is sent and the response is analyzed",
+        "type": "active",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "session": "s_CIE_introsp",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s_CIE_introsp",
+            "then": "forward",
+            "message type": "Introspection request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=token=)([^&]+)",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.exp",
+                    "value": "1689681188"
+                  },
+                  {
+                    "jwt sign": "X_chiave_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s_CIE_introsp",
+            "then": "forward",
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "\"active\":\\s*false"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

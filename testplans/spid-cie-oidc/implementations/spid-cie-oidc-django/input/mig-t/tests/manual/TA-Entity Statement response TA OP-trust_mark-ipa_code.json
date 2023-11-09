@@ -1,0 +1,46 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the id_code claim of a Trust Mark issued for public organization contain ipa_code claim",
+        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the presence of \"ipa_code\" in the id_code claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response TA OP",
+            "decode operation": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode param": "[\\s\\S]*",
+                "decode operation": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "check": [
+                      {
+                        "in": "payload",
+                        "check": "$.id_code.ipa_code",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

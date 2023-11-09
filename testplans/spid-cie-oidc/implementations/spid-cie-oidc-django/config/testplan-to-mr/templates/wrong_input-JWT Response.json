@@ -24,7 +24,7 @@
             "edits": [
               {
                 "jwt from": "var5",
-                "jwt edit": "var6",
+                "jwt edit": "$.var6",
                 "value": "var7"
               },
               {

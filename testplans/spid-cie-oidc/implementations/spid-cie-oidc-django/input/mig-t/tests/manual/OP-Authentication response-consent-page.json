@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP show the consent view",
+        "description": "In this test an authentication request is accomplished and, when the correct login credentials are inserted, the presence of the consent view shown to the user is checked. If it is not the case, the OP is not compliant",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Consent Page request"
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

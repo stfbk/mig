@@ -1,0 +1,52 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Content-Type in a error token response set correctly?",
+        "description": "This test verifies the head Content-Type set to application/json in the error token response.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "https://www.example.com/",
+                "edit regex": "(?<=client_id=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check": "Content-Type",
+                "contains": "application/json"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Token error response contain a correct error parameter",
+        "description": "The Token error response is analyzed and the the error parameter in it is checked. It must have a value among 'invalid_request', 'invalid_client', 'unsupported_grant_type', 'invalid_grant', 'server_error', or 'temporarily_unavailable'.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "in": "example",
+                "edit regex": "(?<=grant_type=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "check": "error",
+                "is in": [
+                  "invalid_request",
+                  "invalid_client",
+                  "unsupported_grant_type",
+                  "invalid_grant",
+                  "server_error",
+                  "temporarily_unavailable"
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

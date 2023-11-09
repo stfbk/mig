@@ -1,0 +1,69 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP's revocation endpoint answer correctly when an already-revoked token is provided",
+        "description": "After a correct flow where an authentication is accomplished and a token is obtained from the OP's Token Endpoint. After this, a request to the Revocation endpoint is done, the token is substituted with an already-revoked token and the response analyzed.",
+        "type": "active",
+        "sessions": [
+          "s1",
+          "s1-revoked"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "save": "access_token",
+                "as": "revoked_access_token"
+              }
+            ]
+          },
+          {
+            "session": "s1-revoked",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-revoked",
+            "then": "forward",
+            "message type": "Revocation request",
+            "decode operations": [
+              {
+                "from": "body",
+                "value": "revoked_access_token",
+                "edit regex": "(?<=token=)([^&]+)"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

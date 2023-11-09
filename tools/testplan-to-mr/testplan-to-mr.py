@@ -12,7 +12,11 @@ import logging #used for errors
     The program takes the test suite and populates the parameter "tests" with the tests created. Previous tests are deleted.
 """
 
-OUT_DIR_SINGLE = "machine-readable-testplan/single/"
+OUT_DIR_SINGLE = "tests/single/"
+
+# Specify the input folder and output folder paths for the config
+input_folder = 'tests'
+output_folder = 'configured_tests'
 
 #System function - shouldn't need update as the table changed.
 def handle_exception(exc_type, exc_value, exc_traceback):
@@ -76,9 +80,36 @@ def _check_value_exists(d: dict, old_value:str, new_value):
         if isinstance(v, dict):
             _check_value_exists(v, old_value, new_value)
         elif isinstance(v, list):
-            for item in v:
+            for index, item in enumerate(v):
                 if isinstance(item, dict):
                     _check_value_exists(item, old_value, new_value)
+                if isinstance(item, str) and old_value in item:
+                    v[index] = item.replace(old_value, new_value)
+
+def traverse_folder(folder_path, output_folder, substitutions):
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.endswith('.json'):
+                file_path = os.path.join(root, file)
+
+                # Load the JSON document
+                try:
+                    with open(file_path, 'r') as f:
+                        data = json.load(f)
+                except ValueError:
+                    print(f"Error in file: {file_path}")
+                    continue
+
+                # Substitute
+                for key, value in substitutions.items():
+                    _check_value_exists(data, key, value)
+
+                # Create the output file path
+                output_file_path = os.path.join(output_folder, (file_path.split("tests/",1)[1]))
+                _create_if_not_exist(os.path.dirname(output_file_path))
+
+                with open(output_file_path, 'w') as output_file:
+                    json.dump(data, output_file, indent=2)
 
 def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
     """
@@ -94,6 +125,7 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
                 26  COR002        OIDC Core                RP       ...  NaN         False       x
 
     """
+    count = 0
     dict_sum = {}
     session1_test = []
     entity_test = []
@@ -106,7 +138,7 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
             filtered = df_tests[((df_tests["Entity under test"] == entity) | (df_tests["Entity under test"] == "ALL")) 
                                 & (df_tests["Pattern name"] == pattern)]
 
-            tests = createJson(filtered, entity)
+            tests, supported_pattern = createJson(filtered, pattern, entity)
 
             if tests:
                 session1_test.extend(tests)
@@ -125,7 +157,7 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
     with open(os.path.join(wd, OUT_DIR_SINGLE, 'ALL_Session1.json'), 'w') as outfile:
         outfile.write(json_objects)
 
-def createJson(table: pd.DataFrame, entity: str) -> list:
+def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
     """
         This function creates the Jsons of the tests that will be added to the file of the corresponding test testType and entity. 
         All the characteristics of the test suite must already be in the file, this function only creates tests (in the "tests" 
@@ -135,6 +167,7 @@ def createJson(table: pd.DataFrame, entity: str) -> list:
     """
 
     tests = []
+    count_test = {}
 
     for index, row in table.iterrows():
         """
@@ -145,7 +178,7 @@ def createJson(table: pd.DataFrame, entity: str) -> list:
         testType = [t.lower().replace(" ", "_") for t in set(table["Type"])][0]
         
         try:
-            openfile = open(os.path.join(wd, "input", "templates", f'{testType}-{row["Pattern name"]}.json'), 'r')
+            openfile = open(os.path.join(wd, "input", "implementations", "spid-cie-oidc-django", "config", "testplan-to-mr", "templates", f'{testType}-{row["Pattern name"]}.json'), 'r')
         except(FileNotFoundError):
             log_pattern.debug(f'TemplateNotFound: {testType}-{row["Pattern name"]}.json ')
             continue
@@ -204,13 +237,24 @@ def createJson(table: pd.DataFrame, entity: str) -> list:
 
             tests.append(template)
 
+            count_test[row["Pattern name"]] = count_test.setdefault(row["Pattern name"],0 ) + 1
         #if exists but its empty
         else:
             log_pattern.warning(f'Empty test on Pattern: {row["Pattern name"]} and UID: {row["UID"]}')
     
-    return tests
+    return tests, count_test
 
-def main():
+def config_for_implementation():
+    # Load JSON config file
+    with open('config_file/config_testplan.json', 'r') as f:
+        substitutions = json.load(f)
+    
+    _create_if_not_exist(output_folder)
+
+    # Call the function to traverse the folder and modify the JSON files
+    traverse_folder(input_folder, output_folder, substitutions)
+
+def generate_mr():
     #Returns a dataframe
     df_tests = pd.read_csv(os.path.join(wd, "input", "testplan.csv"))
     
@@ -255,6 +299,9 @@ if __name__ == "__main__":
 
     _create_if_not_exist(OUT_DIR_SINGLE)
 
-    main()
+    generate_mr()
+    print("Generated tests")
+    config_for_implementation()
+    print("Configured tests")
 
     print("END.")

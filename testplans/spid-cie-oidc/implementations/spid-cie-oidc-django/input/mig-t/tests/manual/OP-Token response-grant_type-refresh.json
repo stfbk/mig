@@ -1,0 +1,62 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP accept a token request using the grant_type set to 'refresh_token' but without the necessary refresh token",
+        "description": "When an RP sends a token request using the refresh token, the OP must check the presence of the grant_type parameter in the request but also the presence of the refresh token. In order to check whether the OP accomplish this control, a token request without a refresh token is sent and the response analyzed",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "edit": "(?<=grant_type=)([^&]+)",
+                "in": "refresh_token"
+              }
+            ],
+            "check": [
+              {
+                "in": "body",
+                "check": "(?<=\"refresh_token\": \")[^\"]+",
+                "is present": "false"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

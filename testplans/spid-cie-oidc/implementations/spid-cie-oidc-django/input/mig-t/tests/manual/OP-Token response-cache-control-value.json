@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the token response have Cache-Control set to 'no-store'",
+        "description": "This test verifies the presence of Cache-Control set to 'no-store' in the token response.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check": "Cache-Control",
+                "contains": "no-store"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

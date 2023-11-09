@@ -1,0 +1,60 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP accept POST requests with a wrong serialization method",
+        "description": "An authentication request is sent with the POST method and the parameters (scope, code_challenge, code_challenge_method and request) are set as query components of the request, using the application/x-www-form-urlencoded format",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "message operations": [
+              {
+                "from": "head",
+                "edit regex": "GET",
+                "in": "POST"
+              },
+              {
+                "from": "head",
+                "add": "Content-Type",
+                "in": "application/x-www-form-urlencoded"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication error response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s302"
+              },
+              {
+                "in": "head",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "result": "assert_only"
+}

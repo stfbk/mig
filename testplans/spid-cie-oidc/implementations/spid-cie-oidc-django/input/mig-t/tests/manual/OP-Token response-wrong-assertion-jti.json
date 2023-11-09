@@ -1,0 +1,45 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the id_code claim of a Trust Mark issued for private organization contain the fiscal_number or vat_number claim",
+        "description": "In this test, a Trust Mark issued for a private entity must be taken, decrypted and the presence of the fiscal_number or vat_number claim in the id_code is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "decode operation": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "check": [
+                      {
+                        "in": "payload",
+                        "check regex": "id_code.^\\s*\\{[^}]*(\"fiscal_number\"|\"vat_number\"):[^}]*\\}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}
