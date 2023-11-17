@@ -30,6 +30,12 @@ docker pull ghcr.io/stfbk/mig-i-mig-t:master
 
 <details>
 
+Before building the image, you need to get the mig-t jar, you can browse the [release page of mig-t](https://github.com/stfbk/mig-t/releases) and get version you need, or you can just execute [mig-t-jar-compile.sh](mig-t-jar-compile.sh) that will init the mig-t submodule and compile the jar for you.
+
+> compiling the jar of mig-t requires maven
+
+Either way you choose, at the end you should have the mig-t-beta-jar-with-dependencies.jar file in this folder.
+
 To build the image you can use the following script
 
 ```bash
