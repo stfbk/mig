@@ -1,6 +1,6 @@
-FROM adoptopenjdk/openjdk11:x86_64-alpine-jdk-11.0.14.1_1
+FROM ubuntu:22.04
 
-RUN apk update && apk add git
+RUN apt-get update && apt-get install git maven openjdk-11-jdk -y
 
 RUN git clone --depth=1 https://github.com/italia/spid-cie-oidc-java && \
         cd spid-cie-oidc-java && \

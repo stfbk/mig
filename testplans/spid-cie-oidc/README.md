@@ -18,7 +18,7 @@ To add support for an RP you have to adhere to the folder structure of the repo 
 
 If you have a Docker image hosted on a Docker registry, just use it inside the [docker-compose.yml](./implementations/template/docker-compose.yml) file. Otherwise, if you need to build an image locally, please provide the steps to do that in the [build_and_run.sh](./implementations/template/build_and_run.sh) script, and use the builded container inside the [docker-compose.yml](./implementations/template/docker-compose.yml) file.  
 
-Either way you choose, you now need to redirect all the traffic of your container to the proxy hosted on port 8080 on the container burpsuite. To do this, there are already two environment variables set on the template compose settings, this sometimes work, but depends on if your implementation is taking system-wide proxy variables in consideration.
+Either way you choose, you now need to redirect all the traffic of your container to the proxy hosted on port 8080 on the container burpsuite. To do this, there are commands available on the template's compose that install redsocks and forward the packets to/from the default OP and TA to the proxy.
 
 > Note: A debian base image is suggested in order for the default proxy forwarding to work. You can use other base images, but you will need to redirect all the outgoing traffic to localhost:8002 and localhost:8000 (OP and TA) to burpsuite:8080, which is the proxy we are using. If the proxy fordwarding doesn't work, some tests will not be executed.
 
@@ -50,7 +50,7 @@ You should write a Session Track for your RP, the session track is a list of act
 
 You can start from an existing session, such as [s_CIE](implementations/spid-cie-oidc-django/input/mig-t/sessions/s_CIE) of spid-cie-oidc-django, and change the part of your RP.
 
-> if you need more details on how to write a session track, check [this section](https://github.com/stfbk/mig-t/blob/main/doc/language.md#session-track-user-actions) of the mig-t documentation
+> if you need more details on how to write a session track, check [this section](https://github.com/stfbk/mig-t/blob/main/doc/language.md#session-track-user-actions) of the mig-t documentation.
 
 > if you plan to push your RP on the mig repo, please put the session inside `input/mig-t/sessions/` folder.
 

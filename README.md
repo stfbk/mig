@@ -105,7 +105,7 @@ Our project welcomes contributions from various types of users, each with unique
 <details>
 <summary>Instructions</summary>
 
-- Guidelines for testing your own implementation will be present in release v2.1.
+A guide on how to add your RP to the testing environment can be found [here](testplans/spid-cie-oidc/README.md#adding-support-for-your-relying-party)
 
 </details>
 

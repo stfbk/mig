@@ -1,7 +1,7 @@
 [{
   "iss": "http://trust-anchor.org:8000",
-  "sub": "http://127.0.0.1:8080/oidc/rp/",
-  "iat": 1698394698,
+  "sub": "http://relying-party.org:8080/oidc/rp/",
+  "iat": 1700561545,
   "id": "https://www.spid.gov.it/certification/rp",
   "mark": "https://www.agid.gov.it/themes/custom/agid/logo.svg",
   "ref": "https://docs.italia.it/italia/spid/spid-regole-tecniche-oidc/it/stabile/index.html"
