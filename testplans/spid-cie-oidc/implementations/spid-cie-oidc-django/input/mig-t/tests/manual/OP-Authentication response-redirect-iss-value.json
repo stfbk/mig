@@ -1,0 +1,61 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP contain iss set to the its identifier on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have \"iss\" as query parameter set to the OP's identifier",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "type": "jwt",
+                "decode param": "request",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.aud[0]",
+                    "as": "saved_aud"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication response",
+            "from": "url",
+            "check": [
+              {
+                "use variable": "true",
+                "in": "url",
+                "check": "iss",
+                "contains": "saved_aud"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

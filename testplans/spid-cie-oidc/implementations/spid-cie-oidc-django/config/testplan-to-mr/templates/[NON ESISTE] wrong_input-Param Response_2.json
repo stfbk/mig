@@ -1,0 +1,51 @@
+{
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "active",
+    "sessions": [
+      "s1"
+    ],
+    "operations": [
+      {
+        "session": "s1",
+        "action": "start"
+      },
+      {
+        "action": "intercept",
+        "from session": "s1",
+        "then": "forward",
+        "message type": "var2",
+        "message operations": [
+          {
+            "from": "var3",
+            "edit_var3": "var4",
+            "in": "var5"
+          },
+          {
+            "from": "var3",
+            "edit_var3": "var6",
+            "in": "var7"
+          }
+        ]
+      },
+      {
+        "action": "intercept",
+        "from session": "s1",
+        "then": "forward",
+        "message type": "var8",
+        "checks": [
+          {
+            "in": "var9",
+            "check regex": "HTTP/?\\d?\\.?\\d?\\svar_10"
+          },
+          {
+            "in": "var_11",
+            "check": "var_12"
+          }
+        ]
+      }
+    ],
+    "result": "assert_only"
+  }
+}

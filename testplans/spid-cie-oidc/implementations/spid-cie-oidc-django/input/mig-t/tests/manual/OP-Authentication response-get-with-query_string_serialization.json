@@ -1,0 +1,76 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP accept GET requests and the Query String serialization method",
+        "description": "An authentication request is sent with the GET method and the parameters (scope, code_challenge, code_challenge_method and request) are set as query components of the request, using the application/x-www-form-urlencoded format",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "checks": [
+              {
+                "in": "url",
+                "check": "scope",
+                "is present": "true"
+              },
+              {
+                "in": "url",
+                "check": "code_challenge",
+                "is present": "true"
+              },
+              {
+                "in": "url",
+                "check": "code_challenge_method",
+                "is present": "true"
+              },
+              {
+                "in": "url",
+                "check": "request",
+                "is present": "true"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "is present": "true",
+                "check": "code"
+              },
+              {
+                "in": "head",
+                "is present": "true",
+                "check": "state"
+              },
+              {
+                "in": "head",
+                "is present": "true",
+                "check": "iss"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

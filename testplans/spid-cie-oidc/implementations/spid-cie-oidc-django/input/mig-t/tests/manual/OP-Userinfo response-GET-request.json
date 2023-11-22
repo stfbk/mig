@@ -1,0 +1,108 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP gives the correct claims through HTTP POST at the userinfo endpoint",
+        "description": "After a successful Authentication Request with a scope \"openid profile\" , a valid Access Token obtained from the OP is sent to the OP's userinfo endpoint using an HTTP POST request. If the userinfo endpoint returns a signed and encrypted JWT containing the claims \"family_name\", \"given_name\", \"birthdate\", https://attributes.eid.gov.it/fiscal_number (National Unique Identifier), the OP is compliant with the specification.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "edit": "scope",
+                "in": "openid profile"
+              },
+              {
+                "from": "url",
+                "type": "jwt",
+                "decode param": "request",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "scope",
+                    "value": "openid profile"
+                  },
+                  {
+                    "jwt sign": "X_chiave_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "UserInfo request",
+            "check": [
+              {
+                "in": "head",
+                "check regex": "POST"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "X_key_jwe",
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "decode operation": [
+                  {
+                    "from": "jwt header",
+                    "type": "jwt",
+                    "check": [
+                      {
+                        "in": "payload",
+                        "check regex": "given_name",
+                        "is present": "true"
+                      },
+                      {
+                        "in": "payload",
+                        "check regex": "family_name",
+                        "is present": "true"
+                      },
+                      {
+                        "in": "payload",
+                        "check regex": "birthdate",
+                        "is present": "true"
+                      },
+                      {
+                        "in": "payload",
+                        "check regex": "https://attributes.spid.gov.it/fiscal_number",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

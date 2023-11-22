@@ -1,0 +1,121 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP release Access Tokens with the use of refresh tokens",
+        "description": "In this test the offline access flow is accomplished and a refresh token is obtained. After this, a new token request is done with \"grant_type=refresh_token\" and the refresh token inserted in the \"refresh_token\" parameter. The response must include the Access Token",
+        "type": "active",
+        "sessions": [
+          "s1",
+          "s1.1",
+          "s1.2"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.acr_values",
+                    "value": "https://www.spid.gov.it/SpidL1"
+                  },
+                  {
+                    "jwt sign": "X_key_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "message operations": [
+              {
+                "from": "body",
+                "save": "(?<=\"refresh_token\": \")[^\"]+",
+                "as": "saved_refresh_token"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation response"
+          },
+          {
+            "session": "s1",
+            "action": "pause"
+          },
+          {
+            "session": "s1.1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1.1",
+            "then": "forward",
+            "message type": "Token request",
+            "message operations": [
+              {
+                "from": "body",
+                "edit": "(?<=grant_type=)([^&]+)",
+                "in": "refresh_token"
+              },
+              {
+                "from": "body",
+                "add": "&refresh_token=",
+                "in": "&refresh_token="
+              }, 
+              {
+                "from": "body",
+                "add": "(?<=refresh_token=)([^&]+)",
+                "use": "saved_refresh_token"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1.1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          },
+          {
+            "session": "s1",
+            "action": "resume"
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

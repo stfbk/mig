@@ -20,7 +20,7 @@
           {
             "from": "var3",
             "save": "var4",
-            "as": "var_10"
+            "as": "var5"
           }
         ]
       },
@@ -28,17 +28,17 @@
         "action": "intercept",
         "from session": "s1",
         "then": "forward",
-        "message type": "var5",
+        "message type": "var6",
         "decode operations": [
           {
-            "from": "var6",
-            "decode param": "var7",
+            "from": "var7",
+            "decode param": "var8",
             "type": "jwt",
             "checks": [
               {
-                "in": "var8",
-                "key_var6": "var9",
-                "is": "var_10",
+                "in": "var9",
+                "key_var6": "var_10",
+                "is": "var5",
                 "use variable": "true"
               }
             ]

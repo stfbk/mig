@@ -1,0 +1,55 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP refuse Authentication Requests without the signature of the JWT",
+        "description": "This test aims to verify if the OP checks the presence of the signature in an authentication request's JWT. In particular, since the JWT is composed by three parts (header, payload and signature), an Authentication Request is sent with a JWT without the last part of it, the signature.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "message operations": [
+              {
+                "from": "url",
+                "in": "",
+                "edit regex": "(?<=request=\\S{90}\\.\\S{1200})\\S*"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s302"
+              },
+              {
+                "in": "body",
+                "check": "invalid_request"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

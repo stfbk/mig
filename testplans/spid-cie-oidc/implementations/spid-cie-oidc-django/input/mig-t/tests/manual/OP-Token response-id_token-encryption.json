@@ -1,0 +1,74 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP encrypt the ID Token when the \"id_token_encrypted_response_alg\" parameter is exposed in the RP's metadata",
+        "description": "To test this OP functionality, a flow is started using an RP that exposes the \"id_token_encrypted_response_alg\" parameter. Once received the ID Token, it has to be not only signed but also encrypted",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "check": [
+                  {
+                    "from": "payload",
+                    "check": "$.metadata.openid_relying_party.id_token_encrypted_response_alg",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"id_token\": \")[^\"]+",
+                "type": "jwt",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "jwe decrypt": "X_key_jwe",
+                    "check": [
+                      {
+                        "in": "header",
+                        "check": "$.alg",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

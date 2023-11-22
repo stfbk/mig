@@ -1,0 +1,75 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Authentication error response contain a correct error parameter",
+        "description": "The Authentication error response is analyzed and error parameter in it is checked. It must have a value among 'invalid_request', 'unauthorized_client', 'access_denied', 'invalid_scope', 'server_error', 'temporarily_unavailable', 'unsupported_response_type', 'login_required', 'consent_required', 'request_uri_not_supported', 'registration_not_supported', or 'invalid_request_object'",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "response_type",
+                    "value": ""
+                  },
+                  {
+                    "jwt sign": "X_chiave_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication error response",
+            "checks": [
+              {
+                "in": "head",
+                "check": "error",
+                "is in": [
+                  "invalid_request",
+                  "unauthorized_client",
+                  "access_denied",
+                  "invalid_scope",
+                  "server_error",
+                  "temporarily_unavailable",
+                  "unsupported_response_type",
+                  "login_required",
+                  "consent_required",
+                  "request_uri_not_supported",
+                  "registration_not_supported",
+                  "invalid_request_object"
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

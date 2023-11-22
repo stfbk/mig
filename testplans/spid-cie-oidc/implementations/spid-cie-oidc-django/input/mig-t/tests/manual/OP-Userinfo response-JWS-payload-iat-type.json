@@ -1,0 +1,47 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the UserInfo Response's JWT contain iat parameter in the payload as a valid unix time",
+        "description": "The JWT Token contained in the UserInfo response is taken, decrypted and the \"iat\" parameter in the payload is checked as a valid unix time",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "X_key_jwe",
+                "from": "body",
+                "type": "jwt",
+                "decode param": "[\\s\\S]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "decode param": "[\\s\\S]*",
+                    "force regex": true,
+                    "type": "jwt",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check regex": "\"iat\":\\d+"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Introspection Endpoint returns false on tokens that do not belong to the RP",
+        "description": "To test that the Introspection response of the OP's correctly identifies tokens that do not belong to the RP making the request, a token issued for another RP is sent by a different RP and the response is analyzed",
+        "type": "active",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "session": "s_CIE_introsp",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s_CIE_introsp",
+            "then": "forward",
+            "message type": "Introspection request",
+            "message operations": [
+              {
+                "from": "body",
+                "edit": "(?<=client_id=)([^&]+)",
+                "in": "https://www.example.com/"
+              }
+            ],
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=token=)([^&]+)",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.aud",
+                    "value": "https://www.example.com/"
+                  },
+                  {
+                    "jwt sign": "X_chiave_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s_CIE_introsp",
+            "then": "forward",
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "\"\"active\":\\s*false\""
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

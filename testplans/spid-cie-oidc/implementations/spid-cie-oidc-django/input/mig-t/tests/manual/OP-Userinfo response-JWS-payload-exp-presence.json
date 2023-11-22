@@ -1,0 +1,47 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the UserInfo Response's JWT contain exp parameter in the payload",
+        "description": "The JWT Token contained in the UserInfo response is taken, decrypted and the \"exp\" parameter in the payload is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "X_key_jwe",
+                "from": "body",
+                "type": "jwt",
+                "decode param": "[\\s\\S]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "decode param": "[\\s\\S]*",
+                    "force regex": true,
+                    "type": "jwt",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check regex": "exp"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}
