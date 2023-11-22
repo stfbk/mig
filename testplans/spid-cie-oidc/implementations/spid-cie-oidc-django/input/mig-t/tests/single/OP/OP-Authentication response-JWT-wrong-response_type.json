@@ -31,11 +31,11 @@
                 "edits": [
                   {
                     "jwt from": "payload",
-                    "jwt edit": "response_type",
+                    "jwt edit": "$.response_type",
                     "value": "example"
                   },
                   {
-                    "jwt sign": "X_chiave_RP"
+                    "jwt sign": "X_key_RP"
                   }
                 ]
               }

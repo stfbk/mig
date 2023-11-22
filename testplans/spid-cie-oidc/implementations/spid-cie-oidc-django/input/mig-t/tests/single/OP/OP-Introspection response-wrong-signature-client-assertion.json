@@ -30,7 +30,7 @@
                 "type": "jwt",
                 "edits": [
                   {
-                    "jwt sign": "X_chiave_core_RP"
+                    "jwt sign": "X_wrong_key"
                   }
                 ]
               }

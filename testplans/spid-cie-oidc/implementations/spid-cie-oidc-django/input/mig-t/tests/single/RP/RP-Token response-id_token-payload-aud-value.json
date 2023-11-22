@@ -1,0 +1,67 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT ID Token contain the 'aud' parameter in the Payload set to RP's 'client_id'",
+        "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the value of the 'aud' parameter in the Payload set to the RP's 'client_id'",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "saved_iss",
+            "decode operations": [
+              {
+                "from": "Token response",
+                "decode param": "body",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "(?<=\"id_token\": \")[^\"]+",
+                    "jwt save": "$.payload",
+                    "as": "aud[0]"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "use variable": "true",
+                    "in": "payload",
+                    "check": "$.iss",
+                    "contains": "aud[0]"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

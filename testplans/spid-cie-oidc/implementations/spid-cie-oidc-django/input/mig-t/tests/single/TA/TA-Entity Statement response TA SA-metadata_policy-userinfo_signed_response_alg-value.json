@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.userinfo_signed_response_alg.subset_of",
+                    "check": "$.metadata_policy.intermediary.userinfo_signed_response_alg.one_of",
                     "is subset of": [
                       "RS256\",\"RS512"
                     ]
@@ -33,7 +33,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

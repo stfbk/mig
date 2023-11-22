@@ -26,14 +26,15 @@
                     "in": "payload",
                     "check": "$.metadata.openid_provider.issuer",
                     "is in": [
-                      "X_url_OP_2"
+                      "X_url_OP"
                     ]
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

@@ -31,11 +31,11 @@
                 "edits": [
                   {
                     "jwt from": "payload",
-                    "jwt edit": "iat",
+                    "jwt edit": "$.iat",
                     "value": "abc"
                   },
                   {
-                    "jwt sign": "X_chiave_core_RP"
+                    "jwt sign": "X_key_core_RP"
                   }
                 ]
               }

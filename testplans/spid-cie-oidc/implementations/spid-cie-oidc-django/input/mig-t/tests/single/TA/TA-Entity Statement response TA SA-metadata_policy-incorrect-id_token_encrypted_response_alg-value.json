@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.id_token_encrypted_response_alg.subset_of",
+                    "check": "$.metadata_policy.intermediary.id_token_encrypted_response_alg.one_of",
                     "not contains": [
                       "RSA_1_5"
                     ]
@@ -33,7 +33,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

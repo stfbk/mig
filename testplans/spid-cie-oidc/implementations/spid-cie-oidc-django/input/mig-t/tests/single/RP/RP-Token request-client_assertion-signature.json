@@ -21,11 +21,12 @@
                 "from": "body",
                 "decode param": "(?<=client_assertion=)([^&]+)",
                 "type": "jwt",
-                "jwt check sig": "X_chiave_core_RP"
+                "jwt check sig": "X_key_core_RP"
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

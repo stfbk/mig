@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP issue refresh tokens even when it is not supposed to",
+        "description": "In this test an RP makes an authentication request with an arbitrary scope that differs from 'offline_access'. Once received the code, the RP tries to exchange it in the token endpoint and the response must not contain the refresh token.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "check": "refresh_token",
+                "is present": false
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

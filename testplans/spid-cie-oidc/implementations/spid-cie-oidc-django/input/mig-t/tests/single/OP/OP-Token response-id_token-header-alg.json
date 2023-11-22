@@ -7,7 +7,7 @@
   "tests": [
     {
       "test": {
-        "name": "Does the issued JWT ID Token contain the 'alg' parameter in the Header",
+        "name": "Does the issued JWT ID Token contain a correct 'alg' parameter in the Header",
         "description": "In this test, the ID Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked",
         "type": "passive",
         "sessions": [
@@ -31,7 +31,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

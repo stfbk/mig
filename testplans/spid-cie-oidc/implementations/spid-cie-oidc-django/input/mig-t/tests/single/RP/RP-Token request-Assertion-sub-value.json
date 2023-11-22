@@ -32,7 +32,7 @@
                   {
                     "jwt from": "payload",
                     "jwt save": "$.iss",
-                    "as": "iss"
+                    "as": "saved_iss"
                   }
                 ],
                 "checks": [
@@ -40,7 +40,7 @@
                     "use variable": "true",
                     "in": "payload",
                     "check": "$.sub",
-                    "contains": "iss"
+                    "contains": "saved_iss"
                   }
                 ]
               }

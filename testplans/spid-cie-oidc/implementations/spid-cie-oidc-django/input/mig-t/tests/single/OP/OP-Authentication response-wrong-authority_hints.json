@@ -31,11 +31,11 @@
                 "edits": [
                   {
                     "jwt from": "payload",
-                    "jwt edit": "authority_hints",
+                    "jwt edit": "$.authority_hints",
                     "value": "https://www.wrongsite.com/"
                   },
                   {
-                    "jwt sign": "X_chiave_RP"
+                    "jwt sign": "X_key_RP"
                   }
                 ]
               }

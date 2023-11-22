@@ -23,21 +23,11 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Introspection request",
-            "decode operations": [
+            "message operations": [
               {
-                "from": "url",
-                "decode param": "request",
-                "type": "jwt",
-                "edits": [
-                  {
-                    "jwt from": "payload",
-                    "jwt edit": "prompt",
-                    "value": "example"
-                  },
-                  {
-                    "jwt sign": "X_chiave_core_RP"
-                  }
-                ]
+                "from": "body",
+                "in": "X_wrong_value",
+                "edit regex": "(?<=client_assertion=)([^&]+)"
               }
             ]
           },

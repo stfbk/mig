@@ -24,14 +24,15 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.userinfo_encrypted_response_enc.subset_of",
+                    "check": "$.metadata_policy.intermediary.userinfo_encrypted_response_enc.one_of",
                     "is present": "true"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

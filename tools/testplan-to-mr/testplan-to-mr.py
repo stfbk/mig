@@ -178,7 +178,7 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
         testType = [t.lower().replace(" ", "_") for t in set(table["Type"])][0]
         
         try:
-            openfile = open(os.path.join(wd, "input", "implementations", "spid-cie-oidc-django", "config", "testplan-to-mr", "templates", f'{testType}-{row["Pattern name"]}.json'), 'r')
+            openfile = open(os.path.join(wd, "input", "spid-cie-oidc-django", "config", "testplan-to-mr", "templates", f'{testType}-{row["Pattern name"]}.json'), 'r')
         except(FileNotFoundError):
             log_pattern.debug(f'TemplateNotFound: {testType}-{row["Pattern name"]}.json ')
             continue

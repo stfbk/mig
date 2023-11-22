@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does the OP metadata contain the jwks or signed_jwks_uri claim in the openid_provider subclaim",
-        "description": "In this test the OP metadata are taken and the presence of the 'jwks' or the 'signed_jwks_uri' parameter in the 'openid_provider' subclaim (metadata type) is checked. There must be at least one of the two",
+        "name": "Does the OP metadata contain the jwks claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the presence of the 'jwks' parameter in the 'openid_provider' subclaim (metadata type) is checked",
         "type": "passive",
         "sessions": [
           "s1"
@@ -24,14 +24,15 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata.openid_provider.signed_jwks_uri",
+                    "check": "$.metadata.openid_provider.jwks",
                     "is present": "true"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

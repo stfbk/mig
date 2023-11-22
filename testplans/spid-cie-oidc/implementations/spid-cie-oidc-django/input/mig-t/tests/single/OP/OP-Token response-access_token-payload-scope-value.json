@@ -46,7 +46,7 @@
                     "in": "payload",
                     "is": "auth_scope",
                     "use variable": "true",
-                    "check": "scope"
+                    "check param": "scope"
                   }
                 ]
               }

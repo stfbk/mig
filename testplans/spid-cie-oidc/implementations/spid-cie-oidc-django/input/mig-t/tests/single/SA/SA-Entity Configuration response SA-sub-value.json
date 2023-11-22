@@ -25,13 +25,14 @@
                   {
                     "in": "payload",
                     "check": "$.sub",
-                    "is": "X_chiave_SA"
+                    "is": "X_url_SA"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]
