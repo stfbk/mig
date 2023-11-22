@@ -58,7 +58,7 @@
                 {
                     "in": "head",
                     "check param": "Host",
-                    "contains": "relying-party.org:8001" // TODO
+                    "contains": "relying-party.org:8080"
                 }
             ]
         },
@@ -153,7 +153,7 @@
             "checks": [
                 {
                     "in": "url",
-                    "check regex": "/fetch\\?sub=http://relying-party\\.org:8001" // TODO
+                    "check regex": "/fetch\\?sub=http://relying-party\\.org:8080"
                 }
             ]
         },
@@ -219,7 +219,7 @@
             "checks": [
                 {
                     "in": "url",
-                    "check regex": "/federation_fetch_endpoint\\?iss=http://relying-party.org:8001&sub=http://trust-anchor.org:8000" // TODO
+                    "check regex": "/federation_fetch_endpoint\\?iss=http://relying-party.org:8080&sub=http://trust-anchor.org:8000"
                 }
             ]
         },
@@ -241,7 +241,7 @@
             "checks": [
                 {
                     "in": "url",
-                    "check regex": "/federation_fetch_endpoint\\?iss=http://relying-party.org:8001&sub=http://subject-aggregator.org:8004" // TODO
+                    "check regex": "/federation_fetch_endpoint\\?iss=http://relying-party.org:8080&sub=http://subject-aggregator.org:8004"
                 }
             ]
         },

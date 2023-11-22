@@ -18,16 +18,15 @@ cd ..
 git clone git@github.com:italia/spid-cie-oidc-java.git
 rm spid-cie-oidc-java/examples/relying-party-spring-boot/docker/Dockerfile.java-rp
 cp Dockerfile.java-rp spid-cie-oidc-java/examples/relying-party-spring-boot/docker/
-cp application.yml spid-cie-oidc-java/examples/relying-party-spring-boot/src/main/resources/
 cd spid-cie-oidc-java/examples/relying-party-spring-boot/docker
 sudo docker build -t your-rp --file Dockerfile.java-rp .
 cd ../../../../spid-cie-oidc-django
 # (Optional) Build your RP image here ---
 
 # local build i-mig-t --------
-#cd ../../../../../tools/i-mig-t
-#sudo docker build -t i-mig-t .
-#cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-java/spid-cie-oidc-django/
+cd ../../../../../tools/i-mig-t
+sudo docker build -t i-mig-t .
+cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-java/spid-cie-oidc-django/
 # local build i-mig-t --------
 
 xhost +local:
