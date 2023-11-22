@@ -9,6 +9,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - "$HOME/.Xauthority:/root/.Xauthority:rw"
       - ../config/mig-t/msg_def.json:/opt/BurpSuiteCommunity/msg_def.json
+      - ../logs/:/opt/BurpSuiteCommunity/logs # Log folder 
     ports:
       - 8080:8080
       #- 5005:5005 # To enable java debugger
