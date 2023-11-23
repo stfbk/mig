@@ -11,8 +11,8 @@ services:
       - ../config/mig-t/msg_def.json:/opt/BurpSuiteCommunity/msg_def.json
       - ../logs/:/opt/BurpSuiteCommunity/logs # Log folder 
     ports:
-      - 9095:9095
-      #- 5005:5005 # To enable java debugger
+      - "9095:9095"
+      #- "5005:5005" # To enable java debugger
     networks:
       - oidcfed
     environment:
@@ -23,12 +23,12 @@ services:
     tty: true
 
   trust-anchor.org:
-    image: ghcr.io/italia/spid-cie-oidc-django:latest
+    image: ghcr.io/italia/spid-cie-oidc-django:v1.2.0
     # build:
     # context: .
     # dockerfile: ./Dockerfile
     ports:
-      - "8000:8000"
+      - 8000:8000
     volumes:
       - ./examples-docker/federation_authority:/django-project
     networks:
@@ -40,7 +40,7 @@ services:
       echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 9095;type = http-connect; }' > /etc/redsocks.conf &&
       /usr/sbin/redsocks -c /etc/redsocks.conf &
       iptables -t nat -A OUTPUT -p tcp --dport 8002 -j REDIRECT --to-port 12345 &&
-      iptables -t nat -A OUTPUT -p tcp --dport 8001 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8080 -j REDIRECT --to-port 12345 &&
       cd /django-project/ &&
       python3 manage.py migrate &&
       python3 manage.py loaddata dumps/example.json &&
@@ -51,14 +51,12 @@ services:
       - PROXY_PORT=9095
 
   cie-provider.org:
-    image: ghcr.io/italia/spid-cie-oidc-django:latest
+    image: ghcr.io/italia/spid-cie-oidc-django:v1.2.0
     # build:
     # context: .
     # dockerfile: ./Dockerfile
-    expose:
-      - 8002
     ports:
-      - "8002:8002"
+      - 8002:8002
     volumes:
       - ./examples-docker/provider:/django-project
     networks:
@@ -71,7 +69,7 @@ services:
       apt-get install iptables redsocks curl lynx -qy
       echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 9095;type = http-connect; }' > /etc/redsocks.conf &&
       /usr/sbin/redsocks -c /etc/redsocks.conf &
-      iptables -t nat -A OUTPUT -p tcp --dport 8001 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8080 -j REDIRECT --to-port 12345 &&
       iptables -t nat -A OUTPUT -p tcp --dport 8000 -j REDIRECT --to-port 12345 &&
       cd /django-project/ &&
       python3 manage.py migrate &&
@@ -83,42 +81,24 @@ services:
       - PROXY_PORT=9095
 
   relying-party.org:
-    image: ghcr.io/italia/spid-cie-oidc-django:latest
-    # build:
-    # context: .
-    # dockerfile: ./Dockerfile
-    expose:
-      - 8001
+    image: your-rp
     ports:
-      - "8001:8001"
+      - 8080:8080
     volumes:
-      - ./examples-docker/relying_party:/django-project
+      - ../data:/data
     networks:
       - oidcfed
     depends_on:
       - trust-anchor.org
     command: |
-      bash -c "dpkg --configure -a
-      apt-get update
+      sh -c "apt-get update
       apt-get install iptables redsocks curl lynx -qy
-      echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 9095;type = http-connect; }' > /etc/redsocks.conf &&
-      /usr/sbin/redsocks -c /etc/redsocks.conf &
+      echo 'base {log_debug = on;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = 0.0.0.0;local_port = 12345;ip = burpsuite;port = 9095;type = http-connect; }' > /etc/redsocks.conf &&
+      redsocks -c /etc/redsocks.conf &
       iptables -t nat -A OUTPUT -p tcp --dport 8002 -j REDIRECT --to-port 12345 &&
       iptables -t nat -A OUTPUT -p tcp --dport 8000 -j REDIRECT --to-port 12345 &&
-      cd /django-project/ &&
-      python3 manage.py migrate &&
-      python3 manage.py loaddata dumps/example.json &&
-      python3 manage.py runserver 0.0.0.0:8001"
+      ../../mvnw spring-boot:run"
     privileged: true
-    environment:
-      - PROXY_SERVER=burpsuite
-      - PROXY_PORT=9095
-
+    
 networks:
   oidcfed:
-#default attachable true, enough to put external in other docker https://docs.docker.com/compose/networking/#use-a-pre-existing-network
-
-# networks:
-#   network1:
-#     name: my-pre-existing-network oidcfed
-#     external: true

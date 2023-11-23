@@ -6,7 +6,7 @@ cd $(dirname "$0") # Go to directory containing script
 if [ ! -d "testplan-to-mr" ]; then
 	cd ../../../../tools/testplan-to-mr
 	sudo docker build -t testplan-to-mr .
-	cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-django
+	cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-java
 fi
 
 #First volume is for **/../testplan.csv** and **/config/testplan-to-mr/templates** input
@@ -15,7 +15,7 @@ fi
 #Fourth is for output of **/input/mig-t/tests/manual** file
 #Fifth is for output of **/input/mig-t/tests/configured_tests** tests
 
-docker run \
+sudo docker run \
 	--rm \
 	-v ${PWD}/../:/testplan-to-mr/input/ \
 	-v ${PWD}/config/testplan-to-mr:/testplan-to-mr/config_file/ \

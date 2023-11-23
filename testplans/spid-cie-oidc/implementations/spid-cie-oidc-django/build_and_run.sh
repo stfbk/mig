@@ -1,4 +1,7 @@
 #!/bin/bash
+
+cd $(dirname "$0") # Go to directory containing script
+
 git clone https://github.com/italia/spid-cie-oidc-django.git
 rm ./spid-cie-oidc-django/docker-compose.yml
 cp docker-compose.yml ./spid-cie-oidc-django/

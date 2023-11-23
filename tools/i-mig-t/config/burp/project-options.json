@@ -359,7 +359,7 @@
       {
         "certificate_mode": "per_host",
         "listen_mode": "all_interfaces",
-        "listener_port": 8080,
+        "listener_port": 9095,
         "running": true
       }
     ],
