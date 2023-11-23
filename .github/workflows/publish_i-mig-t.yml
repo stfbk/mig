@@ -32,6 +32,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          submodules: 'true'
       
       - run: bash tools/i-mig-t/mig-t-jar-compile.sh
 
