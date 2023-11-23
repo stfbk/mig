@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $(dirname "$0") # Go to directory containing script
+
 #if builded locally
 if [ ! -d "testplan-to-mr" ]; then
 	cd ../../../../tools/testplan-to-mr
@@ -16,7 +18,7 @@ fi
 docker run \
 	--rm \
 	-v ${PWD}/../:/testplan-to-mr/input/ \
-	-v ${PWD}/:/testplan-to-mr/config_file/ \
+	-v ${PWD}/config/testplan-to-mr:/testplan-to-mr/config_file/ \
 	-v ${PWD}/input/mig-t/tests/single:/testplan-to-mr/tests/single \
 	-v ${PWD}/input/mig-t/tests/manual:/testplan-to-mr/tests/manual \
 	-v ${PWD}/input/mig-t/configured_tests:/testplan-to-mr/configured_tests \

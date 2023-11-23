@@ -18,7 +18,7 @@ bash docker-prepare.sh
 #rm mig-t-beta-jar-with-dependencies.jar
 #cp /home/bit/FBK/mig-t/tool/target/mig-t-beta-jar-with-dependencies.jar .
 #sudo docker build -t i-mig-t .
-#cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/spid-cie-oidc-django/
+#cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/spid-cie-oidc-django/ # TODO: change to your folder
 # local build i-mig-t --------
 
 xhost +local:
