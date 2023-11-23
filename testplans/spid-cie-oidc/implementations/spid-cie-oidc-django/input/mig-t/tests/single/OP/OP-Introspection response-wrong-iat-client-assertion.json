@@ -25,17 +25,17 @@
             "message type": "Introspection request",
             "decode operations": [
               {
-                "from": "url",
-                "decode param": "client_assertion",
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
                 "type": "jwt",
                 "edits": [
                   {
                     "jwt from": "payload",
-                    "jwt edit": "iat",
+                    "jwt edit": "$.iat",
                     "value": "example"
                   },
                   {
-                    "jwt sign": "X_chiave_core_RP"
+                    "jwt sign": "X_key_core_RP"
                   }
                 ]
               }

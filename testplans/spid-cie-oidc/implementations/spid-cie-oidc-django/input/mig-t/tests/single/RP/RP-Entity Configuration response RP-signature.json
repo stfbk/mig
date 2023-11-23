@@ -21,11 +21,12 @@
                 "from": "body",
                 "decode param": "[\\s\\S]*",
                 "type": "jwt",
-                "jwt check sig": "X_chiave_RP"
+                "jwt check sig": "X_key_RP"
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

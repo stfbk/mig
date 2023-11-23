@@ -69,11 +69,12 @@
                 "from": "body",
                 "decode param": "[\\s\\S]*",
                 "type": "jwt",
-                "decode operation": [
+                "decode operations": [
                   {
                     "from": "jwt header",
                     "type": "jwt",
-                    "check": [
+                    "decode regex": ".*",
+                    "checks": [
                       {
                         "in": "payload",
                         "check regex": "given_name",

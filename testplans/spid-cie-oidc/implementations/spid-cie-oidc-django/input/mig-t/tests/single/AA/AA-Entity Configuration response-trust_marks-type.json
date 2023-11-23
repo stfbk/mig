@@ -8,7 +8,7 @@
     {
       "test": {
         "name": "Does the AA's entity configuration contain a correct trust_marks parameter",
-        "description": "To accomplish this test, the Entity configuration of the AA is taken, the payload is decoded (Base64 encoding) and the trust_marks parameter is checked, it must be a JSON array",
+        "description": "To accomplish this test, the Entity configuration of the AA is taken, the payload is decoded (Base64 encoding) and the type of the trust_marks parameter is checked. It must be an array",
         "type": "passive",
         "sessions": [
           "s1"
@@ -30,7 +30,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

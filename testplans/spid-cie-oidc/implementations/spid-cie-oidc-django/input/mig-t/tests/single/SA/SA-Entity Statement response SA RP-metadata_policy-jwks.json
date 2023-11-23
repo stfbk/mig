@@ -24,15 +24,16 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "metadata_policy.openid_relying_party.jwks",
-                    "matches regex": "^\\{(\\s*\"[^\"]*\"\\s*:\\s*(?:\"[^\"]*\",?|\\[[\\S\\s]*\\],?|\\{[\\S\\s]*\\},?)\\s*)*\\}$",
+                    "check": "$.metadata_policy.openid_relying_party.jwks",
+                    "check regex": "^\\{(\\s*\"[^\"]*\"\\s*:\\s*(?:\"[^\"]*\",?|\\[[\\S\\s]*\\],?|\\{[\\S\\s]*\\},?)\\s*)*\\}$",
                     "is present": "true"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

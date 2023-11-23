@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.id_token_signed_response_alg.subset_of",
+                    "check": "$.metadata_policy.intermediary.id_token_signed_response_alg.one_of",
                     "not contains": [
                       "none",
                       "HS256",
@@ -36,7 +36,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

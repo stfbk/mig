@@ -26,7 +26,7 @@
             "message operations": [
               {
                 "from": "body",
-                "in": "X_chiave_core_RP",
+                "in": "X_wrong_value",
                 "edit regex": "(?<=client_assertion_type=)([^&]+)"
               }
             ]

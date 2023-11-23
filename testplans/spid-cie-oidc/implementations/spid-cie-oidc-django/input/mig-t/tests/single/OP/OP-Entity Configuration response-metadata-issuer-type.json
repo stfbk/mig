@@ -24,15 +24,16 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "metadata.openid_provider.issuer",
-                    "matches regex": "https?:\\/\\/(?:www\\.)?([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)*(\\/[\\/\\d\\w\\.-]*)*([\\:\\d\\/\\w])*\"",
+                    "check": "$.metadata.openid_provider.issuer",
+                    "check regex": "https?:\\/\\/(?:www\\.)?([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)*(\\/[\\/\\d\\w\\.-]*)*([\\:\\d\\/\\w])*\"",
                     "is present": "true"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

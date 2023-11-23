@@ -39,8 +39,11 @@
             "checks": [
               {
                 "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s401",
-                "is present": "true"
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
+              },
+              {
+                "in": "body",
+                "check": "invalid_client"
               }
             ]
           }

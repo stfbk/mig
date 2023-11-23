@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the TA correctly release the Entity statements",
+        "description": "After a correct onboarding with the TA, it must publish the entity statement for the subordinate entity in its fetch endpoint. So, in this test, once correctly registered an Entity, an HTTP GET request is made to the TA's fetch endpoint, with the request containing the Entity identifier. The response is then checked and it must contain the subordinate entity's Entity Statement.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response TA OP",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

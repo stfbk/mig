@@ -25,7 +25,7 @@
                   {
                     "in": "payload",
                     "check": "$.metadata.openid_relying_party.id_token_signed_response_alg",
-                    "not contains": [
+                    "is not in": [
                       "none",
                       "HS256",
                       "HS384",
@@ -36,7 +36,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

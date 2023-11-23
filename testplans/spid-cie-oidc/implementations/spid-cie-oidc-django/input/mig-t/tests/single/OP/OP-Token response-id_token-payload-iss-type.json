@@ -1,0 +1,40 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT ID Token contain the 'iss' parameter in the Payload as an HTTP URL",
+        "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the presence of the 'iss' parameter has to be an HTTPS URL identifying the OP",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"id_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "check regex": "X_url_OP",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

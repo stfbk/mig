@@ -21,11 +21,12 @@
                 "from": "body",
                 "decode param": "(?<=\"id_token\": \")[^\"]+",
                 "type": "jwt",
-                "jwt check sig": "X_chiave_core_OP"
+                "jwt check sig": "X_key_core_OP"
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.userinfo_encrypted_response_alg.subset_of",
+                    "check": "$.metadata_policy.intermediary.userinfo_encrypted_response_alg.one_of",
                     "is subset of": [
                       "RSA-OAEP\",\"RSA-OAEP-256"
                     ]
@@ -33,7 +33,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

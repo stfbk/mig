@@ -25,9 +25,9 @@
             "message type": "Introspection request",
             "message operations": [
               {
-                "from": "url",
-                "in": "X_chiave_core_RP",
-                "edit": "token"
+                "from": "body",
+                "in": "X_not_valid_tkn",
+                "edit regex": "(?<=token=)([^&]+)"
               }
             ]
           },

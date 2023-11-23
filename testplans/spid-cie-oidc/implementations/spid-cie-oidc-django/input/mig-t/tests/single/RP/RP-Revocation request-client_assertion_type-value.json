@@ -19,12 +19,13 @@
             "checks": [
               {
                 "in": "body",
-                "is": "urn:ietf:params:oauth:clientassertion-type:jwt-bearer",
+                "is": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
                 "check": "client_assertion_type"
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

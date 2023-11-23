@@ -24,15 +24,16 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "metadata.oauth_authorization_server.issuer",
-                    "matches regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
+                    "check": "$.metadata.oauth_authorization_server.issuer",
+                    "check regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
                     "is present": "true"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

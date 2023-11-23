@@ -25,13 +25,14 @@
                   {
                     "in": "payload",
                     "check": "$.sub",
-                    "is": "X_url_OP_2"
+                    "is": "X_url_OP"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

@@ -31,11 +31,11 @@
                 "edits": [
                   {
                     "jwt from": "payload",
-                    "jwt edit": "nonce",
+                    "jwt edit": "$.nonce",
                     "value": "19az"
                   },
                   {
-                    "jwt sign": "X_chiave_RP"
+                    "jwt sign": "X_key_RP"
                   }
                 ]
               }

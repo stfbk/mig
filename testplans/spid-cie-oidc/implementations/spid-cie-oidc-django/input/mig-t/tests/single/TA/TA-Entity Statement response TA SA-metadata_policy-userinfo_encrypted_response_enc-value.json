@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.userinfo_encrypted_response_enc.subset_of",
+                    "check": "$.metadata_policy.intermediary.userinfo_encrypted_response_enc.one_of",
                     "is subset of": [
                       "A128CBC-HS256\",\"A256CBC-HS512"
                     ]
@@ -33,7 +33,8 @@
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]

@@ -46,7 +46,7 @@
                     "in": "payload",
                     "is": "auth_client_id",
                     "use variable": "true",
-                    "check": "client_id"
+                    "check param": "client_id"
                   }
                 ]
               }

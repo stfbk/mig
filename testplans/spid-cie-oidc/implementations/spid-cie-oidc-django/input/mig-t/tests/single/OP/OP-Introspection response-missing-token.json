@@ -25,9 +25,9 @@
             "message type": "Introspection request",
             "message operations": [
               {
-                "from": "url",
+                "from": "body",
                 "in": "",
-                "edit": "token"
+                "edit regex": "(?<=token=)([^&]+)"
               }
             ]
           },

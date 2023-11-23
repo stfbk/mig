@@ -24,14 +24,15 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.trust_marks_issuers",
+                    "check": "$.trust_mark_issuers",
                     "is present": "true"
                   }
                 ]
               }
             ]
           }
-        ]
+        ],
+        "result": "correct flow s1"
       }
     }
   ]
