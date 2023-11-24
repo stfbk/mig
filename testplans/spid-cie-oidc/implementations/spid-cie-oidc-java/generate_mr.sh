@@ -18,6 +18,7 @@ fi
 sudo docker run \
 	--rm \
 	-v ${PWD}/../../testplan.csv:/testplan-to-mr/input/testplan.csv \
+	-v ${PWD}/../../config/testplan-to-mr/templates/:/testplan-to-mr/input/templates/ \
 	-v ${PWD}/config/testplan-to-mr:/testplan-to-mr/config_file/ \
 	-v ${PWD}/input/mig-t/tests/single:/testplan-to-mr/tests/single \
 	-v ${PWD}/input/mig-t/tests/manual:/testplan-to-mr/tests/manual \

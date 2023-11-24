@@ -7,6 +7,9 @@ This folder contains all the testplans supported by MIG, categorized by the type
 ```
 testplans
 ├──	testplan_name
+│ 	├── config
+│ 	│   └── testplan-to-mr
+│ 	│       └── templates
 │ 	├── implementations
 │ 	│   ├── implementation_name
 │ 	│   │   ├── input
@@ -18,8 +21,7 @@ testplans
 │ 	│   │   │   ├── mig-t
 │ 	│   │   │   │   └── msg_def.json
 │ 	│   │   │   └── testplan-to-mr
-│ 	│   │   │       ├── config.json
-│ 	│   │   │       └── templates
+│ 	│   │   │       └── config_testplan.json
 │ 	│   │   └── generate_mr.sh
 ```
 
