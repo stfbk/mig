@@ -1,0 +1,46 @@
+{
+    "test": {
+      "name": "Does the TA checks Trust Marks not issued by the Entity",
+      "description": "In this test, a valid Trust Mark issued by another entity is sent to an SA or TA. If it validates the Trust Mark, than is not compliant with the specifications. (The trust marks can be validated only by the entity that issued them. So if SA1 issue a trust mark and it is sent for validation to SA2, SA2 should answer with an error)",
+      "type": "active",
+      "sessions": [
+        "s1"
+      ],
+      "operations": [
+        {
+          "session": "s1",
+          "action": "start"
+        },
+        {
+          "action": "intercept",
+          "from session": "s1",
+          "then": "forward",
+          "message type": "Trust Mark status request TA",
+          "message operations": [
+            {
+              "from": "body",
+              "in": "id",
+              "edit": "https://www.example.com/"
+            }
+          ]
+        },
+        {
+          "action": "intercept",
+          "from session": "s1",
+          "then": "forward",
+          "message type": "Trust Mark status response TA",
+          "checks": [
+            {
+              "in": "head",
+              "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+            },
+            {
+              "in": "body",
+              "check": "invalid_request"
+            }
+          ]
+        }
+      ],
+      "result": "correct flow s1"
+    }
+  }

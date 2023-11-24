@@ -1,0 +1,64 @@
+{
+    "test suite": {
+      "name": "Single test",
+      "description": "One test only",
+      "filter messages": true
+    },
+    "tests": [
+      {
+        "test": {
+          "name": "Does the Entity expose the trust mark status endpoint",
+          "description": "In order to check if the trust mark status endpoint of the AA correctly verifies valid trust marks, a valid trust mark can be sent to the endpoint and the response analyzed",
+          "type": "active",
+          "sessions": [
+            "s1"
+          ],
+          "operations": [
+            {
+              "session": "s1",
+              "action": "start"
+            },
+            {
+              "action": "intercept",
+              "from session": "s1",
+              "then": "forward",
+              "message type": "Consent Page request",
+              "session operations": [
+                {
+                  "session": "s1",
+                  "mark": "last_click",
+                  "name": "MU"
+                },
+                {
+                  "session": "s1",
+                  "remove": "(MU,ML]"
+                },
+                {
+                  "session": "s1",
+                  "insert": "X_url_trust_mark_status_AA",
+                  "at": "ML"
+                }
+              ]
+            },
+            {
+              "action": "intercept",
+              "from session": "s1",
+              "then": "forward",
+              "message type": "Trust Mark status request AA",
+              "checks": [
+                {
+                  "in": "head",
+                  "check regex": "HTTP/?\\d?\\.?\\d?\\s200"
+                },
+                {
+                  "in": "body",
+                  "check": "\"\"active\":\\s*true\""
+                }
+              ]
+            }
+          ],
+          "result": "assert_only"
+        }
+      }
+    ]
+  }

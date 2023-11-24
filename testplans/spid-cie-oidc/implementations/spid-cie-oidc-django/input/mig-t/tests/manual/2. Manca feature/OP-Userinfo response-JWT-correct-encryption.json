@@ -1,0 +1,46 @@
+{
+    "test suite": {
+      "name": "Single test",
+      "description": "One test only",
+      "filter messages": true
+    },
+    "tests": [
+      {
+        "test": {
+          "name": "Does Userinfo endpoint encrypt the JWE in the response with the RP's public key",
+          "description": "In this test the offline access flow is accomplished and a refresh token is obtained. After this, a new token request is done with \"grant_type=refresh_token\" and the refresh token inserted in the \"refresh_token\" parameter. The response must include the Access Token",
+          "type": "passive",
+          "sessions": [
+            "s1"
+          ],
+          "operations": [
+            {
+              "message type": "UserInfo response",
+              "decode operations": [
+                {
+                  "from": "body",
+                  "decode param": "[\\s\\S]*",
+                  "jwe decrypt": "X_key_jwe",
+                  "decode operations": [
+                    {
+                      "from": "body",//tool dice che non è valido e ho provato con jwt payload
+                      "type": "jwt",
+                      "decode param": "[\\s\\S]*",
+                      "checks": [
+                        {
+                          "in": "payload",
+                          "check": "...",
+                          "is": "..."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "result": "correct flow s1"
+        }
+      }
+    ]
+  }
