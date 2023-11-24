@@ -75,12 +75,13 @@ The provided Python script is creating and managing an MD file based on data sto
 
 The objective is to generate a testplan in PDF format from a human-readable testplan provided as input in CSV file format. This process involves converting the CSV file to Markdown (MD) format and subsequently to PDF. The testplan document, generated in PDF format, organizes all tests into categories based on entities. Each test provides the following information:
 
-* **UID**: Unique Identifier
 * **Title**: Name of the test
+* **UID**: Unique Identifier
+* **Description**: Description of the test
+* **Message Under test**: The location or context where the test occurs
+* **Input tester**: Input message for the test
+* **Input EUT**: Input for the environment under test
+* **Output**: Definition of the expected output of the test
 * **Profile**: The profile to which the test belongs (e.g., OIDC Core or OIDC Federation)
 * **Requirement**: The associated requirement
 * **Requirement Source**: Link to the specification
-* **Description**: Description of the test
-* **Input**: Input message for the test
-* **Output**: Definition of the expected output of the test
-* **Affected Message**: The location or context where the test occurs
