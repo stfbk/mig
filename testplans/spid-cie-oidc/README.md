@@ -171,6 +171,3 @@ line 244
 Edit the [config_testplan.json](./implementations/template/config/testplan-to-mr/config_testplan.json) file with the right private keys used and the correct url and port of your RP.
 
 You can now execute [generate_mr.sh](./implementations/template/generate_mr.sh) script, that will generate the tests inside the [tests folder](./implementations/template/input/mig-t/tests/).
-
-If the tests are not generated, check that the folder [templates](./implementations/template/config/testplan-to-mr/templates/) is present. Otherwise, copy its content from the [spid-cie-oidc-django templates folder](./implementations/spid-cie-oidc-django/config/testplan-to-mr/templates).
-<https://github.com/stfbk/mig/tree/new-rp/testplans/spid-cie-oidc/implementations/spid-cie-oidc-java>

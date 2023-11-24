@@ -13,6 +13,7 @@ import logging #used for errors
 """
 
 OUT_DIR_SINGLE = "tests/single/"
+DIR_TEMPLATES = "/testplan-to-mr/input/templates/"
 
 # Specify the input folder and output folder paths for the config
 input_folder = 'tests'
@@ -178,7 +179,7 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
         testType = [t.lower().replace(" ", "_") for t in set(table["Type"])][0]
         
         try:
-            openfile = open(os.path.join(wd, "input", "spid-cie-oidc-django", "config", "testplan-to-mr", "templates", f'{testType}-{row["Pattern name"]}.json'), 'r')
+            openfile = open(os.path.join(DIR_TEMPLATES, f'{testType}-{row["Pattern name"]}.json'), 'r')
         except(FileNotFoundError):
             log_pattern.debug(f'TemplateNotFound: {testType}-{row["Pattern name"]}.json ')
             continue
