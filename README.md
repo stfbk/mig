@@ -184,4 +184,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-Designed and developed within [Security & Trust](https://st.fbk.eu/) Research Unit at [Fondazione Bruno Kessler](https://www.fbk.eu/en/) (Italy) in collaboration with [Istituto Poligrafico e Zecca dello Stato](https://www.ipzs.it/) (Italy) and Futuro & Conoscenza.
+Designed and developed within [Security & Trust](https://st.fbk.eu/) Research Unit at [Fondazione Bruno Kessler](https://www.fbk.eu/en/) (Italy) in cooperation with [Istituto Poligrafico e Zecca dello Stato](https://www.ipzs.it/) (Italy) and Futuro & Conoscenza.
