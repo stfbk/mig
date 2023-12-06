@@ -2,7 +2,7 @@
 
 ## index
 
-- [testplan description](#testplan)
+- [Testplan description](#testplan)
 - [Adding support for your RP](#adding-support-for-your-rp)
 
 ## Testplan description
