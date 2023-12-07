@@ -21,12 +21,17 @@ RUN wget -O firefox.tar.bz2 'https://download-installer.cdn.mozilla.net/pub/fire
 	tar xvf firefox.tar.bz2 -C /opt/ &&\
 	ln -s /opt/firefox/firefox /usr/bin/firefox
 
+# Copy burp config
+COPY ./config/burp/project-options.json /opt/BurpSuiteCommunity/
+COPY ./config/burp/user-options.json /opt/BurpSuiteCommunity/
+
+# Preconfigure BurpSuite
+RUN yes | /opt/BurpSuiteCommunity/BurpSuiteCommunity --user-config-file=user-options.json --config-file=project-options.json
+
 # magic to avoid Docker caching the file even if they change
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 
 COPY ./mig-t-beta-jar-with-dependencies.jar /root/
-COPY ./config/burp/project-options.json /opt/BurpSuiteCommunity/
-COPY ./config/burp/user-options.json /opt/BurpSuiteCommunity/
 COPY ./config/mig-t/config.json /opt/BurpSuiteCommunity/
 
 # Start configuration
