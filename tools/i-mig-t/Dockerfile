@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 # Basic needs
-RUN apt update && apt install -y wget bzip2 libqt5gui5 libcanberra-gtk-module libcanberra-gtk3-module libnss3 libdbus-glib-1-2 default-jre default-jdk openjdk-18-jdk
+RUN apt update && apt install -y wget bzip2 libqt5gui5 libcanberra-gtk-module libcanberra-gtk3-module libnss3 libdbus-glib-1-2 openjdk-19-jdk
 
 ENV DISPLAY=$DISPLAY
 
@@ -26,6 +26,7 @@ COPY ./config/burp/project-options.json /opt/BurpSuiteCommunity/
 COPY ./config/burp/user-options.json /opt/BurpSuiteCommunity/
 
 # Preconfigure BurpSuite
+# TO ENABLE DEBUGGER, COMMENT THIS
 RUN yes | /opt/BurpSuiteCommunity/BurpSuiteCommunity --user-config-file=user-options.json --config-file=project-options.json
 
 # magic to avoid Docker caching the file even if they change
