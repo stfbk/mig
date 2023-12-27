@@ -1,0 +1,143 @@
+{
+  "test suite": {
+    "name": "SA",
+    "description": "SA",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the SA's trust mark status endpoint correctly refuses a not-valid id Trust Marks RP",
+        "description": "In order to check if the trust mark status endpoint of a SA correctly refuses invalid trust marks RP, a invalid trust mark can be sent to the endpoint and the response analyzed.",
+        "type": "active",
+        "sessions": [
+          "s1-logout"
+        ],
+        "operations": [
+          {
+            "session": "s1-logout",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Authentication request",
+            "session operations": [
+              {
+                "session": "s1-logout",
+                "insert": "open | http://soggetti-aggregatori.org:8004/onboarding/tools/validating-trustmark",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "wait | 3000",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "click | xpath=/html/body/div[2]/div/div/div/div/div/div/div/div/div/form/input[2]",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "wait | 4000",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "open | X_trust-mark-endpoint_SA",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "wait | 4000",
+                "at": "ML"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Validating request",
+            "message operations": [
+              {
+                "from": "url",
+                "save": "csrfmiddlewaretoken",
+                "as": "save_csrfmiddlewaretoken"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Trust Mark status request SA",
+            "message operations": [
+              {
+                "from": "head",
+                "edit regex": "GET",
+                "in": "POST"
+              },
+              {
+                "from": "head",
+                "add": "Content-Type",
+                "in": "application/x-www-form-urlencoded"
+              },
+              {
+                "from": "body",
+                "add": "id=",
+                "in": "id="
+              },
+              {
+                "from": "body",
+                "add": "id=",
+                "in": "X_wrong_url"
+              },
+              {
+                "from": "body",
+                "add": "&sub=",
+                "in": "&sub="
+              },
+              {
+                "from": "body",
+                "add": "&sub=",
+                "in": "X_url_RP"
+              },
+              {
+                "from": "body",
+                "add": "&csrfmiddlewaretoken=",
+                "in": "&csrfmiddlewaretoken="
+              },
+              {
+                "from": "body",
+                "add": "&csrfmiddlewaretoken=",
+                "use": "save_csrfmiddlewaretoken"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Trust Mark status response SA",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              },
+              {
+                "in": "body",
+                "check regex": "\"active\": false",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

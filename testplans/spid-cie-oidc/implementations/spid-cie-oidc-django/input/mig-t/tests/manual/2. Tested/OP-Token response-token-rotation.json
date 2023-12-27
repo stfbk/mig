@@ -84,7 +84,7 @@
                 "from": "body",
                 "add": "&refresh_token=",
                 "in": "&refresh_token="
-              }, 
+              },
               {
                 "from": "body",
                 "add": "(?<=refresh_token=)([^&]+)",
@@ -101,7 +101,7 @@
               {
                 "in": "body",
                 "check": "refresh_token",
-                "not is": "saved_refresh_token"
+                "is not": "saved_refresh_token"
               }
             ]
           },

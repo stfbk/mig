@@ -1,0 +1,66 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT ID Token contain a correct 'alg' parameter in the Header",
+        "description": "In this test, the ID Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. The value must be an asymmetric algorithm between those defined in the 'id_token_signing_alg_values_supported' parameter of the OP's metadata",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.id_token_signing_alg_values_supported[0]",
+                    "json schema compliant": "{\"type\": \"array\", \"items\": {\"type\": \"string\", \"enum\": [\"RS256\", \"RS512\", \"RSA-OAEP\", \"RSA-OAEP-256\", \"A128CBC-HS256\", \"A256CBC-HS512\", \"ES256\", \"ES512\", \"PS256\", \"PS512\", \"ECDH-ES\", \"ECDH-ES+A128KW\", \"ECDH-ES+A256KW\"]},\"contains\": {\"const\": \"RS256\"}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"id_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.alg",
+                    "json schema compliant": "{\"type\": \"array\", \"items\": {\"type\": \"string\", \"enum\": [\"RS256\", \"RS512\", \"RSA-OAEP\", \"RSA-OAEP-256\", \"A128CBC-HS256\", \"A256CBC-HS512\", \"ES256\", \"ES512\", \"PS256\", \"PS512\", \"ECDH-ES\", \"ECDH-ES+A128KW\", \"ECDH-ES+A256KW\"]}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

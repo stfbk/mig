@@ -12,7 +12,12 @@
     "X_https_RP": "https://relying-party.org:8001",
     "X_url_OP": "http://cie-provider.org:8002/oidc/op",
     "X_url_TA": "http://trust-anchor.org:8000",
-    "X_url_trust_mark_status_AA": "http://attribute-authority.org/trust_mark_status",
+    "X_url_SA": "http://soggetti-aggregatori.org:8004",
+    "X_trust-mark-endpoint_TA": "http://trust-anchor.org:8000/trust_mark_status",
+    "X_trust-mark-endpoint_SA": "http://soggetti-aggregatori.org:8004/trust_mark_status",
+    "X_url_revoke_TA": "http://trust-anchor.org:8000/trust_mark_revoke",
+    "X_url_revoke_SA": "http://soggetti-aggregatori.org:8004/trust_mark_revoke",
     "X_url_introspection": "http://cie-provider.org:8002/oidc/op/introspection",
-    "X_wrong_code": "wrong_code_verifier_parameter"
+    "X_wrong_code": "wrong_code_verifier_parameter",
+    "X_wrong_url": "http://example.com"
 }

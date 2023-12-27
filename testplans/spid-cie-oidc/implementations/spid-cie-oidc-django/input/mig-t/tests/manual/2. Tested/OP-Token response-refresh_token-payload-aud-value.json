@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does the issued JWT Refresh Token contain correct \"aud\" parameter in the Payload",
-        "description": "The Refresh Token present in the Token Response is analyzed and the value of the \"aud\" parameter in the Payload set to the identifier of the resource server",
+        "name": "Does the issued JWT Refresh Token contain correct 'aud' parameter in the Payload",
+        "description": "The Refresh Token present in the Token Response is analyzed and the value of the 'aud' parameter in the Payload set to the identifier of the resource server and at least the UserInfo endpoint",
         "type": "active",
         "sessions": [
           "s1"
@@ -45,12 +45,19 @@
             "action": "intercept",
             "from session": "s1",
             "then": "forward",
-            "message type": "Token request",
-            "message operations": [
+            "message type": "Entity Configuration OP response",
+            "decode operations": [
               {
                 "from": "body",
-                "save": "(?<=client_id=)[^&]+",
-                "as": "auth_client_id"
+                "decode param": "[\\s\\S]*",
+                "type": "jwt",
+                "edits": [
+                  {
+                      "jwt from": "payload",
+                      "jwt save": "$.metadata.openid_provider.token_endpoint",
+                      "as": "saved_token_endpoint"
+                  }
+                ]
               }
             ]
           },
@@ -64,12 +71,13 @@
                 "from": "body",
                 "decode param": "(?<=\"refresh_token\": \")[^\"]+",
                 "type": "jwt",
+                
                 "checks": [
                   {
-                    "use variable": true,
+                    "use variable": "true",
                     "in": "payload",
                     "check": "$.aud",
-                    "contains": "auth_client_id"
+                    "contains": "saved_token_endpoint"
                   }
                 ]
               }

@@ -7,7 +7,7 @@
     "tests": [
       {
         "test": {
-          "name": "Does Userinfo endpoint encrypt the JWE in the response with the OP's public key",
+          "name": "Does Userinfo endpoint sign the JWE in the response with the OP's private key",
           "description": "In order to guarantee integrity, the Userinfo Response's JWE must be signed with the OP's private key, so that everyone in possess of the OP's public key can decrypt it and verify that it was issued by the OP. In this test a correct request is made and the correctness of the signature of the JWE is checked using the OP's public key",
           "type": "passive",
           "sessions": [
@@ -19,22 +19,16 @@
               "decode operations": [
                 {
                   "from": "body",
+                  "type": "jwt",
                   "decode param": "[\\s\\S]*",
-                  "jwe decrypt": "X_key_jwe",
-                  "decode operations": [
-                    {
-                      "from": "body", //tool dice che non è valido e ho provato con jwt payload
-                      "type": "jwt",
-                      "decode param": "[\\s\\S]*",
-                      "jwt check sig": "X_key_OP"
-                    }
-                  ]
+                  "jwe decrypt": "X_key_core_RP"
                 }
               ]
             }
           ],
-          "result": "correct flow s1"
+          "result": "assert_only"
         }
       }
     ]
   }
+  

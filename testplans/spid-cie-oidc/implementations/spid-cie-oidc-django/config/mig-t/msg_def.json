@@ -695,8 +695,73 @@
                 },
                 {
                     "in": "head",
+                    "check regex": "POST"
+                },
+                {
+                    "in": "head",
                     "check param": "Host",
                     "contains": "cie-provider.org:8002"
+                }
+            ]
+        },
+        {
+            "name": "Echo Attribute request",
+            "is request": true,
+            "response name": "Echo Attribute response",
+            "checks": [
+                {
+                    "in": "url",
+                    "check regex": "/echo_attributes"
+                },
+                {
+                    "in": "head",
+                    "check param": "Host",
+                    "contains": "relying-party.org:8001"
+                }
+            ]
+        },
+        {
+            "name": "Trust Mark revoke request SA",
+            "is request": true,
+            "response name": "Trust Mark revoke response SA",
+            "checks": [
+                {
+                    "in": "url",
+                    "check": "/trust_mark_revoke",
+                    "is present": "true"
+                },
+                {
+                    "in": "head",
+                    "check param": "Host",
+                    "contains": "soggetti-aggregatori.org:8004"
+                }
+            ]
+        },
+        {
+            "name": "Trust Mark revoke request TA",
+            "is request": true,
+            "response name": "Trust Mark revoke response TA",
+            "checks": [
+                {
+                    "in": "url",
+                    "check": "/trust_mark_revoke",
+                    "is present": "true"
+                },
+                {
+                    "in": "head",
+                    "check param": "Host",
+                    "contains": "trust-anchor.org:8000"
+                }
+            ]
+        },
+        {
+            "name": "Validating request",
+            "is request": true,
+            "response name": "Validating response",
+            "checks": [
+                {
+                    "in": "url",
+                    "check regex": "csrfmiddlewaretoken"
                 }
             ]
         }
