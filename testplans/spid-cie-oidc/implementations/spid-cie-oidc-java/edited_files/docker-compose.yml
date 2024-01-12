@@ -49,7 +49,7 @@ services:
       - PROXY_PORT=9095
 
   cie-provider.org:
-    image: ghcr.io/italia/spid-cie-oidc-django:v1.2.0
+    #image: ghcr.io/italia/spid-cie-oidc-django:v1.2.0
     build:
       context: .
       dockerfile: ./Dockerfile
