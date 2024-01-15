@@ -1,0 +1,33 @@
+{
+  "test suite": {
+    "name": "OP",
+    "description": "OP",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does ID token payload contain a correct 'at_hash' parameter",
+        "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the value of the 'at_hash' parameter in the Payload is checked. In particular, its value must match the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the access_token value the Access Token returned with the Token ID.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "at_hash_verify": true
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

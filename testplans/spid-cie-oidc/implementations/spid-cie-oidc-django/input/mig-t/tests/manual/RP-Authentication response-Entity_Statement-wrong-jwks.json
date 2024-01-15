@@ -1,0 +1,57 @@
+{
+  "test suite": {
+    "name": "RP",
+    "description": "RP",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP request the OP's Entity Statement to validate the OP's Entity Configuration",
+        "description": "In order to check if the RP verifies the OP's Entity Configuration with the keys sent in the ES, once the RP asks for the Entity Statement, the TA's Entity Statement in response could have a (wrong) public key that is different from the one that can be found in the OP's EC (ES keys should be wrong). After this, an authentication request with that OP is made and, if the response contains the code parameter, the RP is either using the public keys present in the Entity Configuration (not reliable) or not checking the signature at all.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt sign": "X_wrong_key"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check param": "Location",
+                "not contains": "code"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
+}

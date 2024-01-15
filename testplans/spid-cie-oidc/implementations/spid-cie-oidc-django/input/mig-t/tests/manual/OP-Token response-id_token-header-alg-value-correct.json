@@ -28,11 +28,11 @@
                 "from": "body",
                 "decode param": "[\\s\\S]*",
                 "type": "jwt",
-                "checks": [
+                "edits": [
                   {
-                    "in": "payload",
-                    "check": "$.metadata.openid_provider.id_token_signing_alg_values_supported[0]",
-                    "json schema compliant": "{\"type\": \"array\", \"items\": {\"type\": \"string\", \"enum\": [\"RS256\", \"RS512\", \"RSA-OAEP\", \"RSA-OAEP-256\", \"A128CBC-HS256\", \"A256CBC-HS512\", \"ES256\", \"ES512\", \"PS256\", \"PS512\", \"ECDH-ES\", \"ECDH-ES+A128KW\", \"ECDH-ES+A256KW\"]},\"contains\": {\"const\": \"RS256\"}}"
+                    "jwt from": "payload",
+                    "jwt save": "$.metadata.openid_provider.id_token_signing_alg_values_supported",
+                    "as": "valid_alg"
                   }
                 ]
               }
@@ -50,9 +50,10 @@
                 "type": "jwt",
                 "checks": [
                   {
+                    "use variable": "true",
                     "in": "header",
                     "check": "$.alg",
-                    "json schema compliant": "{\"type\": \"array\", \"items\": {\"type\": \"string\", \"enum\": [\"RS256\", \"RS512\", \"RSA-OAEP\", \"RSA-OAEP-256\", \"A128CBC-HS256\", \"A256CBC-HS512\", \"ES256\", \"ES512\", \"PS256\", \"PS512\", \"ECDH-ES\", \"ECDH-ES+A128KW\", \"ECDH-ES+A256KW\"]}}"
+                    "is in": "valid_alg"
                   }
                 ]
               }
