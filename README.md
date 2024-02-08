@@ -60,14 +60,13 @@ MIG currently supports the spid-cie-oidc testplan along with the implementation 
 
 ## Definitions
 
-* __session__: is a list of user actions which can be seen as a UI integration test that testers use to create for web applications and which inherits the Selenium engine and its primitives. 
+* __session__: is a list of user actions which can be seen as a UI integration test that testers use to create for web applications and which inherits the Selenium engine and its primitives.
 
 * __human readable test__: test cases or test specifications that are defined in a way that can be easily understood by humans, particularly testers, developers, project managers, and other stakeholders who may not have specialized technical knowledge. The human readable version of the tests prioritize clarity, simplicity, and comprehensibility, making them accessible to a broad audience without the need for deep technical expertise.
 
 * __machine readable test__: test cases or test specifications that are formatted and structured in a way that can be interpreted, and executed by automated testing tools, scripts, or software programs. These tests are designed in JSON format and ready to be parsed and executed by [MIG-T](tools/mig-t).
 
 ## Using MIG
-
 
 ### To get started with MIG-T
 
@@ -84,7 +83,6 @@ Please follow the guidelines reported [here](/tools/testplan-to-mr/readme.md).
 
 Please follow the instructions reported [here](/tools/testplan-to-pdf/readme.md).
 
-
 ## Contributing
 
 Our project welcomes contributions from various types of users, each with unique ways to contribute. We appreciate contributions from users of all types, and together, we can make our project even better! Here's a list of potential user types and the guidelines on the actions they can take to participate in our project:
@@ -94,9 +92,9 @@ Our project welcomes contributions from various types of users, each with unique
 <details>
 <summary>Instructions</summary>
 
-- To get started, follow the instructions to run `i-mig-t`.
-- In `\testplans\spid-cie-oidc\implementations\spid-cie-oidc-django\input\mig-t\tests`, you can find a list of all available and supported machine-readable tests.
-- In `\testplans\spid-cie-oidc\implementations\spid-cie-oidc-django\input\mig-t\sessions`, you can find related sessions.
+* To get started, follow the instructions to run `i-mig-t`.
+* In [testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/input/mig-t/tests/](testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/input/mig-t/tests), you can find a list of all available and supported machine-readable tests.
+* In [testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/input/mig-t/sessions/](/testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/input/mig-t/sessions), you can find related sessions.
 
 </details>
 
@@ -114,9 +112,9 @@ A guide on how to add your RP to the testing environment can be found [here](tes
 <details>
 <summary>Instructions</summary>
 
-- To contribute a test plan for a different IdM protocol, please adhere to the repository's structure within the `testplan` folder.
-- Create a `readme.md` file containing information about the test plan you wish to add.
-- The added test plan file should have a `.csv` extension and include all the columns specified in the `\testplans\spid-cie-oidc\Testplan - SPID CIE OIDC v2.0.csv` file.
+To contribute a test plan for a different IdM protocol, please adhere to the [repository's structure](testplans/README.md#folder-structure) within the `testplan` folder.
+* Create a `readme.md` file containing information about the test plan you wish to add.
+* The added test plan file should have a `.csv` extension and include all the columns specified in the [testplan.csv](testplans/spid-cie-oidc/testplan.csv) file.
 
 </details>
 
@@ -125,19 +123,21 @@ A guide on how to add your RP to the testing environment can be found [here](tes
 <details>
 <summary>Instructions</summary>
 
-- To propose changes or enhancements to the existing SPID/CIE OIDC test plan located in `\testplans\spid-cie-oidc\`, kindly initiate discussions by creating issues directly within the repository or submitting a pull request.
+To propose changes or enhancements to the existing SPID/CIE OIDC test plan located in [/testplans/spid-cie-oidc/](/testplans/spid-cie-oidc/), kindly initiate discussions by creating issues directly within the repository or by submitting a pull request.
 
 </details>
 
-### User who wants to modify the tool
+### User who wants to modify MIG and mig-t
 
 <details>
 <summary>Instructions</summary>
-    
-- To facilitate improvements or modifications to MIG, consider the following options:
-  - Initiate discussions by opening issues to propose new features or report any identified bugs.
-  - Actively participate in improving the source code by submitting a pull request.
-- To contribute to `mig-t`, please consult its dedicated [repository](https://github.com/stfbk/mig-t).
+
+To facilitate improvements or modifications to MIG, consider the following options:
+
+* Initiate discussions by opening issues to propose new features or report any identified bugs.
+* Actively participate in improving the source code by submitting a pull request.
+
+To contribute to `mig-t`, please consult its dedicated [repository](https://github.com/stfbk/mig-t).
 
 </details>
 
@@ -145,11 +145,10 @@ A guide on how to add your RP to the testing environment can be found [here](tes
 
 <details>
 <summary>Instructions</summary>
-    
-- For contributions falling into a category not mentioned above, feel free to reach out to us at a.bisegna@fbk.eu through our communication channels. We welcome all forms of contribution and collaboration.
+
+* For contributions falling into a category not mentioned above, feel free to reach out to us at <a.bisegna@fbk.eu> through our communication channels. We welcome all forms of contribution and collaboration.
 
 </details>
-
 
 ## Credits
 
@@ -184,4 +183,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-Designed and developed within [Security & Trust](https://st.fbk.eu/) Research Unit at [Fondazione Bruno Kessler](https://www.fbk.eu/en/) (Italy) in collaboration with [Istituto Poligrafico e Zecca dello Stato](https://www.ipzs.it/) (Italy) and Futuro & Conoscenza.
+Designed and developed within [Security & Trust](https://st.fbk.eu/) Research Unit at [Fondazione Bruno Kessler](https://www.fbk.eu/en/) (Italy) in cooperation with [Istituto Poligrafico e Zecca dello Stato](https://www.ipzs.it/) (Italy) and Futuro & Conoscenza.

@@ -4,11 +4,10 @@ cd $(dirname "$0") # Go to directory containing script
 
 # clone and build spid-cie-oidc-django ---
 git clone https://github.com/italia/spid-cie-oidc-django.git
-cd spid-cie-oidc-django/
-git checkout 7e15d4b2b96c805208395ce66ab98465fe0d1463
-cd ..
 rm ./spid-cie-oidc-django/docker-compose.yml
 cp edited_files/docker-compose.yml ./spid-cie-oidc-django/
+rm ./spid-cie-oidc-django/Dockerfile
+cp edited_files/Dockerfile ./spid-cie-oidc-django/
 rm ./spid-cie-oidc-django/examples/federation_authority/dumps/examples.json
 cp edited_files/example.json ./spid-cie-oidc-django/examples/federation_authority/dumps/
 cd spid-cie-oidc-django
@@ -27,6 +26,8 @@ cd ../../../../spid-cie-oidc-django
 
 # local build i-mig-t --------
 cd ../../../../../tools/i-mig-t
+# rm mig-t-beta-jar-with-dependencies.jar
+# bash mig-t-jar-compile.sh # To complie mig-t to the last version
 sudo docker build -t i-mig-t .
 cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-java/spid-cie-oidc-django/
 # local build i-mig-t --------
