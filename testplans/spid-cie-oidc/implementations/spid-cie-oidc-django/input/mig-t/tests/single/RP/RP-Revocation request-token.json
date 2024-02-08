@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is present": "true",
-                "check": "token"
+                "check regex": "token"
               }
             ]
           }

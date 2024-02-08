@@ -44,9 +44,9 @@
                 "checks": [
                   {
                     "in": "payload",
+                    "check": "scope",
                     "is": "auth_scope",
-                    "use variable": "true",
-                    "check param": "scope"
+                    "use variable": "true"
                   }
                 ]
               }

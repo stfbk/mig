@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is present": "true",
-                "check": "client_assertion_type"
+                "check regex": "client_assertion_type"
               }
             ]
           }

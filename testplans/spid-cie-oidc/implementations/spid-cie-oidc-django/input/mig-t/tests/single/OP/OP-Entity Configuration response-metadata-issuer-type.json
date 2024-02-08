@@ -19,14 +19,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata.openid_provider.issuer",
-                    "check regex": "https?:\\/\\/(?:www\\.)?([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)*(\\/[\\/\\d\\w\\.-]*)*([\\:\\d\\/\\w])*\"",
-                    "is present": "true"
+                    "check": "$.metadata.openid_provider",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"issuer\":{\"type\":\"string\", \"format\":\"uri\"}},\"required\":[\"issuer\"]}"
                   }
                 ]
               }

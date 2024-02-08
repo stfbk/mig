@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is": "Bearer",
-                "check": "token_type"
+                "check regex": "token_type"
               }
             ]
           }

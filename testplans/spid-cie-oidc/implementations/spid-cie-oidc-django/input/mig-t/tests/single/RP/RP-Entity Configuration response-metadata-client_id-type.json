@@ -19,14 +19,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata.openid_relying_party.client_id",
-                    "check regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
-                    "is present": "true"
+                    "check": "$.metadata.openid_relying_party",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"client_id\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"client_id\"]})"
                   }
                 ]
               }

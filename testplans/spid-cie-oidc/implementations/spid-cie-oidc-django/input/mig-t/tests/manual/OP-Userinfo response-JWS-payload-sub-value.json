@@ -48,18 +48,17 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode param": "[\\s\\S]*",
-                    "force regex": true,
+                    "decode regex": "[^\\n\\r]*",
                     "type": "jwt",
                     "checks": [
                       {
                         "use variable": "true",
                         "in": "payload",
-                        "check regex": "sub",
+                        "check": "sub",
                         "contains": "saved_sub"
                       }
                     ]

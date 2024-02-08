@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-                "check": "client_assertion_type"
+                "check regex": "client_assertion_type"
               }
             ]
           }

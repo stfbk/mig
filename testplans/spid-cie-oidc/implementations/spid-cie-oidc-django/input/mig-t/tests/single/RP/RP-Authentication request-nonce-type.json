@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"nonce\":\"([a-zA-Z0-9]{32})\""
+                    "check regex": "\"nonce\":\"(^[\\x00-\\x7F]{32,})$\""
                   }
                 ]
               }

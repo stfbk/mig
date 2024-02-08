@@ -44,9 +44,9 @@
                 "checks": [
                   {
                     "in": "payload",
+                    "check": "client_id",
                     "is": "auth_client_id",
-                    "use variable": "true",
-                    "check param": "client_id"
+                    "use variable": "true"
                   }
                 ]
               }

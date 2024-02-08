@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is": "true",
-                "check": "active"
+                "check regex": "active"
               }
             ]
           }

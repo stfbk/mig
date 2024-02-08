@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is present": "true",
-                "check": "client_id"
+                "check regex": "client_id"
               }
             ]
           }

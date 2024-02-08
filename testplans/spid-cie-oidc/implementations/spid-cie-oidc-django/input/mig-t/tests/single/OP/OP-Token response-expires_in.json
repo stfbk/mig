@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is present": "true",
-                "check": "expires_in"
+                "check regex": "expires_in"
               }
             ]
           }

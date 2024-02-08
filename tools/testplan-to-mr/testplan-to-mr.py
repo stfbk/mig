@@ -204,7 +204,7 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
                 flag = False
                 var = "var"+str(index) if index < 10 else "var_"+str(index)
                 if "body" in message_split and item == "body":
-                    _check_key_exists(template, "key_"+var, "check")
+                    _check_key_exists(template, "key_"+var, "check regex")
                     _check_key_exists(template, "edit_"+var, "edit regex")
                 else:
                     _check_key_exists(template, "key_"+var, "check param")

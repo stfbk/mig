@@ -19,14 +19,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata.federation_entity.logo_uri",
-                    "check regex": "https:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)",
-                    "is present": "true"
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"logo_uri\"]})"
                   }
                 ]
               }

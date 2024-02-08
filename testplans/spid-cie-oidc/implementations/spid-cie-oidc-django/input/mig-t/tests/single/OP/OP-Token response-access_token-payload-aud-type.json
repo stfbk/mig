@@ -24,9 +24,8 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.aud",
-                    "check regex": "^\\[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
-                    "is present": "true"
+                    "check": "$",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"aud\":{\"type\":\"array\"}},\"required\":[\"aud\"]}"
                   }
                 ]
               }

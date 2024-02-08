@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is": "X_https_RP",
-                "check": "client_id"
+                "check regex": "client_id"
               }
             ]
           }

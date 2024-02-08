@@ -8,7 +8,7 @@
     {
       "test": {
         "name": "Does the UserInfo Response's JWE contain a correct alg parameter in the JOSE Header",
-        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'alg' parameter containing a value among ['RS256', 'RS512'] in the JOSE header, then it is compliant with the specification",
+        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'alg' parameter containing a value among ['RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A256KW'] in the JOSE header, then it is compliant with the specification",
         "type": "passive",
         "sessions": [
           "s1"
@@ -26,10 +26,7 @@
                   {
                     "in": "header",
                     "check": "$.alg",
-                    "is in": [
-                      "RS256",
-                      "RS512"
-                    ]
+                    "is in": "['RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A256KW']"
                   }
                 ]
               }

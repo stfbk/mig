@@ -37,7 +37,7 @@
             "checks": [
               {
                 "in": "var9",
-                "key_var6": "var_10",
+                "check": "var_10",
                 "is": "var5",
                 "use variable": "true"
               }

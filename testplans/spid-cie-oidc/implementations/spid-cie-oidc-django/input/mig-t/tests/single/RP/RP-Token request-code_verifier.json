@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is present": "true",
-                "check": "code_verifier"
+                "check regex": "code_verifier"
               }
             ]
           }

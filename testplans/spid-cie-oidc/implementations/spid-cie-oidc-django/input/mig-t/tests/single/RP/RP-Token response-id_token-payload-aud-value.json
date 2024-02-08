@@ -22,17 +22,17 @@
             "action": "intercept",
             "from session": "s1",
             "then": "forward",
-            "message type": "saved_iss",
+            "message type": "Entity Configuration response RP",
             "decode operations": [
               {
-                "from": "Token response",
-                "decode param": "body",
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "edits": [
                   {
-                    "jwt from": "(?<=\"id_token\": \")[^\"]+",
-                    "jwt save": "$.payload",
-                    "as": "aud[0]"
+                    "jwt from": "payload",
+                    "jwt save": "$.iss",
+                    "as": "saved_iss"
                   }
                 ]
               }
@@ -42,18 +42,18 @@
             "action": "intercept",
             "from session": "s1",
             "then": "forward",
-            "message type": "Entity Configuration response RP",
+            "message type": "Token response",
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "(?<=\"id_token\": \")[^\"]+",
                 "type": "jwt",
                 "checks": [
                   {
                     "use variable": "true",
                     "in": "payload",
-                    "check": "$.iss",
-                    "contains": "aud[0]"
+                    "check": "$.aud[0]",
+                    "contains": "saved_iss"
                   }
                 ]
               }

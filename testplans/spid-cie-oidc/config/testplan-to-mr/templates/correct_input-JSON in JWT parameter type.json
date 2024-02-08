@@ -17,15 +17,14 @@
             "checks": [
               {
                 "in": "var5",
-                "check": "$.var6",
-                "check regex": "var7",
-                "is present": "true"
+                "check": "$var6",
+                "json schema compliant": "var7"
               }
             ]
           }
         ]
       }
-		],
-		"result": "correct flow s1"
-	}
+    ],
+    "result": "correct flow s1"
+  }
 }

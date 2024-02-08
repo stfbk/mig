@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "is present": "true",
-                "check": "grant_type"
+                "check regex": "grant_type"
               }
             ]
           }
