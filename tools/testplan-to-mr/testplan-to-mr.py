@@ -6,6 +6,7 @@ import pandas as pd
 import regex as re
 import json
 import logging #used for errors
+import argparse
 
 """
     Idea: there is a test suite created for each entity and for each type. 
@@ -16,8 +17,8 @@ OUT_DIR_SINGLE = "tests/single/"
 DIR_TEMPLATES = "/testplan-to-mr/input/templates/"
 
 # Specify the input folder and output folder paths for the config
-input_folder = 'tests'
-output_folder = 'configured_tests'
+INPUT_TEST = 'tests'
+OUTPUT_TEST = 'configured_tests'
 
 #System function - shouldn't need update as the table changed.
 def handle_exception(exc_type, exc_value, exc_traceback):
@@ -87,8 +88,8 @@ def _check_value_exists(d: dict, old_value:str, new_value):
                 if isinstance(item, str) and old_value in item:
                     v[index] = item.replace(old_value, new_value)
 
-def traverse_folder(folder_path, output_folder, substitutions):
-    for root, dirs, files in os.walk(folder_path):
+def _traverse_folder(substitutions):
+    for root, dirs, files in os.walk(INPUT_TEST):
         for file in files:
             if file.endswith('.json'):
                 file_path = os.path.join(root, file)
@@ -105,12 +106,22 @@ def traverse_folder(folder_path, output_folder, substitutions):
                 for key, value in substitutions.items():
                     _check_value_exists(data, key, value)
 
-                # Create the output file path
-                output_file_path = os.path.join(output_folder, (file_path.split("tests/",1)[1]))
+                # Create the output file path that copies the input
+                output_file_path = os.path.join(OUTPUT_TEST, (file_path.split(INPUT_TEST,1)[1]).lstrip(os.path.sep))
                 _create_if_not_exist(os.path.dirname(output_file_path))
 
                 with open(output_file_path, 'w') as output_file:
                     json.dump(data, output_file, indent=2)
+
+def config_for_implementation():
+    # Load JSON config file
+    with open('config_file/config_testplan.json', 'r') as f:
+        substitutions = json.load(f)
+    
+    _create_if_not_exist(OUTPUT_TEST)
+
+    # Call the function to traverse the folder and modify the JSON files
+    _traverse_folder(substitutions)
 
 def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
     """
@@ -245,16 +256,6 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
     
     return tests, count_test
 
-def config_for_implementation():
-    # Load JSON config file
-    with open('config_file/config_testplan.json', 'r') as f:
-        substitutions = json.load(f)
-    
-    _create_if_not_exist(output_folder)
-
-    # Call the function to traverse the folder and modify the JSON files
-    traverse_folder(input_folder, output_folder, substitutions)
-
 def generate_mr():
     #Returns a dataframe
     df_tests = pd.read_csv(os.path.join(wd, "input", "testplan.csv"))
@@ -298,11 +299,21 @@ if __name__ == "__main__":
 
     sys.excepthook = handle_exception
 
-    _create_if_not_exist(OUT_DIR_SINGLE)
+    parser = argparse.ArgumentParser()
 
-    generate_mr()
-    print("Generated tests")
-    config_for_implementation()
-    print("Configured tests")
+    # Add the --justFill flag with 2 args <input><output>
+    parser.add_argument('--justFill', nargs=1, help='Specify input_path of test, the script will traverse folder for json')
+
+    args = parser.parse_args()
+    if args.justFill:
+        INPUT_TEST = args.justFill[0]
+        config_for_implementation()
+        print("Configured tests")
+    else:
+        _create_if_not_exist(OUT_DIR_SINGLE)
+        generate_mr()
+        print("Generated tests")
+        config_for_implementation()
+        print("Configured tests")
 
     print("END.")

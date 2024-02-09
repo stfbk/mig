@@ -9,11 +9,31 @@ if [ ! -d "testplan-to-mr" ]; then
 	cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-django
 fi
 
+#Check if the flag exist
+justFillFlag=""
+while [[ $# -gt 0 ]]; do
+	key="$1"
+	case $key in
+		--justFill)
+			justFillFlag="--justFill $2"
+			folder_path="$2"
+			shift 2
+			;;
+	esac
+done
+
+#Add the volume only if exist
+volume_mount=""
+if [ -n "$justFillFlag" ]; then
+	volume_mount="-v ${PWD}/$folder_path:/testplan-to-mr/$folder_path"
+fi
+
 #First volume is for **/../testplan.csv** and **/config/testplan-to-mr/templates** input
-#Second is for **/config_testplan.json** input
-#Third is for output of **/input/mig-t/tests/single** file
-#Fourth is for output of **/input/mig-t/tests/manual** file
-#Fifth is for output of **/input/mig-t/tests/configured_tests** tests
+#Second is for the **templates**
+#Third is for **/config_testplan.json** input
+#Fourth is for output of **/input/mig-t/tests/single** file
+#Fifth is for output of **/input/mig-t/tests/manual** file
+#Sixth is for output of **/input/mig-t/tests/configured_tests** tests
 
 docker run \
 	--rm \
@@ -23,6 +43,7 @@ docker run \
 	-v ${PWD}/input/mig-t/tests/single:/testplan-to-mr/tests/single \
 	-v ${PWD}/input/mig-t/tests/manual:/testplan-to-mr/tests/manual \
 	-v ${PWD}/input/mig-t/configured_tests:/testplan-to-mr/configured_tests \
-	testplan-to-mr 
+	$volume_mount \
+	testplan-to-mr /bin/bash -c "python testplan-to-mr.py $justFillFlag"
 
 wait
