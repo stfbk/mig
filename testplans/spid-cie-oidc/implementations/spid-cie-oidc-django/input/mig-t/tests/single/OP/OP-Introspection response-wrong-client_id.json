@@ -11,7 +11,7 @@
         "description": "To test if an OP verifies the presence of the client id of the RP in the Introspection request, a request with a wrong client id (not present in the federation) is sent and the response is analyzed.",
         "type": "active",
         "sessions": [
-          "s1"
+          "s_CIE_introsp"
         ],
         "operations": [
           {

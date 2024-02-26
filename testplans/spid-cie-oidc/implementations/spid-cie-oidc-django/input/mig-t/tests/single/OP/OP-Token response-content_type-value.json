@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "head",
-                "is": "application/json",
-                "check param": "Content-Type"
+                "check": "Content-Type",
+                "is": "application/json"
               }
             ]
           }

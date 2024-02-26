@@ -11,7 +11,7 @@
         "description": "The Introspection request made by the RP is taken and the value of the client_assertion_type parameter is urn:ietf:params:oauth:clientassertion-type:jwt-bearer",
         "type": "passive",
         "sessions": [
-          "s1"
+          "s_CIE_introsp"
         ],
         "operations": [
           {
@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "body",
-                "is": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-                "check regex": "client_assertion_type"
+                "check": "client_assertion_type",
+                "is": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
               }
             ]
           }

@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "body",
-                "is": "Bearer",
-                "check regex": "token_type"
+                "check": "token_type",
+                "is": "Bearer"
               }
             ]
           }

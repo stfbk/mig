@@ -20,7 +20,7 @@
               {
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "decode operation": [
                   {
                     "from": "jwt payload",
@@ -29,7 +29,7 @@
                     "check": [
                       {
                         "in": "payload",
-                        "check regex": "claims.^\\{(\\s*\"[^\"]*\"\\s*:\\s*(?:\"[^\"]*\",?|\\[[\\S\\s]*\\],?|\\{[\\S\\s]*\\},?)\\s*)*\\}$"
+                        "check regex": "claims.^\\{(\\s*\"[^\"]*\"\\s*:\\s*(?:\"[^\"]*\",?|\\[[^\\n\\r]*\\],?|\\{[^\\n\\r]*\\},?)\\s*)*\\}$"
                       }
                     ]
                   }

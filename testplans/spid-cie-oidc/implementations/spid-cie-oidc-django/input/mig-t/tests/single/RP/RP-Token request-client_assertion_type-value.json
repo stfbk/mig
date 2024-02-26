@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "body",
-                "is": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-                "check regex": "client_assertion_type"
+                "check": "client_assertion_type",
+                "is": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
               }
             ]
           }

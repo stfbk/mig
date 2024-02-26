@@ -11,7 +11,7 @@
         "description": "The Introspection request made by the RP is taken and the value of the client_id parameter is an URI",
         "type": "passive",
         "sessions": [
-          "s1"
+          "s_CIE_introsp"
         ],
         "operations": [
           {

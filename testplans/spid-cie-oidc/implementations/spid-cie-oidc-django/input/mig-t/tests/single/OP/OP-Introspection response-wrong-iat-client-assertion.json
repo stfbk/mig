@@ -11,7 +11,7 @@
         "description": "Since the OP has to verify the client assertion in the Introspection Request, this test consist in intercepting a legitimate request, take the JWT of the client assertion and modify the iat of it in order to make it wrong",
         "type": "active",
         "sessions": [
-          "s1"
+          "s_CIE_introsp"
         ],
         "operations": [
           {

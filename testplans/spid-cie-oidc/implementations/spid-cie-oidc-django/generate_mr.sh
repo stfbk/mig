@@ -11,13 +11,27 @@ fi
 
 #Check if the flag exist
 justFillFlag=""
+djangoFlag=""
 while [[ $# -gt 0 ]]; do
 	key="$1"
 	case $key in
 		--justFill)
-			justFillFlag="--justFill $2"
-			folder_path="$2"
-			shift 2
+			if [[ -n "$2" ]]; then
+				justFillFlag="--justFill $2"
+				folder_path="$2"
+				shift 2
+			else
+				echo "Error: Missing argument for --justFill"
+				exit 1
+			fi
+			;;
+		--django)
+			djangoFlag="--django"
+			shift
+			;;
+		*)
+			echo "Error: Unknown option $key"
+			exit 1
 			;;
 	esac
 done
@@ -44,6 +58,6 @@ docker run \
 	-v ${PWD}/input/mig-t/tests/manual:/testplan-to-mr/tests/manual \
 	-v ${PWD}/input/mig-t/configured_tests:/testplan-to-mr/configured_tests \
 	$volume_mount \
-	testplan-to-mr /bin/bash -c "python testplan-to-mr.py $justFillFlag"
+	testplan-to-mr /bin/bash -c "python testplan-to-mr.py $justFillFlag $djangoFlag"
 
 wait

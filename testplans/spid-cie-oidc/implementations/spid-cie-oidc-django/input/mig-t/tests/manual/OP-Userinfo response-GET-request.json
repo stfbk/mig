@@ -67,7 +67,7 @@
               {
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "decode operations": [
                   {

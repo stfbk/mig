@@ -3,10 +3,8 @@
     "name": "var0",
     "description": "var1",
     "type": "passive",
-    "sessions": [
-      "s1"
-    ],
-    "operations": [ 
+    "sessions": "session0",
+    "operations": [
       {
         "message type": "var2",
         "decode operations": [

@@ -19,7 +19,7 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {

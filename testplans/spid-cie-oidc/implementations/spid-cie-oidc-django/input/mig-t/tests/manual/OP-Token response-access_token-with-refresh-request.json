@@ -16,7 +16,7 @@
         ],
         "operations": [
           {
-            "session": "s1-1",
+            "session": "s1.1",
             "action": "start"
           },
           {
@@ -78,7 +78,7 @@
                 "from": "body",
                 "add": "&refresh_token=",
                 "in": "&refresh_token="
-              }, 
+              },
               {
                 "from": "body",
                 "add": "(?<=refresh_token=)([^&]+)",

@@ -11,7 +11,7 @@
         "description": "Since the OP has to verify the client assertion in the Introspection Request, this test consist in sending a request with a wrong the parameter in the JWT present in the client_assertion parameter of the request and adapt the signature to make it correct. If the OP accepts the request anyway, then it does not verify the JWT.",
         "type": "active",
         "sessions": [
-          "s1"
+          "s_CIE_introsp"
         ],
         "operations": [
           {

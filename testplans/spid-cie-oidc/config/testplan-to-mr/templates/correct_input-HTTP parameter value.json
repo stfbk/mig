@@ -3,16 +3,14 @@
 		"name": "var0",
 		"description": "var1",
 		"type": "passive",
-		"sessions": [
-			"s1"
-		],
+		"sessions": "session0",
 		"operations": [
 			{
 				"message type": "var2",
 				"checks": [
 					{
 						"in": "var3",
-						"key_var3": "var4",
+						"check": "var4",
 						"is": "var5"
 					}
 				]

@@ -20,7 +20,7 @@
               {
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "decode operation": [
                   {
                     "jwt from": "jwt payload",
