@@ -170,4 +170,7 @@ line 244
 
 Edit the [config_testplan.json](./implementations/template/config/testplan-to-mr/config_testplan.json) file with the right private keys used and the correct url and port of your RP.
 
-You can now execute [generate_mr.sh](./implementations/template/generate_mr.sh) script, that will generate the tests inside the [tests folder](./implementations/template/input/mig-t/tests/).
+You can now execute [generate_mr.sh](./implementations/template/generate_mr.sh) script, that will generate the tests inside the [tests folder](./implementations/template/input/mig-t/tests/). This script offers two optional command-line options to customize the test generation process:
+
+1. `--justFill <input_path>`. This flag enables the script to only populate the testplans, from the provided input_path folder, with the information extracted from the configuration file.
+2. `--django`. This flag includes additional information related to the Django session in the generated tests.

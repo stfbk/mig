@@ -43,6 +43,11 @@ docker run \
 
 Otherwise, inside each implementation you can find a generate_mr.sh file that will convert the given testplan to mr.
 
+Furthermore, this script offers two optional command-line options, that can be added in the execution of either docker or bash script, to customize the test generation process:
+
+1. `--justFill <input_path>`. This flag enables the script to only populate the testplans, from the provided input_path folder, with the information extracted from the configuration file.
+2. `--django`. This flag includes additional information related to the Django session in the generated tests.
+
 ## Detailed description
 
 ### Dockerfile description
