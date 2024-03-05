@@ -19,14 +19,17 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
                     "check": "$.metadata.oauth_authorization_server.token_endpoint_auth_signing_alg_values_supported.one_of",
                     "not contains": [
-                      "none\",\"HS256\",\"HS384\",\"HS512"
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
                     ]
                   }
                 ]

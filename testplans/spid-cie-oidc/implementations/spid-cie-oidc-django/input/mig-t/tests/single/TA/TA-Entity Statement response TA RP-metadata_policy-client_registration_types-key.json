@@ -19,12 +19,12 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.openid_relying_party.client_registration_types.one_of",
+                    "check": "$.metadata_policy.openid_relying_party.client_registration_types.subset_of",
                     "is present": "true"
                   }
                 ]

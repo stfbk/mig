@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"state\":\"(^[\\x00-\\x7F]{32,})$\""
+                    "check regex": "\"state\":\"[\\x20-\\x7E]{32,}\""
                   }
                 ]
               }

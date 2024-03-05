@@ -19,14 +19,15 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
                     "check": "$.metadata_policy.intermediary.grant_types.subset_of",
                     "is subset of": [
-                      "authorization_code\",\"refresh_toke"
+                      "authorization_code",
+                      "refresh_toke"
                     ]
                   }
                 ]

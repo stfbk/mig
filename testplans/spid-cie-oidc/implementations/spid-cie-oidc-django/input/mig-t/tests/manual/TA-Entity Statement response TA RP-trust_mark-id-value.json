@@ -21,12 +21,12 @@
                 "from": "body",
                 "type": "jwt",
                 "decode param": "[^\\n\\r]*",
-                "decode operation": [
+                "decode operations": [
                   {
                     "jwt from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
+                    "checks": [
                       {
                         "in": "payload",
                         "check": "$.id",

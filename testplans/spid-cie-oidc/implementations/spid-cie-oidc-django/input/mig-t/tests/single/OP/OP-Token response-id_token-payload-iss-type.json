@@ -24,8 +24,8 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.iss",
-                    "json schema compliant": "X_url_OP"
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iss\": {\"type\": \"string\", \"const\": \"http://cie-provider.org:8002/oidc/op\"}}, \"required\":[\"iss\"]})"
                   }
                 ]
               }

@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "",
-        "description": "",
+        "name": "Does the Introspection Endpoint Response have the active parameter",
+        "description": "To test that the Introspection response of the OP's correctly answers to valid tokens, a valid one is sent and the response is analyzed. It must contain the 'active' parameter",
         "type": "passive",
         "sessions": [
           "s_CIE_introsp"

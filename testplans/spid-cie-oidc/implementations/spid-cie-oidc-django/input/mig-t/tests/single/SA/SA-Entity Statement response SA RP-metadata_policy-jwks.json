@@ -25,7 +25,7 @@
                   {
                     "in": "payload",
                     "check": "$.metadata_policy.openid_relying_party.jwks",
-                    "json schema compliant": "{\"type\":\"object\"}"
+                    "json schema compliant": "{\"type\":\"object\", \"properties\": {\"value\" :{}}, \"required\": [\"value\"]}"
                   }
                 ]
               }

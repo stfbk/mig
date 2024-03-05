@@ -25,7 +25,7 @@
                   {
                     "in": "payload",
                     "check": "$.metadata.openid_relying_party.response_types",
-                    "json schema compliant": "{\"type\":\"object\",\"properties\":{\"response_types\":{\"type\":\"array\"}},\"required\":[\"response_types\"]}"
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"response_types\": {\"type\": \"array\"}}, \"required\": [\"response_types\"]}"
                   }
                 ]
               }

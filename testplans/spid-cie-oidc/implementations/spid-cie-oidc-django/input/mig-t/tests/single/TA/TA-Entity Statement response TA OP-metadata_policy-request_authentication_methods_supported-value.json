@@ -19,15 +19,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.openid_provider.request_authentication_methods_supported.one_of",
-                    "is subset of": [
-                      "request_object"
-                    ]
+                    "check": "$.metadata_policy.openid_provider.request_authentication_methods_supported",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"value\": {\"const\": \"request_object\"}}, \"required\": [\"value\"]}"
                   }
                 ]
               }

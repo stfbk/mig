@@ -27,7 +27,7 @@
               {
                 "from": "url",
                 "in": "",
-                "edit regex": "(?<=request=\\S{90}\\.\\S{1200})\\S*"
+                "edit regex": "(?<=request=\\S{90}\\.\\S{1199})\\S*"
               }
             ]
           },

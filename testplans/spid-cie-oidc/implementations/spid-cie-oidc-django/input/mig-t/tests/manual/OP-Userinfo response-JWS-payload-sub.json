@@ -25,7 +25,7 @@
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode param": "[^\\n\\r]*",
+                    "decode regex": "[^\\n\\r]*",
                     "type": "jwt",
                     "checks": [
                       {

@@ -35,7 +35,7 @@
                     "value": ""
                   },
                   {
-                    "jwt sign": "X_chiave_RP"
+                    "jwt sign": "X_key_RP"
                   }
                 ]
               }

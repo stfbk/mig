@@ -26,7 +26,7 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "type": "jwt",
                 "edits": [
                   {

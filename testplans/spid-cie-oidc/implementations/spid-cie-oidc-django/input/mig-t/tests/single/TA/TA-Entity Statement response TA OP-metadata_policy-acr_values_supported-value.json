@@ -19,14 +19,15 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
                     "check": "$.metadata_policy.intermediary.acr_values_supported.subset_of",
                     "is subset of": [
-                      "https://www.spid.gov.it/SpidL1\",\"https://www.spid.gov.it/SpidL2",
+                      "https://www.spid.gov.it/SpidL1",
+                      "https://www.spid.gov.it/SpidL2",
                       "https://www.spid.gov.it/SpidL3"
                     ]
                   }

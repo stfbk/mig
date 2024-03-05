@@ -1,0 +1,41 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the TA's metadata policy for an SA contain a correct response_types parameter key",
+        "description": "In order to check the compliance of a metadata policy issued by the TA, an entity statement for an SA must be fetched in the TA's fetch endpoint. Once obtained the entity statement, the metadata_policy parameter is taken and the presence of the response_types parameter inside the intermediary type is checked. It must contain the key 'value' with value 'code'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response TA SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata_policy.openid_relying_party.response_types.value",
+                    "is subset of": [
+                      "code"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

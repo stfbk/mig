@@ -35,7 +35,7 @@
                     "value": "consent"
                   },
                   {
-                    "jwt sign": "X_chiave_RP"
+                    "jwt sign": "X_key_core_RP"
                   }
                 ]
               }
@@ -64,7 +64,7 @@
                     "value": "consent"
                   },
                   {
-                    "jwt sign": "X_chiave_RP"
+                    "jwt sign": "X_key_core_RP"
                   }
                 ]
               }

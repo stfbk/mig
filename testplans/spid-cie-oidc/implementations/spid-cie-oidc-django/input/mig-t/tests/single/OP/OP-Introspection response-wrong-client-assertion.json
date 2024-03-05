@@ -42,7 +42,7 @@
                 "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
               },
               {
-                "in": "head",
+                "in": "body",
                 "check": "invalid_request"
               }
             ]
