@@ -1,163 +1,163 @@
 {
-    "test suite": {
-        "name": "TA",
-        "description": "TA",
-        "filter messages": true
-    },
-    "tests": [
-        {
-            "test": {
-                "name": "Does the TA Trust Mark Status endpoint effectively verify valid Trust Marks of RP",
-                "description": "To check if the trust mark status endpoint accurately verifies valid trust marks, valid trust marks obtained directly from the RP Entity Configuration response can be sent to the endpoint dynamically according to the 'iss' of the trust mark, and the response can be analyzed.",
-                "type": "active",
-                "sessions": [
-                    "s1-logout"
-                ],
-                "operations": [
-                    {
-                        "session": "s1-logout",
-                        "action": "start"
-                    },
-                    {
-                        "action": "intercept",
-                        "from session": "s1-logout",
-                        "then": "forward",
-                        "message type": "Entity Configuration response OP",
-                        "decode operations": [
-                            {
-                                "from": "body",
-                                "type": "jwt",
-                                "decode param": "[^\\n\\r]*",
-                                "edits": [
-                                    {
-                                        "jwt from": "payload",
-                                        "jwt save": "$.trust_marks[0].id",
-                                        "as": "saved_id"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "action": "intercept",
-                        "from session": "s1-logout",
-                        "then": "forward",
-                        "message type": "Authentication request",
-                        "session operations": [
-                            {
-                                "session": "s1-logout",
-                                "insert": "open | http://trust-anchor.org:8000/onboarding/tools/validating-trustmark",
-                                "at": "ML"
-                            },
-                            {
-                                "session": "s1-logout",
-                                "insert": "wait | 3000",
-                                "at": "ML"
-                            },
-                            {
-                                "session": "s1-logout",
-                                "insert": "click | xpath=/html/body/div[2]/div/div/div/div/div/div/div/div/div/form/input[2]",
-                                "at": "ML"
-                            },
-                            {
-                                "session": "s1-logout",
-                                "insert": "wait | 4000",
-                                "at": "ML"
-                            },
-                            {
-                                "session": "s1-logout",
-                                "insert": "open | X_trust-mark-endpoint_TA",
-                                "at": "ML"
-                            },
-                            {
-                                "session": "s1-logout",
-                                "insert": "wait | 4000",
-                                "at": "ML"
-                            }
-                        ]
-                    },
-                    {
-                        "action": "intercept",
-                        "from session": "s1-logout",
-                        "then": "forward",
-                        "message type": "Validating request",
-                        "message operations": [
-                            {
-                                "from": "url",
-                                "save": "csrfmiddlewaretoken",
-                                "as": "save_csrfmiddlewaretoken"
-                            }
-                        ]
-                    },
-                    {
-                        "action": "intercept",
-                        "from session": "s1-logout",
-                        "then": "forward",
-                        "message type": "Trust Mark status request TA",
-                        "message operations": [
-                            {
-                                "from": "head",
-                                "edit regex": "GET",
-                                "in": "POST"
-                            },
-                            {
-                                "from": "head",
-                                "add": "Content-Type",
-                                "in": "application/x-www-form-urlencoded"
-                            },
-                            {
-                                "from": "body",
-                                "add": "id=",
-                                "in": "id="
-                            },
-                            {
-                                "from": "body",
-                                "add": "id=",
-                                "use": "saved_id"
-                            },
-                            {
-                                "from": "body",
-                                "add": "&sub=",
-                                "in": "&sub="
-                            },
-                            {
-                                "from": "body",
-                                "add": "&sub=",
-                                "in": "X_url_RP"
-                            },
-                            {
-                                "from": "body",
-                                "add": "&csrfmiddlewaretoken=",
-                                "in": "&csrfmiddlewaretoken="
-                            },
-                            {
-                                "from": "body",
-                                "add": "&csrfmiddlewaretoken=",
-                                "use": "save_csrfmiddlewaretoken"
-                            }
-                        ]
-                    },
-                    {
-                        "action": "intercept",
-                        "from session": "s1-logout",
-                        "then": "forward",
-                        "message type": "Trust Mark status response TA",
-                        "checks": [
-                            {
-                                "in": "head",
-                                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                                "is present": "true"
-                            },
-                            {
-                                "in": "body",
-                                "check regex": "\"active\": true",
-                                "is present": "true"
-                            }
-                        ]
-                    }
-                ],
-                "result": "assert_only"
-            }
-        }
-    ]
+  "test suite": {
+    "name": "TA",
+    "description": "TA",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the TA Trust Mark Status endpoint effectively verify valid Trust Marks of RP",
+        "description": "To check if the trust mark status endpoint accurately verifies valid trust marks, valid trust marks obtained directly from the RP Entity Configuration response can be sent to the endpoint dynamically according to the 'iss' of the trust mark, and the response can be analyzed.",
+        "type": "active",
+        "sessions": [
+          "s1-logout"
+        ],
+        "operations": [
+          {
+            "session": "s1-logout",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\n\\r]*",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.trust_marks[0].id",
+                    "as": "saved_id"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Authentication request",
+            "session operations": [
+              {
+                "session": "s1-logout",
+                "insert": "open | X_url_TA/onboarding/tools/validating-trustmark",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "wait | 3000",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "click | xpath=/html/body/div[2]/div/div/div/div/div/div/div/div/div/form/input[2]",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "wait | 4000",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "open | X_trust-mark-endpoint_TA",
+                "at": "ML"
+              },
+              {
+                "session": "s1-logout",
+                "insert": "wait | 4000",
+                "at": "ML"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Validating request",
+            "message operations": [
+              {
+                "from": "url",
+                "save": "csrfmiddlewaretoken",
+                "as": "save_csrfmiddlewaretoken"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Trust Mark status request TA",
+            "edit operations": [
+              {
+                "from": "head",
+                "edit regex": "GET",
+                "value": "POST"
+              },
+              {
+                "from": "head",
+                "add": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "id="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "saved_id"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&sub="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "X_url_RP"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&csrfmiddlewaretoken="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "save_csrfmiddlewaretoken"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Trust Mark status response TA",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              },
+              {
+                "in": "body",
+                "check regex": "\"active\": true",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "assert_only"
+      }
+    }
+  ]
 }

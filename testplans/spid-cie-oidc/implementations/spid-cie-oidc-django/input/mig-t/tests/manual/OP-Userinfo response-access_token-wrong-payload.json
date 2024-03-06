@@ -39,7 +39,10 @@
                   }
                 ]
               }
-            ]
+            ],
+            "at_hash_update": {
+              "sign key": "X_key_core_OP"
+            }
           },
           {
             "action": "intercept",

@@ -74,11 +74,11 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Token request",
-            "edit operation": [
+            "edit operations": [
               {
                 "from": "body",
-                "edit": "(?<=grant_type=)([^&]+)",
-                "in": "grant_type=refresh_token"
+                "edit regex": "(?<=grant_type=)([^&\\n]+)",
+                "value": "refresh_token"
               },
               {
                 "from": "body",

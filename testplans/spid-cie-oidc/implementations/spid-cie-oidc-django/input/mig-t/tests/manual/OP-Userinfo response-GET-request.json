@@ -23,12 +23,14 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Authentication request",
-            "decode operations": [
+            "edit operations": [
               {
                 "from": "url",
                 "edit": "scope",
-                "in": "openid profile"
-              },
+                "value": "openid profile"
+              }
+            ],
+            "decode operations": [
               {
                 "from": "url",
                 "type": "jwt",
@@ -67,32 +69,32 @@
               {
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "type": "jwt",
                 "decode operations": [
                   {
-                    "from": "jwt header",
+                    "from": "jwt payload",
                     "type": "jwt",
-                    "decode regex": ".*",
+                    "decode regex": "[^\\n\\r]*",
                     "checks": [
                       {
                         "in": "payload",
-                        "check regex": "given_name",
+                        "check": "given_name",
                         "is present": "true"
                       },
                       {
                         "in": "payload",
-                        "check regex": "family_name",
+                        "check": "family_name",
                         "is present": "true"
                       },
                       {
                         "in": "payload",
-                        "check regex": "birthdate",
+                        "check": "birthdate",
                         "is present": "true"
                       },
                       {
                         "in": "payload",
-                        "check regex": "https://attributes.spid.gov.it/fiscal_number",
+                        "check": "https://attributes.eid.gov.it/fiscal_number",
                         "is present": "true"
                       }
                     ]

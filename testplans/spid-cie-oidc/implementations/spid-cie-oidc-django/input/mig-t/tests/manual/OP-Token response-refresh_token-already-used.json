@@ -69,11 +69,11 @@
             "from session": "s1.1",
             "then": "forward",
             "message type": "Token request",
-            "edit operation": [
+            "edit operations": [
               {
                 "from": "body",
-                "edit": "(?<=grant_type=)([^&\\n]+)",
-                "in": "grant_type=refresh_token"
+                "edit regex": "(?<=grant_type=)([^&\\n]+)",
+                "value": "refresh_token"
               },
               {
                 "from": "body",
@@ -106,11 +106,11 @@
             "from session": "s1.2",
             "then": "forward",
             "message type": "Token request",
-            "edit operation": [
+            "edit operations": [
               {
                 "from": "body",
-                "edit": "(?<=grant_type=)([^&\\n]+)",
-                "in": "grant_type=refresh_token"
+                "edit regex": "(?<=grant_type=)([^&\\n]+)",
+                "value": "refresh_token"
               },
               {
                 "from": "body",
