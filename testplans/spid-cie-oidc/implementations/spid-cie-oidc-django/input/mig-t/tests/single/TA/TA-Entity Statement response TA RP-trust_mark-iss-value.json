@@ -53,7 +53,7 @@
                     "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
+                    "checks": [
                       {
                         "use variable": "true",
                         "in": "payload",

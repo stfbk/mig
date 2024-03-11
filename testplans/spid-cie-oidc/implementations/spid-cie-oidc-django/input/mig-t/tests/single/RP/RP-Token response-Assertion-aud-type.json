@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does the issued JWT ID Token contain a correct 'sub' parameter in the Payload",
-        "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the 'sub' parameter is checked to be a string",
+        "name": "Does the signed JWT assertion contain a correct aud claim",
+        "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking the aud. Its value must be an URL",
         "type": "passive",
         "sessions": [
           "s1"
@@ -19,13 +19,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "(?<=\"id_token\": \")[^\"]+",
+                "decode param": "(?<=client_assertion=)([^&]+)",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
                     "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\": {\"type\": \"string\", \"pattern\": \"^[0-9a-f]{64}$\"}}, \"required\": [\"sub\"]}"
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"aud\": {\"type\": \"string\", \"format\": \"uri-reference\"}}, \"required\": [\"aud\"]}"
                   }
                 ]
               }

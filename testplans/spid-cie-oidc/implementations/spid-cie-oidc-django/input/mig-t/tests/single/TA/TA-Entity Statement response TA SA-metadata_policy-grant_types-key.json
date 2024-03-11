@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$metadata_policy.intermediary.grant_types",
+                    "check": "$.metadata_policy.intermediary.grant_types",
                     "json schema compliant": "{\"type\": \"object\", \"properties\": {\"subset_of\": {}, \"superset_of\": {}}, \"required\": [\"subset_of\"], [\"superset_of\"]}"
                   }
                 ]
@@ -32,7 +32,9 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

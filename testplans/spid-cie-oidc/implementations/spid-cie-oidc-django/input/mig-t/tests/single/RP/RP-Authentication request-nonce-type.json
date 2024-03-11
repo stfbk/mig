@@ -24,14 +24,17 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"nonce\":\"[\\x20-\\x7E]{32,}\""
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"nonce\": {\"type\": \"string\", \"pattern\": \"^[\\u0020-\\u007E]{32,}$\"}}, \"required\": [\"nonce\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

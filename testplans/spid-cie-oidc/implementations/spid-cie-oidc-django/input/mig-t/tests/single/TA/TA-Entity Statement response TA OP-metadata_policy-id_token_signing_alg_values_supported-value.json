@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.id_token_signing_alg_values_supported.one_of",
+                    "check": "$..metadata_policy.intermediary.id_token_signing_alg_values_supported.one_of",
                     "is subset of": [
                       "RS256",
                       "RS512"

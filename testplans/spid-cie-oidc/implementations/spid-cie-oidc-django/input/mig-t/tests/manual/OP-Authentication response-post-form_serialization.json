@@ -36,6 +36,11 @@
               },
               {
                 "from": "url",
+                "save": "response_type=",
+                "as": "saved_response_type"
+              },
+              {
+                "from": "url",
                 "save": "code_challenge",
                 "as": "saved_code_challenge"
               },
@@ -93,7 +98,7 @@
               {
                 "from": "body",
                 "add": "",
-                "use": "saved_client_id"
+                "use": "http%3A%2F%2Frelying-party.org%3A8001"
               },
               {
                 "from": "body",
@@ -103,7 +108,17 @@
               {
                 "from": "body",
                 "add": "",
-                "use": "saved_scope"
+                "value": "openid+offline_access"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&response_type="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "saved_response_type"
               },
               {
                 "from": "body",

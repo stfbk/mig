@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata.openid_relying_party.response_types",
+                    "check": "$.metadata.openid_relying_party",
                     "json schema compliant": "{\"type\": \"object\", \"properties\": {\"response_types\": {\"type\": \"array\"}}, \"required\": [\"response_types\"]}"
                   }
                 ]
@@ -32,7 +32,9 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

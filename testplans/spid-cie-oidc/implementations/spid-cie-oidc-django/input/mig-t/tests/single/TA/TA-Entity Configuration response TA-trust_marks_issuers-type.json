@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does TA's Entity configuration's trust_marks_issuers parameter contain a JSON Array",
-        "description": "To accomplish this test, the Entity configuration of the TA is taken, the payload is decoded (Base64 encoding) and the trust_marks_issuers parameter must be a JSON Array.",
+        "name": "Does TA's Entity configuration's trust_mark_issuers parameter contain a JSON Array",
+        "description": "To accomplish this test, the Entity configuration of the TA is taken, the payload is decoded (Base64 encoding) and the trust_mark_issuers parameter must be a JSON Array.",
         "type": "passive",
         "sessions": [
           "s1"
@@ -24,14 +24,17 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"trust_marks_issuers\":\\s*((?:\\{\\s*|\\s*,\\s*)\"([^\\[\\]]+)\"\\s*:\\s*(\\[[^\\]]+\\])(?:\\s*\\s*|\\s*))*\\}"
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"trust_mark_issuers\": {\"type\": \"object\", \"additionalProperties\": {\"type\": \"array\"}}}, \"required\": [\"trust_mark_issuers\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

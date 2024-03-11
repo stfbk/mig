@@ -24,14 +24,17 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"aud\":\\s*\\[\\s*\"(https?:\\/\\/(www\\\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*))\"\\s*(,\\s*\"(https?:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*))\"\\s*)*\\]"
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"aud\": {\"type\": \"array\", \"format\": \"uri-reference\"}}, \"required\": [\"aud\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

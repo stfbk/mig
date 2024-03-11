@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$metadata_policy.intermediary.id_token_signing_alg_values_supported",
+                    "check": "$.metadata_policy.intermediary.id_token_signing_alg_values_supported",
                     "json schema compliant": "{\"type\": \"object\", \"properties\": {\"subset_of\": {}, \"superset_of\": {}}, \"required\": [\"subset_of\", \"superset_of\"]}"
                   }
                 ]
@@ -32,7 +32,9 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

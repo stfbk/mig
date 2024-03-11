@@ -24,6 +24,23 @@
             ]
         },
         {
+            "name": "Authorization request",
+            "is request": true,
+            "response name": "Authorization response",
+            "checks": [
+                {
+                    "in": "body",
+                    "check regex": "username",
+                    "is present": "true"
+                },
+                {
+                    "in": "body",
+                    "check regex": "password",
+                    "is present": "true"
+                }
+            ]
+        },
+        {
             "name": "Token request",
             "is request": true,
             "response name": "Token response",
