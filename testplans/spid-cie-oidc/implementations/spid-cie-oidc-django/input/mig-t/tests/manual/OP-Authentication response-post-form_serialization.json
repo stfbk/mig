@@ -11,16 +11,22 @@
         "description": "An authentication request is sent with the POST method and the parameters (scope, code_challenge, code_challenge_method and request) are inserted in the body of the request, using the application/x-www-form-urlencoded format",
         "type": "active",
         "sessions": [
-          "s1"
+          "s1_login"
         ],
         "operations": [
           {
-            "session": "s1",
+            "session": "s1_login",
             "action": "start"
           },
           {
             "action": "intercept",
-            "from session": "s1",
+            "from session": "s1_login",
+            "then": "forward",
+            "message type": "Authentication request"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1_login",
             "then": "forward",
             "message type": "Authentication request",
             "message operations": [
@@ -53,6 +59,11 @@
                 "from": "url",
                 "save": "request",
                 "as": "saved_request"
+              },
+              {
+                "from": "head",
+                "save match": "(?<=Cookie: csrftoken=)[^$]+",
+                "as": "saved_csrf"
               }
             ],
             "edit operations": [
@@ -91,6 +102,11 @@
                 "value": "application/x-www-form-urlencoded"
               },
               {
+                "from": "head",
+                "add": "X-CSRFToken",
+                "use": "saved_csrf"
+              },
+              {
                 "from": "body",
                 "add": "",
                 "value": "client_id="
@@ -98,7 +114,7 @@
               {
                 "from": "body",
                 "add": "",
-                "use": "http%3A%2F%2Frelying-party.org%3A8001"
+                "use": "saved_client_id"
               },
               {
                 "from": "body",
@@ -108,7 +124,7 @@
               {
                 "from": "body",
                 "add": "",
-                "value": "openid+offline_access"
+                "use": "saved_scope"
               },
               {
                 "from": "body",

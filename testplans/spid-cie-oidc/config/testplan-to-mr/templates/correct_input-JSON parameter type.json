@@ -1,0 +1,21 @@
+{
+	"test": {
+		"name": "var0",
+		"description": "var1",
+		"type": "passive",
+		"sessions": "session0",
+		"operations": [
+			{
+				"message type": "var2",
+				"checks": [
+					{
+						"in": "var3",
+						"check": "$var4",
+						"json schema compliant": "var5"
+					}
+				]
+			}
+		],
+		"result": "correct flow s1"
+	}
+}

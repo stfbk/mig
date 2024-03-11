@@ -14,11 +14,11 @@
         "from session": "s1",
         "then": "forward",
         "message type": "var2",
-        "message operations": [
+        "edit operations": [
           {
             "from": "var3",
             "edit_var3": "var4",
-            "in": "var5"
+            "value": "var5"
           }
         ]
       },

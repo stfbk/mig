@@ -7,428 +7,6 @@
   "tests": [
     {
       "test": {
-        "name": "Does the entity return a correct Content-Type in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "checks": [
-              {
-                "in": "head",
-                "url decode": false,
-                "is": "application/entity-statement+jwt",
-                "check param": "Content-Type"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Content-Type of the UserInfo response set to 'application/jwt'",
-        "description": "The Content-Type of the UserInfo response must be set to 'application/jwt' ",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "UserInfo response",
-            "checks": [
-              {
-                "in": "head",
-                "url decode": false,
-                "is": "application/jwt",
-                "check param": "Content-Type"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued JWT Access Token contain a correct 'alg' parameter in the Header",
-        "description": "In this test, the Access Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. The value must be a supported asymmetric algorithm between ['RS256', 'RS512']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=\"access_token\": \")[^\"]+",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "header",
-                    "check": "$.alg",
-                    "is in": [
-                      "RS256",
-                      "RS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued JWT Access Token contain a wrong 'alg' parameter in the Header",
-        "description": "In this test, the Access Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. If its value is set to none, contains values among ['none', 'HS256', 'HS384', 'HS512'], is absent or contains a symmetric algorithm, than the Access Token is not compliant.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=\"access_token\": \")[^\"]+",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "header",
-                    "check": "$.alg",
-                    "is not in": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued JWT ID Token contain a wrong 'alg' parameter in the Header",
-        "description": "In this test, the ID Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. If its value is set to none, contains values among ['none', 'HS256', 'HS384', 'HS512'], is absent or contains a symmetric algorithm, than the ID Token is not compliant.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=\"id_token\": \")[^\"]+",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "header",
-                    "check": "$.alg",
-                    "is not in": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP metadata contain an incorrect id_token_encryption_alg_values_supported claim in the openid_provider subclaim",
-        "description": "In this test the OP metadata are taken and the value of the 'id_token_encryption_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the value ['RSA_1_5']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_provider.id_token_encryption_alg_values_supported",
-                    "not contains": [
-                      "RSA_1_5"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP metadata contain incorrect id_token_signing_alg_values_supported claim in the openid_provider subclaim",
-        "description": "In this test the OP metadata are taken and the value of the 'id_token_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_provider.id_token_signing_alg_values_supported",
-                    "not contains": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP metadata contain incorrect request_object_signing_alg_values_supported claim in the openid_provider subclaim",
-        "description": "In this test the OP metadata are taken and the value of the 'request_object_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_provider.request_object_signing_alg_values_supported",
-                    "not contains": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP metadata contain incorrect userinfo_encryption_alg_values_supported claim in the openid_provider subclaim",
-        "description": "In this test the OP metadata are taken and the value of the 'userinfo_encryption_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['RSA_1_5']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_provider.userinfo_encryption_alg_values_supported",
-                    "not contains": [
-                      "RSA_1_5"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP metadata contain incorrect userinfo_signing_alg_values_supported claim in the openid_provider subclaim",
-        "description": "In this test the OP metadata are taken and the value of the 'userinfo_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_provider.userinfo_signing_alg_values_supported",
-                    "not contains": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity correctly sign the Entity Configuration",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken and the three parts of the JWT (header, payload and signature) are base64url decoded. Finally, the signature is validated passing the public key (n, e of jwks parameter that must be taken from the Entity Statement of a superior), the JWS Signature (received signature base64url decoded) and the JWS signing input (header and payload base64url encoded and concatenated with a dot dividing them) to a signature verifier configured for the algorithm described in the Entity Configuration Header",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "jwt check sig": "X_key_OP"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP correctly sign the Access Token",
-        "description": "Tokens issued by an OP must have the structure of JWT Tokens. In particular, this structure is composed by three base64url encoded strings separated by dots, namely the header, payload and signature. The signature is made using the OP's private key, in such a way to be decrypted using its public key. In this test a normal flow is performed and the obtained Access Token is analyzed. In order to test if the OP correctly signed the signature part of the JWT, the access token is passed to a signature verifier correctly configured",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=\"access_token\": \")[^\"]+",
-                "type": "jwt",
-                "jwt check sig": "X_key_core_OP"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP correctly sign the ID Token",
-        "description": "Tokens issued by an OP must have the structure of JWT Tokens. In particular, this structure is composed by three base64url encoded strings separated by dots, namely the header, payload and signature. The signature is made using the OP's private key, in such a way to be decrypted using its public key. In this test a normal flow is performed and the obtained ID Token is analyzed. In order to test if the OP correctly signed the signature part of the JWT, the third part of the string is taken and passed to a signature verifier correctly configured",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=\"id_token\": \")[^\"]+",
-                "type": "jwt",
-                "jwt check sig": "X_key_core_OP"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration OP contain a correct sub parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the sub parameter is checked. Its value must be equal to the one in the iss parameter",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.sub",
-                    "is": "X_url_OP"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
         "name": "Does the OP metadata contain correct acr_values_supported claim in the openid_provider subclaim",
         "description": "In this test the OP metadata are taken and the value of the 'acr_values_supported' in the 'openid_provider' subclaim (metadata type) parameter is checked to be [https://www.spid.gov.it/SpidL1, https://www.spid.gov.it/SpidL2, https://www.spid.gov.it/SpidL3]",
         "type": "passive",
@@ -1855,8 +1433,8 @@
     },
     {
       "test": {
-        "name": "Does the UserInfo Response's JWE contain a correct alg parameter in the JOSE Header",
-        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'alg' parameter containing a value among ['RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A256KW'] in the JOSE header, then it is compliant with the specification",
+        "name": "Does the UserInfo Response's JWE contain a correct cty parameter in the JOSE Header",
+        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'cty' parameter set to 'JWT' in the JOSE header, then it is compliant with the specification",
         "type": "passive",
         "sessions": [
           "s1"
@@ -1873,48 +1451,8 @@
                 "checks": [
                   {
                     "in": "header",
-                    "check": "$.alg",
-                    "is in": [
-                      "RSA-OAEP",
-                      "RSA-OAEP-256",
-                      "ECDH-ES",
-                      "ECDH-ES+A128KW",
-                      "ECDH-ES+A256KW"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the UserInfo Response's JWE contain a correct enc parameter in the JOSE Header",
-        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'enc' parameter containing a value among ['A128CBC-HS256', 'A256CBC-HS512'] in the JOSE header, then it is compliant with the specification",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "UserInfo response",
-            "decode operations": [
-              {
-                "jwe decrypt": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5d8kD7BOVMIDg\nV2ygTSpl+YoiB52Zquu1aBBsSUptaD1ENHtnwlUFpEsWrDJ/IbUkkWbrgbnVwEnA\nsgXBagXufGwf1VgubmhyMCexHhGGV9UTTL/rTCN/yyQmAFGmJdA+XAf2MMZqpUT8\n8QFM5sM7nDdei6sPUXfrT6/lwsMtEd0UkiK10RW2oBOpjkOCVENoqIGGKztrn/Vu\nTzf08MtpCGO7hcmTi28PLn4tWQzLmw/bNTr7W0l0D5WZoFktfL2fT3rsUYhaYzOl\np+sEw64cVxQ4fnqj5yUNqH8IhMfV2rYPrgrQxiESkAI7anwAfgrxDpi4nV2eRUMP\nBmnYLzixAgMBAAECggEBAJ/3jyuQ3TsagK3++bQxmlYmK1w6kVZPM8pdnXyookdH\nV0CSu7W8ybR6BkHh+BPrMN//gXOzimOw3GwVoB04ozEVo/S5ALvbgr6qhjGgK6Fh\n9GgXFJmQLDY3MlCMid/yUXDX1A4l951YOu6nuGVpzA6IKMGlWb92lyYgryhPGiSu\nAVf5xdzbeUes1GKY2UPE9Rg2Qld782t6oJQ613vM6HPqfHC7N6yZ+7TFUiVc5wiK\njn3jNVSINCN59m7m2DsfPLHJB7g53104kw5cquSMA8gR5oiHt36bvnOHtbYgZmzn\n9iKgwml/EnaZ1NoE4/WJWbUTapodzQf65LASli897iECgYEA5PA7lJEDd3vrw5hl\nolFzvjvRriOu1SMHXx9Y52AgpOeQ6MnE1pO8qwn33lwYTSPGYinaq4jS3FKF/U5v\nOZltJAGBMa4ByEvAROJVCh958rKVRWKIqVXLOi8Gk11kHbVKw6oDXAd8Qt/y/ff8\nk/K6jW2EbWm1K6kfTvTMzoHkqrUCgYEAz2QeMH4WtrdiWUET7JgZNX0TbcaVBgd2\nGpo8JHnfnGOUsvO/euKGgqpCcxiWVXSlqffQyTgVzl4iMROP8bEaQwvueHurtziM\nDSy9Suumyktu3PbGgjqu/izRim8Xlg7sz8Hs2quJPII/fQ8BCoaWpg30osFZqCBa\nrQM7CWhxR40CgYA3CVWZap8lu0G7XMiaE/C6O9E1htiB3pDoGjYaMW7Hle+tNsw+\nNXf2uke/Se6BpOcNNDigYh0m4CPb+F4ev7aQIFh5o/ZDu4o2RR7idxyu7qWZ740h\nAEIB88ol5R6rUajujtGN7zK9NO9KhLJQstqMI1bhorbuDxM6vPj7cBiTvQKBgQDJ\nfuJ+BuOWntHlGf97rcNAXsdTrs73TqSG8Ddi0S5ayb2dqIjvoctChJ2PKeJWIMEc\nRHQMLHuzR2489F60WnfDkIIfeTi7CSu5WTCI7C/e+C88bF8uBEolFfJ4Z7soxlN6\n/1Val7L8oSeCH+PJED6qE4EN6IFtghHXav4fA+SbuQKBgQCNy7q3MoBOxDlKOpSN\nChoYUfW0JvwJbyyaVYOVq0efGVobosAblE/IuwaoIuVgh8c4T3qZtwFcSpvfR5Qy\nSOWFs2QXN/P4ZvmiVpXK/9Tcnth2BThpb9apQCT2a/CYtrRiGNAVWKiK0U9QlN/w\n9fVBO/ZgdaXE4xqYOSceH14yrQ==\n-----END PRIVATE KEY-----\n",
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "header",
-                    "check": "$.enc",
-                    "is in": [
-                      "A128CBC-HS256",
-                      "A256CBC-HS512"
-                    ]
+                    "check": "$.cty",
+                    "is": "JWT"
                   }
                 ]
               }
@@ -2050,8 +1588,8 @@
     },
     {
       "test": {
-        "name": "Does the Content-Type in a token response set correctly?",
-        "description": "This test verifies the head Content-Type set to application/json in the token response.",
+        "name": "Does the issued JWT Access Token contain a correct 'alg' parameter in the Header",
+        "description": "In this test, the Access Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. The value must be a supported asymmetric algorithm between ['RS256', 'RS512']",
         "type": "passive",
         "sessions": [
           "s1"
@@ -2059,11 +1597,21 @@
         "operations": [
           {
             "message type": "Token response",
-            "checks": [
+            "decode operations": [
               {
-                "in": "head",
-                "check": "Content-Type",
-                "is": "application/json"
+                "from": "body",
+                "decode param": "(?<=\"access_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.alg",
+                    "is in": [
+                      "RS256",
+                      "RS512"
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -2073,8 +1621,44 @@
     },
     {
       "test": {
-        "name": "Does the token_type of a token response set correctly?",
-        "description": "This test verifies whether the token_type of a token response is Bearer.",
+        "name": "Does the UserInfo Response's JWE contain a correct alg parameter in the JOSE Header",
+        "description": "In this test, the JWE is taken from the Userinfo Response's body, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. If its value is set to none, contains values among ['none', 'HS256', 'HS384', 'HS512'], is absent or contains a symmetric algorithm, than the Token is not compliant.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5d8kD7BOVMIDg\nV2ygTSpl+YoiB52Zquu1aBBsSUptaD1ENHtnwlUFpEsWrDJ/IbUkkWbrgbnVwEnA\nsgXBagXufGwf1VgubmhyMCexHhGGV9UTTL/rTCN/yyQmAFGmJdA+XAf2MMZqpUT8\n8QFM5sM7nDdei6sPUXfrT6/lwsMtEd0UkiK10RW2oBOpjkOCVENoqIGGKztrn/Vu\nTzf08MtpCGO7hcmTi28PLn4tWQzLmw/bNTr7W0l0D5WZoFktfL2fT3rsUYhaYzOl\np+sEw64cVxQ4fnqj5yUNqH8IhMfV2rYPrgrQxiESkAI7anwAfgrxDpi4nV2eRUMP\nBmnYLzixAgMBAAECggEBAJ/3jyuQ3TsagK3++bQxmlYmK1w6kVZPM8pdnXyookdH\nV0CSu7W8ybR6BkHh+BPrMN//gXOzimOw3GwVoB04ozEVo/S5ALvbgr6qhjGgK6Fh\n9GgXFJmQLDY3MlCMid/yUXDX1A4l951YOu6nuGVpzA6IKMGlWb92lyYgryhPGiSu\nAVf5xdzbeUes1GKY2UPE9Rg2Qld782t6oJQ613vM6HPqfHC7N6yZ+7TFUiVc5wiK\njn3jNVSINCN59m7m2DsfPLHJB7g53104kw5cquSMA8gR5oiHt36bvnOHtbYgZmzn\n9iKgwml/EnaZ1NoE4/WJWbUTapodzQf65LASli897iECgYEA5PA7lJEDd3vrw5hl\nolFzvjvRriOu1SMHXx9Y52AgpOeQ6MnE1pO8qwn33lwYTSPGYinaq4jS3FKF/U5v\nOZltJAGBMa4ByEvAROJVCh958rKVRWKIqVXLOi8Gk11kHbVKw6oDXAd8Qt/y/ff8\nk/K6jW2EbWm1K6kfTvTMzoHkqrUCgYEAz2QeMH4WtrdiWUET7JgZNX0TbcaVBgd2\nGpo8JHnfnGOUsvO/euKGgqpCcxiWVXSlqffQyTgVzl4iMROP8bEaQwvueHurtziM\nDSy9Suumyktu3PbGgjqu/izRim8Xlg7sz8Hs2quJPII/fQ8BCoaWpg30osFZqCBa\nrQM7CWhxR40CgYA3CVWZap8lu0G7XMiaE/C6O9E1htiB3pDoGjYaMW7Hle+tNsw+\nNXf2uke/Se6BpOcNNDigYh0m4CPb+F4ev7aQIFh5o/ZDu4o2RR7idxyu7qWZ740h\nAEIB88ol5R6rUajujtGN7zK9NO9KhLJQstqMI1bhorbuDxM6vPj7cBiTvQKBgQDJ\nfuJ+BuOWntHlGf97rcNAXsdTrs73TqSG8Ddi0S5ayb2dqIjvoctChJ2PKeJWIMEc\nRHQMLHuzR2489F60WnfDkIIfeTi7CSu5WTCI7C/e+C88bF8uBEolFfJ4Z7soxlN6\n/1Val7L8oSeCH+PJED6qE4EN6IFtghHXav4fA+SbuQKBgQCNy7q3MoBOxDlKOpSN\nChoYUfW0JvwJbyyaVYOVq0efGVobosAblE/IuwaoIuVgh8c4T3qZtwFcSpvfR5Qy\nSOWFs2QXN/P4ZvmiVpXK/9Tcnth2BThpb9apQCT2a/CYtrRiGNAVWKiK0U9QlN/w\n9fVBO/ZgdaXE4xqYOSceH14yrQ==\n-----END PRIVATE KEY-----\n",
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.alg",
+                    "is not in": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain access token",
+        "description": "The Token response is analyzed and the presence of the access token is checked",
         "type": "passive",
         "sessions": [
           "s1"
@@ -2085,8 +1669,8 @@
             "checks": [
               {
                 "in": "body",
-                "check": "token_type",
-                "is": "Bearer"
+                "is present": "true",
+                "check regex": "access_token"
               }
             ]
           }
@@ -2096,8 +1680,146 @@
     },
     {
       "test": {
-        "name": "Does the OP correctly contain the code parameter on redirect in a successful authentication",
-        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'code' as query parameter",
+        "name": "Does the OP issue the access tokens when requested",
+        "description": "In this test an authentication request with scope 'openid' is made. Once received the code, the RP tries to exchange it in the token endpoint and the response must contain the access token.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check regex": "access_token"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP issue the expires_in in a token response",
+        "description": "In this test an RP makes a correct authentication request and, once received the code, the RP tries to exchange it in the token endpoint. The response is then analyzed and it must contain the expires_in parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check regex": "expires_in"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain the ID token",
+        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of the ID token",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check regex": "id_token"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the successful token response contain the token type",
+        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of the token type",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": "true",
+                "check regex": "token_type"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
+        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity expose the resolve entity statement endpoint",
+        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Resolve Entity Statement response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP contain the correct type of code parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'code' as query parameter and it must be a UUID.",
         "type": "passive",
         "sessions": [
           "s1"
@@ -2108,8 +1830,8 @@
             "checks": [
               {
                 "in": "head",
-                "check param": "Location",
-                "contains": "code"
+                "check regex": "(?<=code=)[a-zA-Z0-9]+(?=&)",
+                "is present": "true"
               }
             ]
           }
@@ -2119,20 +1841,20 @@
     },
     {
       "test": {
-        "name": "Does the OP contain correct state parameter on redirect in a successful authentication",
-        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'state' as query parameter",
+        "name": "Does the successful token response contain a valid access token",
+        "description": "In this test a correct Token request is sent and the response is analyzed. It must contain the access token parameter and its value must be a JWT",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Authentication response",
+            "message type": "Token response",
             "checks": [
               {
-                "in": "head",
-                "check param": "Location",
-                "contains": "state"
+                "in": "body",
+                "check regex": "(?<=\"access_token\":\\s?)\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\"",
+                "is present": "true"
               }
             ]
           }
@@ -2142,20 +1864,277 @@
     },
     {
       "test": {
-        "name": "Does the OP contain iss parameter on redirect in a successful authentication",
-        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'iss' as query parameter",
+        "name": "Does the successful token response contain a valid ID token",
+        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of a valid ID token",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Authentication response",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "(?<=\"id_token\":\\s?)\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\"",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the UserInfo Endpoint create a signed and encrypted JWT",
+        "description": "The UserInfo response is taken and the presence of a signed and encrypted JWE in the body of the response is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+$",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity return a correct HTTP code in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
             "checks": [
               {
                 "in": "head",
-                "check param": "Location",
-                "contains": "iss"
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
+        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the revocation endpoint return an empty HTTP 200 OK response upon a correct revocation request",
+        "description": "A correct flow is accomplished and, once received the token, a request is made to the revocation endpoint. The response is then analyzed and has to be an empty HTTP 200 OK",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP handle a correct token request",
+        "description": "In this test a normal flow is accomplished and is tried to obtain an Access Token. All requests are well-formed and the Responses of the OP are analyzed.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the HTTP status of a token response correct?",
+        "description": "This test verifies whether the HTTP status of a token response is 200.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the UserInfo Response's JWE contain a correct alg parameter in the JOSE Header",
+        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'alg' parameter containing a value among ['RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A256KW'] in the JOSE header, then it is compliant with the specification",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5d8kD7BOVMIDg\nV2ygTSpl+YoiB52Zquu1aBBsSUptaD1ENHtnwlUFpEsWrDJ/IbUkkWbrgbnVwEnA\nsgXBagXufGwf1VgubmhyMCexHhGGV9UTTL/rTCN/yyQmAFGmJdA+XAf2MMZqpUT8\n8QFM5sM7nDdei6sPUXfrT6/lwsMtEd0UkiK10RW2oBOpjkOCVENoqIGGKztrn/Vu\nTzf08MtpCGO7hcmTi28PLn4tWQzLmw/bNTr7W0l0D5WZoFktfL2fT3rsUYhaYzOl\np+sEw64cVxQ4fnqj5yUNqH8IhMfV2rYPrgrQxiESkAI7anwAfgrxDpi4nV2eRUMP\nBmnYLzixAgMBAAECggEBAJ/3jyuQ3TsagK3++bQxmlYmK1w6kVZPM8pdnXyookdH\nV0CSu7W8ybR6BkHh+BPrMN//gXOzimOw3GwVoB04ozEVo/S5ALvbgr6qhjGgK6Fh\n9GgXFJmQLDY3MlCMid/yUXDX1A4l951YOu6nuGVpzA6IKMGlWb92lyYgryhPGiSu\nAVf5xdzbeUes1GKY2UPE9Rg2Qld782t6oJQ613vM6HPqfHC7N6yZ+7TFUiVc5wiK\njn3jNVSINCN59m7m2DsfPLHJB7g53104kw5cquSMA8gR5oiHt36bvnOHtbYgZmzn\n9iKgwml/EnaZ1NoE4/WJWbUTapodzQf65LASli897iECgYEA5PA7lJEDd3vrw5hl\nolFzvjvRriOu1SMHXx9Y52AgpOeQ6MnE1pO8qwn33lwYTSPGYinaq4jS3FKF/U5v\nOZltJAGBMa4ByEvAROJVCh958rKVRWKIqVXLOi8Gk11kHbVKw6oDXAd8Qt/y/ff8\nk/K6jW2EbWm1K6kfTvTMzoHkqrUCgYEAz2QeMH4WtrdiWUET7JgZNX0TbcaVBgd2\nGpo8JHnfnGOUsvO/euKGgqpCcxiWVXSlqffQyTgVzl4iMROP8bEaQwvueHurtziM\nDSy9Suumyktu3PbGgjqu/izRim8Xlg7sz8Hs2quJPII/fQ8BCoaWpg30osFZqCBa\nrQM7CWhxR40CgYA3CVWZap8lu0G7XMiaE/C6O9E1htiB3pDoGjYaMW7Hle+tNsw+\nNXf2uke/Se6BpOcNNDigYh0m4CPb+F4ev7aQIFh5o/ZDu4o2RR7idxyu7qWZ740h\nAEIB88ol5R6rUajujtGN7zK9NO9KhLJQstqMI1bhorbuDxM6vPj7cBiTvQKBgQDJ\nfuJ+BuOWntHlGf97rcNAXsdTrs73TqSG8Ddi0S5ayb2dqIjvoctChJ2PKeJWIMEc\nRHQMLHuzR2489F60WnfDkIIfeTi7CSu5WTCI7C/e+C88bF8uBEolFfJ4Z7soxlN6\n/1Val7L8oSeCH+PJED6qE4EN6IFtghHXav4fA+SbuQKBgQCNy7q3MoBOxDlKOpSN\nChoYUfW0JvwJbyyaVYOVq0efGVobosAblE/IuwaoIuVgh8c4T3qZtwFcSpvfR5Qy\nSOWFs2QXN/P4ZvmiVpXK/9Tcnth2BThpb9apQCT2a/CYtrRiGNAVWKiK0U9QlN/w\n9fVBO/ZgdaXE4xqYOSceH14yrQ==\n-----END PRIVATE KEY-----\n",
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.alg",
+                    "is in": [
+                      "RSA-OAEP",
+                      "RSA-OAEP-256",
+                      "ECDH-ES",
+                      "ECDH-ES+A128KW",
+                      "ECDH-ES+A256KW"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the UserInfo Response's JWE contain a correct enc parameter in the JOSE Header",
+        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'enc' parameter containing a value among ['A128CBC-HS256', 'A256CBC-HS512'] in the JOSE header, then it is compliant with the specification",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5d8kD7BOVMIDg\nV2ygTSpl+YoiB52Zquu1aBBsSUptaD1ENHtnwlUFpEsWrDJ/IbUkkWbrgbnVwEnA\nsgXBagXufGwf1VgubmhyMCexHhGGV9UTTL/rTCN/yyQmAFGmJdA+XAf2MMZqpUT8\n8QFM5sM7nDdei6sPUXfrT6/lwsMtEd0UkiK10RW2oBOpjkOCVENoqIGGKztrn/Vu\nTzf08MtpCGO7hcmTi28PLn4tWQzLmw/bNTr7W0l0D5WZoFktfL2fT3rsUYhaYzOl\np+sEw64cVxQ4fnqj5yUNqH8IhMfV2rYPrgrQxiESkAI7anwAfgrxDpi4nV2eRUMP\nBmnYLzixAgMBAAECggEBAJ/3jyuQ3TsagK3++bQxmlYmK1w6kVZPM8pdnXyookdH\nV0CSu7W8ybR6BkHh+BPrMN//gXOzimOw3GwVoB04ozEVo/S5ALvbgr6qhjGgK6Fh\n9GgXFJmQLDY3MlCMid/yUXDX1A4l951YOu6nuGVpzA6IKMGlWb92lyYgryhPGiSu\nAVf5xdzbeUes1GKY2UPE9Rg2Qld782t6oJQ613vM6HPqfHC7N6yZ+7TFUiVc5wiK\njn3jNVSINCN59m7m2DsfPLHJB7g53104kw5cquSMA8gR5oiHt36bvnOHtbYgZmzn\n9iKgwml/EnaZ1NoE4/WJWbUTapodzQf65LASli897iECgYEA5PA7lJEDd3vrw5hl\nolFzvjvRriOu1SMHXx9Y52AgpOeQ6MnE1pO8qwn33lwYTSPGYinaq4jS3FKF/U5v\nOZltJAGBMa4ByEvAROJVCh958rKVRWKIqVXLOi8Gk11kHbVKw6oDXAd8Qt/y/ff8\nk/K6jW2EbWm1K6kfTvTMzoHkqrUCgYEAz2QeMH4WtrdiWUET7JgZNX0TbcaVBgd2\nGpo8JHnfnGOUsvO/euKGgqpCcxiWVXSlqffQyTgVzl4iMROP8bEaQwvueHurtziM\nDSy9Suumyktu3PbGgjqu/izRim8Xlg7sz8Hs2quJPII/fQ8BCoaWpg30osFZqCBa\nrQM7CWhxR40CgYA3CVWZap8lu0G7XMiaE/C6O9E1htiB3pDoGjYaMW7Hle+tNsw+\nNXf2uke/Se6BpOcNNDigYh0m4CPb+F4ev7aQIFh5o/ZDu4o2RR7idxyu7qWZ740h\nAEIB88ol5R6rUajujtGN7zK9NO9KhLJQstqMI1bhorbuDxM6vPj7cBiTvQKBgQDJ\nfuJ+BuOWntHlGf97rcNAXsdTrs73TqSG8Ddi0S5ayb2dqIjvoctChJ2PKeJWIMEc\nRHQMLHuzR2489F60WnfDkIIfeTi7CSu5WTCI7C/e+C88bF8uBEolFfJ4Z7soxlN6\n/1Val7L8oSeCH+PJED6qE4EN6IFtghHXav4fA+SbuQKBgQCNy7q3MoBOxDlKOpSN\nChoYUfW0JvwJbyyaVYOVq0efGVobosAblE/IuwaoIuVgh8c4T3qZtwFcSpvfR5Qy\nSOWFs2QXN/P4ZvmiVpXK/9Tcnth2BThpb9apQCT2a/CYtrRiGNAVWKiK0U9QlN/w\n9fVBO/ZgdaXE4xqYOSceH14yrQ==\n-----END PRIVATE KEY-----\n",
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.enc",
+                    "is in": [
+                      "A128CBC-HS256",
+                      "A256CBC-HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity return a correct Content-Type in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "checks": [
+              {
+                "in": "head",
+                "url decode": false,
+                "is": "application/entity-statement+jwt",
+                "check param": "Content-Type"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Content-Type of the UserInfo response set to 'application/jwt'",
+        "description": "The Content-Type of the UserInfo response must be set to 'application/jwt' ",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "checks": [
+              {
+                "in": "head",
+                "url decode": false,
+                "is": "application/jwt",
+                "check param": "Content-Type"
               }
             ]
           }
@@ -3035,6 +3014,416 @@
     },
     {
       "test": {
+        "name": "Does the entity correctly sign the Entity Configuration",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken and the three parts of the JWT (header, payload and signature) are base64url decoded. Finally, the signature is validated passing the public key (n, e of jwks parameter that must be taken from the Entity Statement of a superior), the JWS Signature (received signature base64url decoded) and the JWS signing input (header and payload base64url encoded and concatenated with a dot dividing them) to a signature verifier configured for the algorithm described in the Entity Configuration Header",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "jwt check sig": "X_key_OP"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP correctly sign the Access Token",
+        "description": "Tokens issued by an OP must have the structure of JWT Tokens. In particular, this structure is composed by three base64url encoded strings separated by dots, namely the header, payload and signature. The signature is made using the OP's private key, in such a way to be decrypted using its public key. In this test a normal flow is performed and the obtained Access Token is analyzed. In order to test if the OP correctly signed the signature part of the JWT, the access token is passed to a signature verifier correctly configured",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"access_token\": \")[^\"]+",
+                "type": "jwt",
+                "jwt check sig": "X_key_core_OP"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP correctly sign the ID Token",
+        "description": "Tokens issued by an OP must have the structure of JWT Tokens. In particular, this structure is composed by three base64url encoded strings separated by dots, namely the header, payload and signature. The signature is made using the OP's private key, in such a way to be decrypted using its public key. In this test a normal flow is performed and the obtained ID Token is analyzed. In order to test if the OP correctly signed the signature part of the JWT, the third part of the string is taken and passed to a signature verifier correctly configured",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"id_token\": \")[^\"]+",
+                "type": "jwt",
+                "jwt check sig": "X_key_core_OP"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP correctly contain the code parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'code' as query parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check param": "Location",
+                "contains": "code"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP contain correct state parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'state' as query parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check param": "Location",
+                "contains": "state"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP contain iss parameter on redirect in a successful authentication",
+        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'iss' as query parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check param": "Location",
+                "contains": "iss"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain an incorrect id_token_encryption_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'id_token_encryption_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the value ['RSA_1_5']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.id_token_encryption_alg_values_supported",
+                    "not contains": [
+                      "RSA_1_5"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain incorrect id_token_signing_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'id_token_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.id_token_signing_alg_values_supported",
+                    "not contains": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain incorrect request_object_signing_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'request_object_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.request_object_signing_alg_values_supported",
+                    "not contains": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain incorrect userinfo_encryption_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'userinfo_encryption_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['RSA_1_5']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.userinfo_encryption_alg_values_supported",
+                    "not contains": [
+                      "RSA_1_5"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the OP metadata contain incorrect userinfo_signing_alg_values_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the value of the 'userinfo_signing_alg_values_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.userinfo_signing_alg_values_supported",
+                    "not contains": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration OP contain a correct sub parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the sub parameter is checked. Its value must be equal to the one in the iss parameter",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.sub",
+                    "is": "X_url_OP"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued JWT Access Token contain a wrong 'alg' parameter in the Header",
+        "description": "In this test, the Access Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. If its value is set to none, contains values among ['none', 'HS256', 'HS384', 'HS512'], is absent or contains a symmetric algorithm, than the Access Token is not compliant.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"access_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.alg",
+                    "is not in": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued JWT ID Token contain a wrong 'alg' parameter in the Header",
+        "description": "In this test, the ID Token is taken from the Token Response, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. If its value is set to none, contains values among ['none', 'HS256', 'HS384', 'HS512'], is absent or contains a symmetric algorithm, than the ID Token is not compliant.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"id_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.alg",
+                    "is not in": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does entity configuration contain a correct exp parameter",
         "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
         "type": "passive",
@@ -3515,77 +3904,8 @@
     },
     {
       "test": {
-        "name": "Does the entity return a correct HTTP code in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
-        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the revocation endpoint return an empty HTTP 200 OK response upon a correct revocation request",
-        "description": "A correct flow is accomplished and, once received the token, a request is made to the revocation endpoint. The response is then analyzed and has to be an empty HTTP 200 OK",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Revocation response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP handle a correct token request",
-        "description": "In this test a normal flow is accomplished and is tried to obtain an Access Token. All requests are well-formed and the Responses of the OP are analyzed.",
+        "name": "Does the Content-Type in a token response set correctly?",
+        "description": "This test verifies the head Content-Type set to application/json in the token response.",
         "type": "passive",
         "sessions": [
           "s1"
@@ -3596,8 +3916,8 @@
             "checks": [
               {
                 "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
+                "check": "Content-Type",
+                "is": "application/json"
               }
             ]
           }
@@ -3607,131 +3927,8 @@
     },
     {
       "test": {
-        "name": "Does the HTTP status of a token response correct?",
-        "description": "This test verifies whether the HTTP status of a token response is 200.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the UserInfo Response's JWE contain a correct cty parameter in the JOSE Header",
-        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'cty' parameter set to 'JWT' in the JOSE header, then it is compliant with the specification",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "UserInfo response",
-            "decode operations": [
-              {
-                "jwe decrypt": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5d8kD7BOVMIDg\nV2ygTSpl+YoiB52Zquu1aBBsSUptaD1ENHtnwlUFpEsWrDJ/IbUkkWbrgbnVwEnA\nsgXBagXufGwf1VgubmhyMCexHhGGV9UTTL/rTCN/yyQmAFGmJdA+XAf2MMZqpUT8\n8QFM5sM7nDdei6sPUXfrT6/lwsMtEd0UkiK10RW2oBOpjkOCVENoqIGGKztrn/Vu\nTzf08MtpCGO7hcmTi28PLn4tWQzLmw/bNTr7W0l0D5WZoFktfL2fT3rsUYhaYzOl\np+sEw64cVxQ4fnqj5yUNqH8IhMfV2rYPrgrQxiESkAI7anwAfgrxDpi4nV2eRUMP\nBmnYLzixAgMBAAECggEBAJ/3jyuQ3TsagK3++bQxmlYmK1w6kVZPM8pdnXyookdH\nV0CSu7W8ybR6BkHh+BPrMN//gXOzimOw3GwVoB04ozEVo/S5ALvbgr6qhjGgK6Fh\n9GgXFJmQLDY3MlCMid/yUXDX1A4l951YOu6nuGVpzA6IKMGlWb92lyYgryhPGiSu\nAVf5xdzbeUes1GKY2UPE9Rg2Qld782t6oJQ613vM6HPqfHC7N6yZ+7TFUiVc5wiK\njn3jNVSINCN59m7m2DsfPLHJB7g53104kw5cquSMA8gR5oiHt36bvnOHtbYgZmzn\n9iKgwml/EnaZ1NoE4/WJWbUTapodzQf65LASli897iECgYEA5PA7lJEDd3vrw5hl\nolFzvjvRriOu1SMHXx9Y52AgpOeQ6MnE1pO8qwn33lwYTSPGYinaq4jS3FKF/U5v\nOZltJAGBMa4ByEvAROJVCh958rKVRWKIqVXLOi8Gk11kHbVKw6oDXAd8Qt/y/ff8\nk/K6jW2EbWm1K6kfTvTMzoHkqrUCgYEAz2QeMH4WtrdiWUET7JgZNX0TbcaVBgd2\nGpo8JHnfnGOUsvO/euKGgqpCcxiWVXSlqffQyTgVzl4iMROP8bEaQwvueHurtziM\nDSy9Suumyktu3PbGgjqu/izRim8Xlg7sz8Hs2quJPII/fQ8BCoaWpg30osFZqCBa\nrQM7CWhxR40CgYA3CVWZap8lu0G7XMiaE/C6O9E1htiB3pDoGjYaMW7Hle+tNsw+\nNXf2uke/Se6BpOcNNDigYh0m4CPb+F4ev7aQIFh5o/ZDu4o2RR7idxyu7qWZ740h\nAEIB88ol5R6rUajujtGN7zK9NO9KhLJQstqMI1bhorbuDxM6vPj7cBiTvQKBgQDJ\nfuJ+BuOWntHlGf97rcNAXsdTrs73TqSG8Ddi0S5ayb2dqIjvoctChJ2PKeJWIMEc\nRHQMLHuzR2489F60WnfDkIIfeTi7CSu5WTCI7C/e+C88bF8uBEolFfJ4Z7soxlN6\n/1Val7L8oSeCH+PJED6qE4EN6IFtghHXav4fA+SbuQKBgQCNy7q3MoBOxDlKOpSN\nChoYUfW0JvwJbyyaVYOVq0efGVobosAblE/IuwaoIuVgh8c4T3qZtwFcSpvfR5Qy\nSOWFs2QXN/P4ZvmiVpXK/9Tcnth2BThpb9apQCT2a/CYtrRiGNAVWKiK0U9QlN/w\n9fVBO/ZgdaXE4xqYOSceH14yrQ==\n-----END PRIVATE KEY-----\n",
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "header",
-                    "check": "$.cty",
-                    "is": "JWT"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
-        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response OP",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Entity expose the resolve entity statement endpoint",
-        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Resolve Entity Statement response",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP contain the correct type of code parameter on redirect in a successful authentication",
-        "description": "In order to check if the OP correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'code' as query parameter and it must be a UUID.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Authentication response",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "(?<=code=)[a-zA-Z0-9]+(?=&)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the successful token response contain a valid access token",
-        "description": "In this test a correct Token request is sent and the response is analyzed. It must contain the access token parameter and its value must be a JWT",
+        "name": "Does the token_type of a token response set correctly?",
+        "description": "This test verifies whether the token_type of a token response is Bearer.",
         "type": "passive",
         "sessions": [
           "s1"
@@ -3742,205 +3939,8 @@
             "checks": [
               {
                 "in": "body",
-                "check regex": "(?<=\\\"access_token\\\":\\s?)\\\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\\\"",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the successful token response contain a valid ID token",
-        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of a valid ID token",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "(?<=\\\"id_token\\\":\\s?)\\\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\\\"",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the UserInfo Endpoint create a signed and encrypted JWT",
-        "description": "The UserInfo response is taken and the presence of a signed and encrypted JWE in the body of the response is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "UserInfo response",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+$",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the successful token response contain access token",
-        "description": "The Token response is analyzed and the presence of the access token is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "body",
-                "is present": "true",
-                "check regex": "access_token"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP issue the access tokens when requested",
-        "description": "In this test an authentication request with scope 'openid' is made. Once received the code, the RP tries to exchange it in the token endpoint and the response must contain the access token.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "body",
-                "is present": "true",
-                "check regex": "access_token"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the OP issue the expires_in in a token response",
-        "description": "In this test an RP makes a correct authentication request and, once received the code, the RP tries to exchange it in the token endpoint. The response is then analyzed and it must contain the expires_in parameter",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "body",
-                "is present": "true",
-                "check regex": "expires_in"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the successful token response contain the ID token",
-        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of the ID token",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "body",
-                "is present": "true",
-                "check regex": "id_token"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the successful token response contain the token type",
-        "description": "The RP receiving the Token response and that sent a correct token request must check the presence of the token type",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token response",
-            "checks": [
-              {
-                "in": "body",
-                "is present": "true",
-                "check regex": "token_type"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the UserInfo Response's JWE contain a correct alg parameter in the JOSE Header",
-        "description": "In this test, the JWE is taken from the Userinfo Response's body, the header is base64url decoded and the presence of the 'alg' parameter in the Header is checked. If its value is set to none, contains values among ['none', 'HS256', 'HS384', 'HS512'], is absent or contains a symmetric algorithm, than the Token is not compliant.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "UserInfo response",
-            "decode operations": [
-              {
-                "jwe decrypt": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5d8kD7BOVMIDg\nV2ygTSpl+YoiB52Zquu1aBBsSUptaD1ENHtnwlUFpEsWrDJ/IbUkkWbrgbnVwEnA\nsgXBagXufGwf1VgubmhyMCexHhGGV9UTTL/rTCN/yyQmAFGmJdA+XAf2MMZqpUT8\n8QFM5sM7nDdei6sPUXfrT6/lwsMtEd0UkiK10RW2oBOpjkOCVENoqIGGKztrn/Vu\nTzf08MtpCGO7hcmTi28PLn4tWQzLmw/bNTr7W0l0D5WZoFktfL2fT3rsUYhaYzOl\np+sEw64cVxQ4fnqj5yUNqH8IhMfV2rYPrgrQxiESkAI7anwAfgrxDpi4nV2eRUMP\nBmnYLzixAgMBAAECggEBAJ/3jyuQ3TsagK3++bQxmlYmK1w6kVZPM8pdnXyookdH\nV0CSu7W8ybR6BkHh+BPrMN//gXOzimOw3GwVoB04ozEVo/S5ALvbgr6qhjGgK6Fh\n9GgXFJmQLDY3MlCMid/yUXDX1A4l951YOu6nuGVpzA6IKMGlWb92lyYgryhPGiSu\nAVf5xdzbeUes1GKY2UPE9Rg2Qld782t6oJQ613vM6HPqfHC7N6yZ+7TFUiVc5wiK\njn3jNVSINCN59m7m2DsfPLHJB7g53104kw5cquSMA8gR5oiHt36bvnOHtbYgZmzn\n9iKgwml/EnaZ1NoE4/WJWbUTapodzQf65LASli897iECgYEA5PA7lJEDd3vrw5hl\nolFzvjvRriOu1SMHXx9Y52AgpOeQ6MnE1pO8qwn33lwYTSPGYinaq4jS3FKF/U5v\nOZltJAGBMa4ByEvAROJVCh958rKVRWKIqVXLOi8Gk11kHbVKw6oDXAd8Qt/y/ff8\nk/K6jW2EbWm1K6kfTvTMzoHkqrUCgYEAz2QeMH4WtrdiWUET7JgZNX0TbcaVBgd2\nGpo8JHnfnGOUsvO/euKGgqpCcxiWVXSlqffQyTgVzl4iMROP8bEaQwvueHurtziM\nDSy9Suumyktu3PbGgjqu/izRim8Xlg7sz8Hs2quJPII/fQ8BCoaWpg30osFZqCBa\nrQM7CWhxR40CgYA3CVWZap8lu0G7XMiaE/C6O9E1htiB3pDoGjYaMW7Hle+tNsw+\nNXf2uke/Se6BpOcNNDigYh0m4CPb+F4ev7aQIFh5o/ZDu4o2RR7idxyu7qWZ740h\nAEIB88ol5R6rUajujtGN7zK9NO9KhLJQstqMI1bhorbuDxM6vPj7cBiTvQKBgQDJ\nfuJ+BuOWntHlGf97rcNAXsdTrs73TqSG8Ddi0S5ayb2dqIjvoctChJ2PKeJWIMEc\nRHQMLHuzR2489F60WnfDkIIfeTi7CSu5WTCI7C/e+C88bF8uBEolFfJ4Z7soxlN6\n/1Val7L8oSeCH+PJED6qE4EN6IFtghHXav4fA+SbuQKBgQCNy7q3MoBOxDlKOpSN\nChoYUfW0JvwJbyyaVYOVq0efGVobosAblE/IuwaoIuVgh8c4T3qZtwFcSpvfR5Qy\nSOWFs2QXN/P4ZvmiVpXK/9Tcnth2BThpb9apQCT2a/CYtrRiGNAVWKiK0U9QlN/w\n9fVBO/ZgdaXE4xqYOSceH14yrQ==\n-----END PRIVATE KEY-----\n",
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "header",
-                    "check": "$.alg",
-                    "is not in": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
+                "check": "token_type",
+                "is": "Bearer"
               }
             ]
           }

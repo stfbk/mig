@@ -19,7 +19,7 @@
             "checks": [
               {
                 "in": "body",
-                "check regex": "(?<=\\\"access_token\\\":\\s?)\\\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\\\"",
+                "check regex": "(?<=\"access_token\":\\s?)\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\"",
                 "is present": "true"
               }
             ]

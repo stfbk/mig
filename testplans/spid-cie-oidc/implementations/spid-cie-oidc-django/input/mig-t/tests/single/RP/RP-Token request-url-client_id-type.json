@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "body",
-                "check regex": "client_id=https:\\/\\/((:)?www\\.)?([-a-zA-Z0-9@%._\\+~#=:]{2,256})(?:&|$)",
-                "is present": "true"
+                "check": "$",
+                "json schema compliant": "{\"type\":\"object\", \"properties\":{\"client_id\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"client_id\"]})"
               }
             ]
           }
