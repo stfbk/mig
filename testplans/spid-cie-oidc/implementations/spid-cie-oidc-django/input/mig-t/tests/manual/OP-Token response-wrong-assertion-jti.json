@@ -7,38 +7,97 @@
   "tests": [
     {
       "test": {
-        "name": "Does the id_code claim of a Trust Mark issued for private organization contain the fiscal_number or vat_number claim",
-        "description": "In this test, a Trust Mark issued for a private entity must be taken, decrypted and the presence of the fiscal_number or vat_number claim in the id_code is checked",
-        "type": "passive",
+        "name": "Does the token response to a token request made with a client_assertion parameter containing an already used jti in the JWT return a Token Error response",
+        "description": "In this test the Token Request's 'client_assertion' field is set to a wrong JWT. In particular the jti has already been used.",
+        "type": "active",
         "sessions": [
-          "s1"
+          "s1",
+          "s1.1"
         ],
         "operations": [
           {
-            "message type": "Entity Statement response SA OP",
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token request",
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode regex": "(?<=client_assertion=)([^&\\n]+)",
                 "type": "jwt",
-                "decode operation": [
+                "edits": [
                   {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
-                      {
-                        "in": "payload",
-                        "check regex": "id_code.^\\s*\\{[^}]*(\"fiscal_number\"|\"vat_number\"):[^}]*\\}"
-                      }
-                    ]
+                    "jwt from": "payload",
+                    "jwt save": "$.jti",
+                    "as": "used_jti"
                   }
                 ]
               }
             ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Revocation response"
+          },
+          {
+            "session": "s1",
+            "action": "pause"
+          },
+          {
+            "session": "s1.1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1.1",
+            "then": "forward",
+            "message type": "Token request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode regex": "(?<=client_assertion=)([^&\\n]+)",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.jti",
+                    "use": "used_jti"
+                  },
+                  {
+                    "jwt sign": "X_key_core_RP"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1.1",
+            "then": "forward",
+            "message type": "Token response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s400"
+              },
+              {
+                "in": "head",
+                "check": "invalid_request"
+              }
+            ]
+          },
+          {
+            "session": "s1",
+            "action": "resume"
           }
         ],
-        "result": "assert_only"
+        "result": "correct flow s1.1"
       }
     }
   ]

@@ -35,7 +35,7 @@
                     "value": "openid profile"
                   },
                   {
-                    "jwt sign": "X_chiave_core_RP"
+                    "jwt sign": "X_key_core_RP"
                   }
                 ]
               }
@@ -63,12 +63,11 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode param": "[\\s\\S]*",
-                    "force regex": true,
+                    "decode param": "[^\\n\\r]*",
                     "type": "jwt",
                     "checks": [
                       {

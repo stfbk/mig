@@ -19,20 +19,22 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.intermediary.id_token_signing_alg_values_supported.one_of",
-                    "is present": "true"
+                    "check": "$.metadata_policy.intermediary.id_token_signing_alg_values_supported",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"subset_of\": {}, \"superset_of\": {}}, \"required\": [\"subset_of\", \"superset_of\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

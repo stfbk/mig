@@ -3,11 +3,9 @@
     "name": "var0",
     "description": "var1",
     "type": "active",
-    "sessions": [
-      "s1"
-    ],
+    "sessions": "session0",
     "operations": [
-      { 
+      {
         "session": "s1",
         "action": "start"
       },

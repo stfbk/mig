@@ -8,7 +8,7 @@
     {
       "test": {
         "name": "Does the OP refuse Authentication Requests without the scope parameter in the URL",
-        "description": "An Authentication Request is sent without the iss parameter in the URL of the request (scope in the HTTP request)",
+        "description": "An Authentication Request is sent without the scope parameter in the URL of the request (scope in the HTTP request)",
         "type": "active",
         "sessions": [
           "s1"
@@ -23,10 +23,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Authentication request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "url",
-                "in": "",
+                "value": "",
                 "edit": "scope"
               }
             ]

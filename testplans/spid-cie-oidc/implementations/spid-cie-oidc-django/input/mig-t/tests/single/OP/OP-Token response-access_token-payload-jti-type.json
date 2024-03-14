@@ -24,14 +24,17 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"jti\":\"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\""
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"jti\": {\"type\": \"string\", \"pattern\": \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\"}}, \"required\": [\"jti\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

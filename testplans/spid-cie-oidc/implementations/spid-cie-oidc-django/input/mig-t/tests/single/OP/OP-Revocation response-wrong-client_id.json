@@ -23,10 +23,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Revocation request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "body",
-                "in": "https://www.example.com/",
+                "value": "https://www.example.com/",
                 "edit regex": "(?<=client_id=)([^&]+)"
               }
             ]

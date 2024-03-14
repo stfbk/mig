@@ -23,10 +23,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Revocation request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "body",
-                "in": "urn-ietf",
+                "value": "urn-ietf",
                 "edit regex": "(?<=client_assertion_type=)([^&]+)"
               }
             ]

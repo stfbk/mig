@@ -19,14 +19,15 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
                     "check": "$.metadata_policy.intermediary.userinfo_encryption_enc_values_supported.one_of",
                     "is subset of": [
-                      "A128CBC-HS256\",\"A256CBC-HS512"
+                      "A128CBC-HS256",
+                      "A256CBC-HS512"
                     ]
                   }
                 ]

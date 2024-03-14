@@ -24,7 +24,7 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Token response",
-            "decode operations": [
+            "message operations": [
               {
                 "from": "body",
                 "save": "access_token",
@@ -41,7 +41,7 @@
             "from session": "s1-revoked",
             "then": "forward",
             "message type": "Revocation request",
-            "decode operations": [
+            "edit operations": [
               {
                 "from": "body",
                 "value": "revoked_access_token",

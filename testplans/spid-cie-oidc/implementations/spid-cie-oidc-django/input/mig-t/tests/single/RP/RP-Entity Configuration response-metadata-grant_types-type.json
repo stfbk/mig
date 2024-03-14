@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata.openid_relying_party.grant_types",
+                    "check": "$.metadata.openid_relying_party",
                     "json schema compliant": "{\"type\":\"object\", \"properties\":{\"grant_types\":{\"type\":\"array\"}}, \"requirement\":[\"grant_type\"]}"
                   }
                 ]
@@ -32,7 +32,9 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

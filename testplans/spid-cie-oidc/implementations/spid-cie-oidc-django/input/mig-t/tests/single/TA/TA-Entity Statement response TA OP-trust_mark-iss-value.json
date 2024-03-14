@@ -26,7 +26,7 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "edits": [
                   {
@@ -46,14 +46,14 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "decode operations": [
                   {
                     "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
+                    "checks": [
                       {
                         "use variable": "true",
                         "in": "payload",

@@ -19,19 +19,22 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"authority_hints\":\\[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]"
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"authority_hints\": {\"type\": \"array\"}}, \"required\": [\"authority_hints\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

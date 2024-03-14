@@ -19,7 +19,7 @@
             "checks": [
               {
                 "in": "body",
-                "check regex": "(?<=\\\"id_token\\\":\\s?)\\\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\\\"",
+                "check regex": "(?<=\"id_token\":\\s?)\"([\\w\\-]+\\.[\\w\\-]+\\.[\\w\\-]+)\"",
                 "is present": "true"
               }
             ]

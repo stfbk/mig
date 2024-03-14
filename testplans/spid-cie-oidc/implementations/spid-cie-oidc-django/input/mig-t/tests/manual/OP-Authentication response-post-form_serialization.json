@@ -11,69 +11,40 @@
         "description": "An authentication request is sent with the POST method and the parameters (scope, code_challenge, code_challenge_method and request) are inserted in the body of the request, using the application/x-www-form-urlencoded format",
         "type": "active",
         "sessions": [
-          "s1"
+          "s1-login"
         ],
         "operations": [
           {
-            "session": "s1",
+            "session": "s1-login",
             "action": "start"
           },
           {
             "action": "intercept",
-            "from session": "s1",
+            "from session": "s1-login",
+            "then": "forward",
+            "message type": "Authentication request"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-login",
             "then": "forward",
             "message type": "Authentication request",
             "message operations": [
               {
-                "from": "head",
-                "edit regex": "GET",
-                "in": "POST"
-              },
-              {
-                "from": "head",
-                "add": "Content-Type",
-                "in": "application/x-www-form-urlencoded"
-              },{
                 "from": "url",
                 "save": "client_id",
                 "as": "saved_client_id"
               },
               {
                 "from": "url",
-                "remove parameter": "?client_id"
-              },
-              {
-                "from": "body",
-                "add": "client_id=",
-                "in": "client_id="
-              },
-              {
-                "from": "body",
-                "add": "client_id=",
-                "use": "saved_client_id"
-              },
-              {
-                "from": "url",
-                "remove parameter": "response_type"
-              },
-              {
-                "from": "url",
                 "save": "scope",
-                "as": "saved_scope"
+                "as": "saved_scope",
+                "url decode": false
               },
               {
                 "from": "url",
-                "remove parameter": "scope"
-              },
-              {
-                "from": "body",
-                "add": "&scope=",
-                "in": "&scope="
-              },
-              {
-                "from": "body",
-                "add": "&scope=",
-                "use": "saved_scope"
+                "save": "response_type",
+                "as": "saved_response_type"
               },
               {
                 "from": "url",
@@ -82,36 +53,8 @@
               },
               {
                 "from": "url",
-                "remove parameter": "code_challenge"
-              },
-              {
-                "from": "body",
-                "add": "&code_challenge=",
-                "in": "&code_challenge="
-              },
-              {
-                "from": "body",
-                "add": "&code_challenge=",
-                "use": "saved_code_challenge"
-              },
-              {
-                "from": "url",
                 "save": "code_challenge_method",
                 "as": "saved_code_challenge_method"
-              },
-              {
-                "from": "url",
-                "remove parameter": "code_challenge_method"
-              },
-              {
-                "from": "body",
-                "add": "&code_challenge_method=",
-                "in": "&code_challenge_method="
-              },
-              {
-                "from": "body",
-                "add": "&code_challenge_method=",
-                "use": "saved_code_challenge_method"
               },
               {
                 "from": "url",
@@ -119,23 +62,119 @@
                 "as": "saved_request"
               },
               {
+                "from": "head",
+                "save match": "(?<=Cookie: csrftoken=)[^$]+",
+                "as": "saved_csrf"
+              },
+              {
                 "from": "url",
-                "remove parameter": "request"
+                "remove match word": "\\?"
+              }
+            ],
+            "edit operations": [
+              {
+                "from": "url",
+                "remove": "client_id"
+              },
+              {
+                "from": "url",
+                "remove": "response_type"
+              },
+              {
+                "from": "url",
+                "remove": "scope"
+              },
+              {
+                "from": "url",
+                "remove": "code_challenge"
+              },
+              {
+                "from": "url",
+                "remove": "code_challenge_method"
+              },
+              {
+                "from": "url",
+                "remove": "request"
+              },
+              {
+                "from": "head",
+                "edit regex": "GET",
+                "value": "POST"
+              },
+              {
+                "from": "head",
+                "add": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "from": "head",
+                "add": "X-CSRFToken",
+                "use": "saved_csrf"
               },
               {
                 "from": "body",
-                "add": "&request=",
-                "in": "&request="
+                "add": "",
+                "value": "client_id="
               },
               {
                 "from": "body",
-                "add": "&request=",
+                "add": "",
+                "use": "saved_client_id"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&scope="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "saved_scope"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&response_type="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "saved_response_type"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&code_challenge="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "saved_code_challenge"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&code_challenge_method="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "saved_code_challenge_method"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&request="
+              },
+              {
+                "from": "body",
+                "add": "",
                 "use": "saved_request"
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "correct flow s1-login"
       }
     }
   ]

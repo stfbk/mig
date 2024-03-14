@@ -23,10 +23,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Authentication request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "url",
-                "in": "",
+                "value": "",
                 "edit": "request"
               }
             ]

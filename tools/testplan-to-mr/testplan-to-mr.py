@@ -1,12 +1,12 @@
 from copy import deepcopy
 import sys
 import os
-from os.path import dirname, join
+from os.path import join
 import pandas as pd
 import regex as re
 import json
 import logging #used for errors
-import argparse
+import argparse #used for args
 
 """
     Idea: there is a test suite created for each entity and for each type. 
@@ -137,7 +137,6 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
                 26  COR002        OIDC Core                RP       ...  NaN         False       x
 
     """
-    count = 0
     dict_sum = {}
     session1_test = []
     entity_test = []
@@ -150,11 +149,11 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
             filtered = df_tests[((df_tests["Entity under test"] == entity) | (df_tests["Entity under test"] == "ALL")) 
                                 & (df_tests["Pattern name"] == pattern)]
 
-            tests, supported_pattern = createJson(filtered, pattern, entity)
+            tests = createJson(filtered, pattern, entity)
 
             if tests:
                 session1_test.extend(tests)
-                entity_test.extend(tests)
+                entity_test.extend(tests)     
         
         #Test by entity
         entitySuite = {"test suite":{"name":entity , "description":"All the test available for this entity" ,"filter messages": True}, "tests":entity_test}
@@ -163,10 +162,37 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
             with open(os.path.join(wd, OUT_DIR_SINGLE+'/'+entity, f'All_{entity}.json'), 'w') as outfile:
                     outfile.write(json_objects)
         entity_test = []
-    
+        
     testSuite = {"test suite":{"name":"Session_1" , "description":f"All the entities and the available patterns: {' ,'.join([*dict_sum.keys()])}" ,"filter messages": True}, "tests":session1_test}
     json_objects = json.dumps(testSuite, indent = 2)
     with open(os.path.join(wd, OUT_DIR_SINGLE, 'ALL_Session1.json'), 'w') as outfile:
+        outfile.write(json_objects)
+
+    #DEVELOP PASSIVE
+    passive_test = []
+    # Filter for the entity (rows where entity under test = entity)
+    for entity in entities:
+        # Filter for the type of the test
+        for pattern in patterns:
+            # Returns the rows where entity under test is the entity and the type of the column is the wanted type
+            filtered = df_tests[((df_tests["Entity under test"] == entity) | (df_tests["Entity under test"] == "ALL")) 
+                                & (df_tests["Pattern name"] == pattern) & (df_tests["Type MIG"] == "Passive")]
+
+            tests = createJson(filtered, pattern, entity)
+            if tests:
+                passive_test.extend(tests)
+                entity_test.extend(tests)     
+        
+        #Test by entity
+        entitySuite = {"test suite":{"name":entity , "description":"All the test available for this entity" ,"filter messages": True}, "tests":entity_test}
+        json_objects = json.dumps(entitySuite, indent = 2)
+        if entity_test and entity != "ALL":
+            with open(os.path.join(wd, OUT_DIR_SINGLE+'/'+entity, f'All_{entity}_Passive.json'), 'w') as outfile:
+                    outfile.write(json_objects)
+        entity_test = []
+    testSuite = {"test suite":{"name":"Passive" , "description":f"All the one exec" ,"filter messages": True}, "tests":passive_test}
+    json_objects = json.dumps(testSuite, indent = 2)
+    with open(os.path.join(wd, OUT_DIR_SINGLE, 'PASSIVE.json'), 'w') as outfile:
         outfile.write(json_objects)
 
 def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
@@ -179,7 +205,6 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
     """
 
     tests = []
-    count_test = {}
 
     for index, row in table.iterrows():
         """
@@ -192,7 +217,7 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
         try:
             openfile = open(os.path.join(DIR_TEMPLATES, f'{testType}-{row["Pattern name"]}.json'), 'r')
         except(FileNotFoundError):
-            log_pattern.debug(f'TemplateNotFound: {testType}-{row["Pattern name"]}.json ')
+            log_pattern.debug(f'TemplateNotFound: {testType}-{row["Pattern name"]}.json')
             continue
         
         message_split = "" if pd.isna(row["Input for generated MR: Oracle"]) else row["Input for generated MR: Oracle"].split(" | ")
@@ -228,6 +253,9 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
                 if flag:
                     used_item.remove(item)
 
+                if s_django:
+                    _check_value_exists(template, "session0", row["Session in spid-oidc-cie-django"])
+
             #check for missing inserted values in the list
             if len(used_item) != 0:
                 log_value.warning(f'Values not inserted {used_item} for Pattern: {row["Pattern name"]} and UID: {row["UID"]}')
@@ -249,12 +277,11 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
 
             tests.append(template)
 
-            count_test[row["Pattern name"]] = count_test.setdefault(row["Pattern name"],0 ) + 1
         #if exists but its empty
         else:
             log_pattern.warning(f'Empty test on Pattern: {row["Pattern name"]} and UID: {row["UID"]}')
     
-    return tests, count_test
+    return tests
 
 def generate_mr():
     #Returns a dataframe
@@ -301,8 +328,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    # Add the --justFill flag with 2 args <input><output>
+    # Add the --justFill flag with 1 args <input>
     parser.add_argument('--justFill', nargs=1, help='Specify input_path of test, the script will traverse folder for json')
+    # Add the '--django' argument
+    parser.add_argument('--django', action='store_true', help='Add django sessions')
+    s_django = False
 
     args = parser.parse_args()
     if args.justFill:
@@ -311,6 +341,8 @@ if __name__ == "__main__":
         print("Configured tests")
     else:
         _create_if_not_exist(OUT_DIR_SINGLE)
+        if args.django:
+            s_django = True
         generate_mr()
         print("Generated tests")
         config_for_implementation()

@@ -11,7 +11,7 @@
         "description": "An introspection request with a token not valid is sent and the introspection response analyzed",
         "type": "active",
         "sessions": [
-          "s1"
+          "s_CIE_introsp"
         ],
         "operations": [
           {
@@ -23,10 +23,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Introspection request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "body",
-                "in": "X_not_valid_tkn",
+                "value": "X_not_valid_tkn",
                 "edit regex": "(?<=token=)([^&]+)"
               }
             ]

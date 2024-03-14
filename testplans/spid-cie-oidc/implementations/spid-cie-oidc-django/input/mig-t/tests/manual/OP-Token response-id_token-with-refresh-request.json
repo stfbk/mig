@@ -21,7 +21,7 @@
           },
           {
             "action": "intercept",
-            "from session": "s1-1",
+            "from session": "s1.1",
             "then": "forward",
             "message type": "Authentication request",
             "decode operations": [
@@ -78,7 +78,7 @@
                 "from": "body",
                 "add": "&refresh_token=",
                 "in": "&refresh_token="
-              }, 
+              },
               {
                 "from": "body",
                 "add": "(?<=refresh_token=)([^&]+)",

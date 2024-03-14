@@ -19,19 +19,22 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"trust_marks\":\\s*\\[\\s*\\{\\s*\"\\w*\":\\s*\".*\"(,\\s*.*\")*\\s*\\}\\s*\\]"
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"trust_marks\": {\"type\": \"array\"}}, \"required\": [\"trust_marks\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

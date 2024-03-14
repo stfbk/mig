@@ -36,6 +36,16 @@
                     "value": "https://www.spid.gov.it/SpidL1"
                   },
                   {
+                    "jwt from": "payload",
+                    "jwt remove": "$.claims.userinfo.*"
+                  },
+                  {
+                    "jwt from": "payload",
+                    "jwt add": "$.claims.userinfo",
+                    "key": "given_name",
+                    "value": ""
+                  },
+                  {
                     "jwt sign": "X_key_core_RP"
                   }
                 ]
@@ -65,17 +75,17 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode regex": "[\\s\\S]*",
+                    "decode regex": "[^\\n\\r]*",
                     "type": "jwt",
                     "checks": [
                       {
                         "in": "payload",
                         "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\": { \"type\": \"string\" }, \"exp\": { \"type\": \"number\" }, \"iat\": { \"type\": \"number\" }, \"aud\": { \"type\": \"string\" }, \"iss\": { \"type\": \"string\" }, \"given_name\": { \"type\": \"string\" }, \"family_name\": { \"type\": \"string\" }, \"birthdate\": { \"type\": \"string\" }, \"https://attributes.eid.gov.it/fiscal_number\": { \"type\": \"string\" }, \"nbf\": { \"type\": [\"number\", \"null\"] }}, \"required\": [\"sub\", \"exp\", \"iat\", \"aud\", \"iss\", \"given_name\", \"family_name\", \"birthdate\", \"https://attributes.eid.gov.it/fiscal_number\"], \"additionalProperties\": false}"
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
                       }
                     ]
                   }
@@ -124,17 +134,17 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode regex": "[\\s\\S]*",
+                    "decode regex": "[^\\n\\r]*",
                     "type": "jwt",
                     "checks": [
                       {
                         "in": "payload",
                         "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\": { \"type\": \"string\" }, \"exp\": { \"type\": \"number\" }, \"iat\": { \"type\": \"number\" }, \"aud\": { \"type\": \"string\" }, \"iss\": { \"type\": \"string\" }, \"given_name\": { \"type\": \"string\" }, \"family_name\": { \"type\": \"string\" }, \"birthdate\": { \"type\": \"string\" }, \"https://attributes.eid.gov.it/fiscal_number\": { \"type\": \"string\" }, \"nbf\": { \"type\": [\"number\", \"null\"] }}, \"required\": [\"sub\", \"exp\", \"iat\", \"aud\", \"iss\", \"given_name\", \"family_name\", \"birthdate\", \"https://attributes.eid.gov.it/fiscal_number\"], \"additionalProperties\": false}"
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
                       }
                     ]
                   }

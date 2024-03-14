@@ -27,11 +27,11 @@
               {
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode param": "$.trust.marks[0].trust_mark",
+                    "decode param": "$.trust_marks[0].trust_mark",
                     "type": "jwt",
                     "edits": [
                       {

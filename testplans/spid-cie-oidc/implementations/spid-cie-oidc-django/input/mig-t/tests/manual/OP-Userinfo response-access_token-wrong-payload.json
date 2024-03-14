@@ -1,0 +1,68 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP correctly validate the Access Tokens",
+        "description": "In order to test if the OP's UserInfo endpoint correctly validates the Access Tokens, a UserInfo Request with an Access Token with a wrong payload, wrong client_id is sent and the OP's response analyzed.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode regex": "(?<=\"access_token\": \")[^\"]+",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt edit": "$.client_id",
+                    "value": "X_wrong_URL"
+                  },
+                  {
+                    "jwt sign": "X_key_core_OP"
+                  }
+                ]
+              }
+            ],
+            "at_hash_update": {
+              "sign key": "X_key_core_OP"
+            }
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "UserInfo response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s401"
+              },
+              {
+                "in": "body",
+                "check": "invalid_client"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

@@ -26,11 +26,11 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
-                "check": [
+                "checks": [
                   {
-                    "from": "payload",
+                    "in": "payload",
                     "check": "$.metadata.openid_relying_party.id_token_encrypted_response_alg",
                     "is present": "true"
                   }
@@ -54,7 +54,7 @@
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
                     "jwe decrypt": "X_key_jwe",
-                    "check": [
+                    "checks": [
                       {
                         "in": "header",
                         "check": "$.alg",

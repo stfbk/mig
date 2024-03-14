@@ -19,19 +19,22 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"iat\":\\d+\")"
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

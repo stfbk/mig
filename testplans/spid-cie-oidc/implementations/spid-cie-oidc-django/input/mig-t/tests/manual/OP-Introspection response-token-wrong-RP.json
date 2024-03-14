@@ -42,7 +42,7 @@
                     "value": "https://www.example.com/"
                   },
                   {
-                    "jwt sign": "X_chiave_core_RP"
+                    "jwt sign": "X_key_core_RP"
                   }
                 ]
               }

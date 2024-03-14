@@ -16,7 +16,7 @@
         ],
         "operations": [
           {
-            "session": "s1-1",
+            "session": "s1.1",
             "action": "start"
           },
           {
@@ -68,20 +68,20 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Token request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "body",
-                "edit": "(?<=grant_type=)([^&]+)",
-                "in": "refresh_token"
+                "edit": "(?<=grant_type=)([^&\\n]+)",
+                "in": "grant_type=refresh_token"
               },
               {
                 "from": "body",
-                "add": "&refresh_token=",
-                "in": "&refresh_token="
-              }, 
+                "add": "",
+                "value": "&refresh_token="
+              },
               {
                 "from": "body",
-                "add": "(?<=refresh_token=)([^&]+)",
+                "add": "",
                 "use": "saved_refresh_token"
               }
             ]

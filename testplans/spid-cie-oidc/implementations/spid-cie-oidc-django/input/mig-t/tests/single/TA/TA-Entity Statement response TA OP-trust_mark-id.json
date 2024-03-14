@@ -16,17 +16,17 @@
         "operations": [
           {
             "message type": "Entity Statement response TA OP",
-            "decode operation": [
+            "decode operations": [
               {
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[\\s\\S]*",
-                "decode operation": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
-                    "jwt from": "jwt payload",
+                    "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
+                    "checks": [
                       {
                         "in": "payload",
                         "check": "id",

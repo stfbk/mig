@@ -7,7 +7,7 @@
   "tests": [
     {
       "test": {
-        "name": "Does the Content-Type of the UserInfo response set to 'application/jwt' ",
+        "name": "Does the Content-Type of the UserInfo response set to 'application/jwt'",
         "description": "The Content-Type of the UserInfo response must be set to 'application/jwt' ",
         "type": "passive",
         "sessions": [

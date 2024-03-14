@@ -3,9 +3,7 @@
     "name": "var0",
     "description": "var1",
     "type": "active",
-    "sessions": [
-      "s1"
-    ],
+    "sessions": "session0",
     "operations": [
       {
         "session": "s1",
@@ -16,11 +14,11 @@
         "from session": "s1",
         "then": "forward",
         "message type": "var2",
-        "message operations": [
+        "edit operations": [
           {
             "from": "var3",
             "edit_var3": "var4",
-            "in": "var5"
+            "value": "var5"
           }
         ]
       },

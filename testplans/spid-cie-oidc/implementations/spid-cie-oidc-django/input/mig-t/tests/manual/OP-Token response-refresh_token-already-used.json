@@ -69,20 +69,20 @@
             "from session": "s1.1",
             "then": "forward",
             "message type": "Token request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "body",
-                "edit": "(?<=grant_type=)([^&]+)",
-                "in": "refresh_token"
+                "edit regex": "(?<=grant_type=)([^&\\n]+)",
+                "value": "refresh_token"
               },
               {
                 "from": "body",
-                "add": "&refresh_token=",
-                "in": "&refresh_token="
-              }, 
+                "add": "",
+                "value": "&refresh_token="
+              },
               {
                 "from": "body",
-                "add": "(?<=refresh_token=)([^&]+)",
+                "add": "",
                 "use": "saved_refresh_token"
               }
             ]
@@ -106,20 +106,20 @@
             "from session": "s1.2",
             "then": "forward",
             "message type": "Token request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "body",
-                "edit": "(?<=grant_type=)([^&]+)",
-                "in": "refresh_token"
+                "edit regex": "(?<=grant_type=)([^&\\n]+)",
+                "value": "refresh_token"
               },
               {
                 "from": "body",
-                "add": "&refresh_token=",
-                "in": "&refresh_token="
-              }, 
+                "add": "",
+                "value": "&refresh_token="
+              },
               {
                 "from": "body",
-                "add": "(?<=refresh_token=)([^&]+)",
+                "add": "",
                 "use": "saved_refresh_token"
               }
             ]

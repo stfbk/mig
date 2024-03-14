@@ -24,14 +24,17 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check regex": "\"client_id\":\"http:\\/\\/(www\\.)?[-\\w@:%.\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-\\w()@:%\\+.~#?&\\/\\/=]*)\""
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"client_id\": {\"type\": \"string\", \"format\": \"uri-reference\", \"pattern\": \"^https://\"}}, \"required\": [\"client_id\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

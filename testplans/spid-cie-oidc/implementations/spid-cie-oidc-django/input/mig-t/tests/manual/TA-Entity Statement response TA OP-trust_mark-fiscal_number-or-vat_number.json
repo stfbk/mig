@@ -19,17 +19,18 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
-                "decode operation": [
+                "decode operations": [
                   {
                     "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
+                    "checks": [
                       {
                         "in": "payload",
-                        "check regex": "id_code.^\\s*\\{[^}]*(\"fiscal_number\"|\"vat_number\"):[^}]*\\}"
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": { \"id_code\": { \"type\": \"object\", \"properties\": {\"vat_number\": {}, \"fiscal_number\": {}},\"anyOf\": [{ \"required\": [\"vat_number\"] },{\"required\": [\"fiscal_number\"] }]}},\"required\":[\"id_code\"]}"
                       }
                     ]
                   }

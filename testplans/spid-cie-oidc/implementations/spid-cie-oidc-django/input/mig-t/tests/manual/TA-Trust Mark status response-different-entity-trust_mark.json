@@ -22,26 +22,6 @@
             "action": "intercept",
             "from session": "s1-logout",
             "then": "forward",
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode param": "[\\s\\S]*",
-                "edits": [
-                  {
-                    "jwt from": "payload",
-                    "jwt save": "$.trust_marks[0].id",
-                    "as": "saved_id"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1-logout",
-            "then": "forward",
             "message type": "Authentication request",
             "session operations": [
               {
@@ -66,13 +46,33 @@
               },
               {
                 "session": "s1-logout",
-                "insert": "open | X_url_TA/trust_mark_status",
+                "insert": "open | X_trust-mark-endpoint_TA",
                 "at": "ML"
               },
               {
                 "session": "s1-logout",
                 "insert": "wait | 4000",
                 "at": "ML"
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1-logout",
+            "then": "forward",
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\n\\r]*",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.trust_marks[0].id",
+                    "as": "saved_id"
+                  }
+                ]
               }
             ]
           },
@@ -94,45 +94,45 @@
             "from session": "s1-logout",
             "then": "forward",
             "message type": "Trust Mark status request TA",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "head",
                 "edit regex": "GET",
-                "in": "POST"
+                "value": "POST"
               },
               {
                 "from": "head",
                 "add": "Content-Type",
-                "in": "application/x-www-form-urlencoded"
+                "value": "application/x-www-form-urlencoded"
               },
               {
                 "from": "body",
-                "add": "id=",
-                "in": "id="
+                "add": "",
+                "value": "id="
               },
               {
                 "from": "body",
-                "add": "id=",
+                "add": "",
                 "use": "saved_id"
               },
               {
                 "from": "body",
-                "add": "&sub=",
-                "in": "&sub="
+                "add": "",
+                "value": "&sub="
               },
               {
                 "from": "body",
-                "add": "&sub=",
-                "in": "X_url_OP"
+                "add": "",
+                "value": "X_url_OP"
               },
               {
                 "from": "body",
-                "add": "&csrfmiddlewaretoken=",
-                "in": "&csrfmiddlewaretoken="
+                "add": "",
+                "value": "&csrfmiddlewaretoken="
               },
               {
                 "from": "body",
-                "add": "&csrfmiddlewaretoken=",
+                "add": "",
                 "use": "save_csrfmiddlewaretoken"
               }
             ]

@@ -23,10 +23,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "UserInfo request",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "head",
-                "in": "",
+                "value": "",
                 "edit": "Authorization"
               }
             ]

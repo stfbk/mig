@@ -74,45 +74,45 @@
             "from session": "s1-logout",
             "then": "forward",
             "message type": "Trust Mark status request TA",
-            "message operations": [
+            "edit operations": [
               {
                 "from": "head",
                 "edit regex": "GET",
-                "in": "POST"
+                "value": "POST"
               },
               {
                 "from": "head",
                 "add": "Content-Type",
-                "in": "application/x-www-form-urlencoded"
+                "value": "application/x-www-form-urlencoded"
               },
               {
                 "from": "body",
-                "add": "id=",
-                "in": "id="
+                "add": "",
+                "value": "id="
               },
               {
                 "from": "body",
-                "add": "id=",
-                "in": "X_wrong_url"
+                "add": "",
+                "value": "X_wrong_url"
               },
               {
                 "from": "body",
-                "add": "&sub=",
-                "in": "&sub="
+                "add": "",
+                "value": "&sub="
               },
               {
                 "from": "body",
-                "add": "&sub=",
-                "in": "X_url_OP"
+                "add": "",
+                "value": "X_url_OP"
               },
               {
                 "from": "body",
-                "add": "&csrfmiddlewaretoken=",
-                "in": "&csrfmiddlewaretoken="
+                "add": "",
+                "value": "&csrfmiddlewaretoken="
               },
               {
                 "from": "body",
-                "add": "&csrfmiddlewaretoken=",
+                "add": "",
                 "use": "save_csrfmiddlewaretoken"
               }
             ]

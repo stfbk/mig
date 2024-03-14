@@ -19,22 +19,22 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[\\s\\S]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata_policy.openid_provider.client_registration_types_supported.one_of",
-                    "is subset of": [
-                      "automatic"
-                    ]
+                    "check": "$.metadata_policy.openid_provider.client_registration_types_supported",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"subset_of\": {\"const\": \"automatic\"}}, \"required\": [\"subset_of\"]}"
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     }
   ]

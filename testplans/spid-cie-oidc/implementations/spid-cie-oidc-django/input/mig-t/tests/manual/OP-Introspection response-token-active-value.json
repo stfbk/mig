@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "",
-        "description": "",
+        "name": "Does the Introspection Endpoint returns true on active tokens",
+        "description": "To test that the Introspection response of the OP's correctly identifies valid tokens, a valid one is sent and the response is analyzed",
         "type": "passive",
         "sessions": [
           "s_CIE_introsp"
@@ -19,7 +19,7 @@
             "checks": [
               {
                 "in": "body",
-                "check regex": "\"active\"\": true",
+                "check regex": "\"active\": true",
                 "is present": "true"
               }
             ]
