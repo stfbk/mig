@@ -16,20 +16,21 @@
         "operations": [
           {
             "message type": "Entity Statement response SA RP",
-            "decode operation": [
+            "decode operations": [
               {
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[^\\r\\n]*",
-                "decode operation": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
                     "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
+                    "checks": [
                       {
                         "in": "payload",
-                        "check regex": "claims.^\\[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$"
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"claims\": {\"type\": \"object\", \"additionalProperties\": {\"type\": \"object\"}}},\"required\": [\"claims\"]}"
                       }
                     ]
                   }

@@ -7,7 +7,7 @@
   "tests": [
     {
       "test": {
-        "name": "Does the issued JWT ID Token contain the 'iss' parameter in the Payload as an HTTP URL",
+        "name": "Does the issued JWT ID Token contain the 'iss' parameter in the Payload as an HTTPS URL",
         "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the presence of the 'iss' parameter has to be an HTTPS URL identifying the OP",
         "type": "passive",
         "sessions": [
@@ -25,7 +25,7 @@
                   {
                     "in": "payload",
                     "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iss\": {\"type\": \"string\", \"const\": \"http://cie-provider.org:8002/oidc/op\"}}, \"required\":[\"iss\"]})"
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iss\": {\"type\": \"string\", \"const\": \"X_https_OP\"}}, \"required\":[\"iss\"]})"
                   }
                 ]
               }

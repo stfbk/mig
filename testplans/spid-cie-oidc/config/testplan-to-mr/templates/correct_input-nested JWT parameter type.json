@@ -7,20 +7,21 @@
     "operations": [
       {
         "message type": "var2",
-        "decode operation": [
+        "decode operations": [
           {
             "from": "var3",
             "type": "jwt",
-            "decode param": "var4",
-            "decode operation": [
+            "decode regex": "var4",
+            "decode operations": [
               {
                 "from": "jwt var5",
                 "type": "jwt",
                 "decode param": "$.var6[0].var7",
-                "check": [
+                "checks": [
                   {
                     "in": "var8",
-                    "check regex": "var9"
+                    "check": "$var9",
+                    "json schema compliant": "var_10"
                   }
                 ]
               }

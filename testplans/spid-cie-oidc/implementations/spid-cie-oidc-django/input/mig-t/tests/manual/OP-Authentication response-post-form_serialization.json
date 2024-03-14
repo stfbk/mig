@@ -11,22 +11,22 @@
         "description": "An authentication request is sent with the POST method and the parameters (scope, code_challenge, code_challenge_method and request) are inserted in the body of the request, using the application/x-www-form-urlencoded format",
         "type": "active",
         "sessions": [
-          "s1_login"
+          "s1-login"
         ],
         "operations": [
           {
-            "session": "s1_login",
+            "session": "s1-login",
             "action": "start"
           },
           {
             "action": "intercept",
-            "from session": "s1_login",
+            "from session": "s1-login",
             "then": "forward",
             "message type": "Authentication request"
           },
           {
             "action": "intercept",
-            "from session": "s1_login",
+            "from session": "s1-login",
             "then": "forward",
             "message type": "Authentication request",
             "message operations": [
@@ -37,12 +37,13 @@
               },
               {
                 "from": "url",
-                "save": "scope=",
-                "as": "saved_scope"
+                "save": "scope",
+                "as": "saved_scope",
+                "url decode": false
               },
               {
                 "from": "url",
-                "save": "response_type=",
+                "save": "response_type",
                 "as": "saved_response_type"
               },
               {
@@ -64,6 +65,10 @@
                 "from": "head",
                 "save match": "(?<=Cookie: csrftoken=)[^$]+",
                 "as": "saved_csrf"
+              },
+              {
+                "from": "url",
+                "remove match word": "\\?"
               }
             ],
             "edit operations": [
@@ -169,7 +174,7 @@
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": "correct flow s1-login"
       }
     }
   ]

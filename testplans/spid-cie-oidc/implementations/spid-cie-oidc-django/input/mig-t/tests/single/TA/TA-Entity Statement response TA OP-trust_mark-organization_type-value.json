@@ -24,7 +24,7 @@
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.organization_type",
+                    "check": "$.trust_marks[0].trust_mark.organization_type",
                     "is in": [
                       "public",
                       "private"

@@ -26,8 +26,14 @@
             "message operations": [
               {
                 "from": "url",
+                "save": "client_id",
+                "as": "saved_client_id"
+              },
+              {
+                "from": "url",
                 "save": "scope",
-                "as": "saved_scope"
+                "as": "saved_scope",
+                "url decode": false
               },
               {
                 "from": "url",
@@ -43,6 +49,10 @@
                 "from": "url",
                 "save": "request",
                 "as": "saved_request"
+              },
+              {
+                "from": "url",
+                "remove match word": "\\?"
               }
             ],
             "edit operations": [
@@ -83,12 +93,22 @@
               {
                 "from": "body",
                 "add": "",
-                "value": "scope="
+                "value": "client_id="
               },
               {
                 "from": "body",
                 "add": "",
-                "value": "openid+offline_access"
+                "use": "saved_client_id"
+              },
+              {
+                "from": "body",
+                "add": "",
+                "value": "&scope="
+              },
+              {
+                "from": "body",
+                "add": "",
+                "use": "saved_scope"
               },
               {
                 "from": "body",
