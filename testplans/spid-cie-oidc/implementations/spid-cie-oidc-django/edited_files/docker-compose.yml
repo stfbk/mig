@@ -2,8 +2,8 @@ version: "3"
 
 services:
   burpsuite:
-    image: i-mig-t # Use this if you build locally
-    #image: ghcr.io/stfbk/mig-i-mig-t:latest
+    #image: i-mig-t # Use this if you build locally
+    image: ghcr.io/stfbk/mig-i-mig-t:latest
     volumes:
       - /tmp/.X11-unix/:/tmp/.X11-unix/
       - /etc/localtime:/etc/localtime:ro
@@ -31,6 +31,8 @@ services:
       - "8000:8000"
     volumes:
       - ./examples-docker/federation_authority:/django-project
+    depends_on:
+      - burpsuite
     networks:
       - oidcfed
     command: |
@@ -43,7 +45,9 @@ services:
       python3 manage.py migrate &&
       python3 manage.py loaddata dumps/example.json &&
       python3 manage.py runserver 0.0.0.0:8000"
-    privileged: true
+    cap_add:
+      - NET_ADMIN
+
 
   cie-provider.org:
     #image: ghcr.io/italia/spid-cie-oidc-django:latest
@@ -57,6 +61,7 @@ services:
     networks:
       - oidcfed
     depends_on:
+      - burpsuite
       - trust-anchor.org
     command: |
       bash -c "
@@ -68,7 +73,8 @@ services:
       python3 manage.py migrate &&
       python3 manage.py loaddata dumps/example.json &&
       python3 manage.py runserver 0.0.0.0:8002"
-    privileged: true
+    cap_add:
+      - NET_ADMIN
 
   relying-party.org:
     #image: ghcr.io/italia/spid-cie-oidc-django:latest
@@ -82,6 +88,7 @@ services:
     networks:
       - oidcfed
     depends_on:
+      - burpsuite
       - trust-anchor.org
     command: |
       bash -c "
@@ -93,7 +100,8 @@ services:
       python3 manage.py migrate &&
       python3 manage.py loaddata dumps/example.json &&
       python3 manage.py runserver 0.0.0.0:8001"
-    privileged: true
+    cap_add:
+      - NET_ADMIN
 
 networks:
   oidcfed:
