@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "url",
-                "is present": "true",
-                "check param": "response_type"
+                "is present": true,
+                "check": "response_type"
               }
             ]
           }

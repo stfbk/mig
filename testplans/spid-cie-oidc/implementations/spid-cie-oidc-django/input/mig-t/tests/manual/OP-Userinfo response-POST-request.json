@@ -23,6 +23,13 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Authentication request",
+            "edit operations": [
+              {
+                "from": "url",
+                "edit": "scope",
+                "value": "openid profile"
+              }
+            ],
             "decode operations": [
               {
                 "from": "url",
@@ -33,6 +40,16 @@
                     "jwt from": "payload",
                     "jwt edit": "scope",
                     "value": "openid profile"
+                  },
+                  {
+                    "jwt from": "payload",
+                    "jwt remove": "$.claims.userinfo.*"
+                  },
+                  {
+                    "jwt from": "payload",
+                    "jwt add": "$.claims.userinfo",
+                    "key": "given_name",
+                    "value": ""
                   },
                   {
                     "jwt sign": "X_key_core_RP"
@@ -48,7 +65,7 @@
             "message type": "UserInfo request",
             "checks": [
               {
-                "in": "head",
+                "in": "url",
                 "check regex": "POST"
               }
             ]
@@ -63,28 +80,17 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode param": "[^\\n\\r]*",
+                    "decode regex": "[^\\n\\r]*",
                     "type": "jwt",
                     "checks": [
                       {
                         "in": "payload",
-                        "check regex": "sub"
-                      },
-                      {
-                        "in": "payload",
-                        "check regex": "given_name"
-                      },
-                      {
-                        "in": "payload",
-                        "check regex": "family_name"
-                      },
-                      {
-                        "in": "payload",
-                        "check regex": "https://attributes.spid.gov.it/fiscal_number"
+                        "check": "given_name",
+                        "is present": "true"
                       }
                     ]
                   }

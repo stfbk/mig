@@ -15,12 +15,12 @@
         ],
         "operations": [
           {
-            "message type": "Entity Statement response TA RP",
+            "message type": "Entity Statement response SA RP",
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
@@ -30,7 +30,7 @@
                       {
                         "in": "payload",
                         "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": { \"id_code\": { \"type\": \"object\", \"properties\": {\"vat_number\": {}, \"fiscal_number\": {}},\"anyOf\": [{ \"required\": [\"vat_number\"] },{\"required\": [\"fiscal_number\"] }]}},\"required\":[\"id_code\"]}"
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"fiscal_number\": {}, \"vat_number\":{}},\"anyOf\":[{\"required\":[\"fiscal_number\"]},{\"required\":[\"vat_number\"]}]}},\"required\":[\"id_code\"]}"
                       }
                     ]
                   }
@@ -39,7 +39,7 @@
             ]
           }
         ],
-        "result": "assert_only"
+        "result": "correct flow s1"
       }
     }
   ]

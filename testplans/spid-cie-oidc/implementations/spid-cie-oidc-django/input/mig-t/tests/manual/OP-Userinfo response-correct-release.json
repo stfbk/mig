@@ -75,7 +75,7 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
@@ -85,7 +85,7 @@
                       {
                         "in": "payload",
                         "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"iat\":{}, \"exp\":{}, \"aud\":{}, \"iss\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
                       }
                     ]
                   }
@@ -134,7 +134,7 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
@@ -144,7 +144,7 @@
                       {
                         "in": "payload",
                         "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"iat\":{}, \"exp\":{}, \"aud\":{}, \"iss\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
                       }
                     ]
                   }

@@ -7,21 +7,21 @@
     "operations": [
       {
         "message type": "var2",
-        "decode operation": [
+        "decode operations": [
           {
             "from": "var3",
             "type": "jwt",
-            "decode param": "var4",
-            "decode operation": [
+            "decode regex": "var4",
+            "decode operations": [
               {
                 "from": "jwt var5",
                 "type": "jwt",
-                "decode param": "$.var6[0].var7",
+                "decode param": "$.var6",
                 "checks": [
                   {
-                    "in": "var8",
-                    "check": "var9",
-                    "is in": "var_10"
+                    "in": "var7",
+                    "check": "var8",
+                    "is in": "var9"
                   }
                 ]
               }
@@ -30,6 +30,6 @@
         ]
       }
     ],
-    "result": "correct flow s1"
+    "result": "correct flow session0"
   }
 }

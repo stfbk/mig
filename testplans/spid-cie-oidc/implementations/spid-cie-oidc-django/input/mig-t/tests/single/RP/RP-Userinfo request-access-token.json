@@ -19,7 +19,7 @@
             "checks": [
               {
                 "in": "head",
-                "is present": "true",
+                "is present": true,
                 "check param": "Authorization"
               }
             ]

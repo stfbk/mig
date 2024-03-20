@@ -42,6 +42,16 @@
                     "value": "openid profile"
                   },
                   {
+                    "jwt from": "payload",
+                    "jwt remove": "$.claims.userinfo.*"
+                  },
+                  {
+                    "jwt from": "payload",
+                    "jwt add": "$.claims.userinfo",
+                    "key": "given_name",
+                    "value": ""
+                  },
+                  {
                     "jwt sign": "X_key_core_RP"
                   }
                 ]
@@ -53,10 +63,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "UserInfo request",
-            "check": [
+            "checks": [
               {
-                "in": "head",
-                "check regex": "POST"
+                "in": "url",
+                "check regex": "GET"
               }
             ]
           },
@@ -80,21 +90,6 @@
                       {
                         "in": "payload",
                         "check": "given_name",
-                        "is present": "true"
-                      },
-                      {
-                        "in": "payload",
-                        "check": "family_name",
-                        "is present": "true"
-                      },
-                      {
-                        "in": "payload",
-                        "check": "birthdate",
-                        "is present": "true"
-                      },
-                      {
-                        "in": "payload",
-                        "check": "https://attributes.eid.gov.it/fiscal_number",
                         "is present": "true"
                       }
                     ]

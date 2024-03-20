@@ -18,13 +18,14 @@
             "message type": "Introspection request",
             "checks": [
               {
-                "in": "head",
-                "check regex": "POST"
+                "in": "url",
+                "is present": true,
+                "check": "POST"
               }
             ]
           }
         ],
-        "result": "assert_only"
+        "result": "correct flow s1"
       }
     }
   ]

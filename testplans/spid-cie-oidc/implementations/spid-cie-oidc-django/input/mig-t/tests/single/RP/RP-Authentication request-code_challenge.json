@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "url",
-                "is present": "true",
-                "check param": "code_challenge"
+                "is present": true,
+                "check": "code_challenge"
               }
             ]
           }

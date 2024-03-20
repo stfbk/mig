@@ -1,28 +1,28 @@
 {
-	"test": {
-		"name": "var0",
-		"description": "var1",
-		"type": "passive",
-		"sessions": "session0",
-		"operations": [
-			{
-				"message type": "var2",
-				"decode operations": [
-					{
-						"from": "var3",
-						"decode param": "var4",
-						"type": "jwt",
-						"checks": [
-							{
-								"in": "var5",
-								"check": "$.var6",
-								"is present": "true"
-							}
-						]
-					}
-				]
-			}
-		],
-		"result": "correct flow s1"
-	}
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "passive",
+    "sessions": "session0",
+    "operations": [
+      {
+        "message type": "var2",
+        "decode operations": [
+          {
+            "from": "var3",
+            "decode param": "var4",
+            "type": "jwt",
+            "checks": [
+              {
+                "in": "var5",
+                "check": "$.var6",
+                "is present": "true"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "result": "correct flow s1"
+  }
 }
