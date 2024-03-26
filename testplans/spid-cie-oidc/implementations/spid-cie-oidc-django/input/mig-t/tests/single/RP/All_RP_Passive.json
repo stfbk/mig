@@ -7,30 +7,6 @@
   "tests": [
     {
       "test": {
-        "name": "Does the entity return a correct Content-Type in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "checks": [
-              {
-                "in": "head",
-                "url decode": false,
-                "is": "application/entity-statement+jwt",
-                "check param": "Content-Type"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
         "name": "Does the Introspection Request contain correct type of client_assertion_type",
         "description": "The Introspection request made by the RP is taken and the value of the client_assertion_type parameter is urn:ietf:params:oauth:clientassertion-type:jwt-bearer",
         "type": "passive",
@@ -215,8 +191,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the exp parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "name": "Does the entity return a correct HTTP code in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
         "type": "passive",
         "sessions": [
           "s1"
@@ -224,18 +200,11 @@
         "operations": [
           {
             "message type": "Entity Configuration response RP",
-            "decode operations": [
+            "checks": [
               {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.exp",
-                    "is present": "true"
-                  }
-                ]
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
               }
             ]
           }
@@ -245,8 +214,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the iat parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
+        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
         "type": "passive",
         "sessions": [
           "s1"
@@ -254,18 +223,11 @@
         "operations": [
           {
             "message type": "Entity Configuration response RP",
-            "decode operations": [
+            "checks": [
               {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.iat",
-                    "is present": "true"
-                  }
-                ]
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
               }
             ]
           }
@@ -275,98 +237,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the iss parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iss parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.iss",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration contain the jwks parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the jwks parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.jwks",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration contain the metadata parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the metadata parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration contain the sub parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the sub parameter is checked",
+        "name": "Does entity configuration RP contain a correct sub parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the sub parameter is checked. Its value must be equal to the one in the iss parameter",
         "type": "passive",
         "sessions": [
           "s1"
@@ -383,7 +255,611 @@
                   {
                     "in": "payload",
                     "check": "$.sub",
-                    "is present": "true"
+                    "is": "X_url_RP"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
+        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Introspection Request contain correct type token",
+        "description": "The Introspection request made by the RP is taken and the type of the token parameter is a JWT",
+        "type": "passive",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "token=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity expose the resolve entity statement endpoint",
+        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Resolve Entity Statement response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Revocation Request contain correct type of client assertion",
+        "description": "The Revocation request made by the RP is taken and the value of the client_assertion parameter is a signed JWT structure",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_assertion=([\\w]+)\\.([\\w]+)\\.([\\w\\-]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Revocation Request contain correct type of token for which the request is made",
+        "description": "The Revocation request made by the RP is taken and the value of the token parameter is a JWT.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "token=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the client_assertion in the token request contain a JWT",
+        "description": "The client_assertion parameter in the token request sent by the RP must be a JWT",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "client_assertion=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token request use HTTP POST",
+        "description": "The token request sent by the RP must be sent in HTTP POST",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "POST",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP contain a valid Access Token in the UserInfo request",
+        "description": "The UserInfo request from the RP is taken and analyzed. In the Authorization field of the head there must be a valid Access Token",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo request",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "Authorization:\\s?Bearer\\s?([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP Authentication Request's JWT contain the 'state' parameter greater than 32 characters",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'state' parameter must be at least 32 alphanumeric characters long. If it is not present or its length is less than 32 alphanumeric characters, then the RP is not compliant with the specifications",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"state\": {\"type\": \"string\", \"pattern\": \"^[\\u0020-\\u007E]{32,}$\"}}, \"required\": [\"state\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP Authentication Request's JWT contain the 'nonce' parameter longer than 32 characters",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'nonce' parameter must be at least 32 alphanumeric characters long.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"nonce\": {\"type\": \"string\", \"pattern\": \"^[\\u0020-\\u007E]{32,}$\"}}, \"required\": [\"nonce\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain a correct exp parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain a correct iat parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the metadata parameter contain a JSON Object",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"metadata\": {\"type\": \"object\"}}, \"required\": [\"metadata\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the metadata parameter contain only allowed types and only once for each",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object with each key representing a type of metadata. These types cannot be repeated and must be a value among the following: 'openid_relying_party', 'openid_provider', 'federation_entity', 'oauth_authorization_server', 'oauth_resource', 'trust_mark_issuer'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": { \"openid_relying_party\": { \"type\": \"object\" }, \"openid_provider\": { \"type\": \"object\" }, \"federation_entity\": { \"type\": \"object\" }, \"oauth_authorization_server\": { \"type\": \"object\" }, \"oauth_resource\": { \"type\": \"object\" }, \"trust_mark_issuer\": { \"type\": \"object\" } }, \"required\": [\"openid_relying_party\", \"openid_provider\", \"federation_entity\", \"oauth_authorization_server\", \"oauth_resource\", \"trust_mark_issuer\"], \"additionalProperties\": false}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct type of 'client_id' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'client_id' parameter is an HTTPS URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"client_id\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"client_id\"]})"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct type grant_types claim",
+        "description": "In this test the RP metadata are taken and the 'grant_types' parameter is a JSON array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"grant_types\":{\"type\":\"array\"}}, \"requirement\":[\"grant_type\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct type logo_uri claim",
+        "description": "In this test the RP metadata in the RP Entity Configuration are taken and the value of the logo_uri claim in the 'federation_entity' entity type is an URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"logo_uri\"]})"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain the 'response_types' parameter as a json",
+        "description": "In this test the RP metadata are taken and the 'response_types' parameter in the 'openid_relying_party' is a JSON array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"response_types\": {\"type\": \"array\"}}, \"required\": [\"response_types\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP's entity configuration contain a correct trust_marks parameter",
+        "description": "To accomplish this test, the Entity configuration of the RP is taken, the payload is decoded (Base64 encoding) and the trust_marks parameter is checked, it must be a JSON array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"trust_marks\": {\"type\": \"array\"}}, \"required\": [\"trust_marks\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the signed JWT assertion contain a correct aud claim",
+        "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking the aud. Its value must be an URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"aud\": {\"type\": \"array\", \"format\": \"uri-reference\"}}, \"required\": [\"aud\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the signed JWT assertion contain a correct exp claim",
+        "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking the exp claim. Its value must be a timestap",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the signed JWT assertion contain a correct iat claim",
+        "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking the iat claim. Its value must be a timestap",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
                   }
                 ]
               }
@@ -785,6 +1261,216 @@
     },
     {
       "test": {
+        "name": "Does the RP Authentication Request's JWT contain the 'iss' parameter",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the presence of the 'iss' parameter is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the exp parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.exp",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the iat parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iat",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the iss parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iss parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the jwks parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the jwks parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.jwks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the metadata parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the metadata parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the sub parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the sub parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.sub",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does the RP's entity configuration contain the trust_marks parameter",
         "description": "To accomplish this test, the Entity configuration of the RP is taken, the payload is decoded (Base64 encoding) and the presence of the trust_marks parameter is checked.",
         "type": "passive",
@@ -905,36 +1591,6 @@
     },
     {
       "test": {
-        "name": "Does the RP Authentication Request's JWT contain the 'iss' parameter",
-        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the presence of the 'iss' parameter is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Authentication request",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "request",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.iss",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
         "name": "Does the signed JWT assertion contain the jti claim",
         "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking if the jti claim is present.",
         "type": "passive",
@@ -1025,8 +1681,8 @@
     },
     {
       "test": {
-        "name": "Does the RP metadata contain incorrect 'id_token_signed_response_alg' parameter",
-        "description": "In this test the RP metadata are taken and the value of the 'id_token_signed_response_alg' parameter is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512'].",
+        "name": "Does the RP metadata contain incorrect 'id_token_encrypted_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'id_token_encrypted_response_alg' parameter is checked. It must not contain the value ['RSA_1_5'].",
         "type": "passive",
         "sessions": [
           "s1"
@@ -1037,689 +1693,15 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode regex": "[^\\r\\n]*",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.metadata.openid_relying_party.id_token_signed_response_alg",
-                    "is not in": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP metadata contain incorrect 'userinfo_encrypted_response_alg' parameter",
-        "description": "In this test the RP metadata are taken and the value of the 'userinfo_encrypted_response_alg' parameter is checked. It must not contain the value ['RSA_1_5'].",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode regex": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_relying_party.userinfo_encrypted_response_alg",
-                    "is not in": [
+                    "check": "$.metadata.openid_relying_party.id_token_encrypted_response_alg",
+                    "not contains": [
                       "RSA_1_5"
                     ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP metadata contain incorrect 'userinfo_signed_response_alg' parameter",
-        "description": "In this test the RP metadata are taken and the value of the 'userinfo_signed_response_alg' parameter is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512'].",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode regex": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_relying_party.userinfo_signed_response_alg",
-                    "is not in": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
-        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Entity expose the resolve entity statement endpoint",
-        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Resolve Entity Statement response",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Introspection Request contain correct type token",
-        "description": "The Introspection request made by the RP is taken and the type of the token parameter is a JWT",
-        "type": "passive",
-        "sessions": [
-          "s_CIE_introsp"
-        ],
-        "operations": [
-          {
-            "message type": "Introspection request",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "token=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Revocation Request contain correct type of client assertion",
-        "description": "The Revocation request made by the RP is taken and the value of the client_assertion parameter is a signed JWT structure",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Revocation request",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "client_assertion=([\\w]+)\\.([\\w]+)\\.([\\w\\-]*)(?:&|$)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Revocation Request contain correct type of token for which the request is made",
-        "description": "The Revocation request made by the RP is taken and the value of the token parameter is a JWT.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Revocation request",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "token=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the client_assertion in the token request contain a JWT",
-        "description": "The client_assertion parameter in the token request sent by the RP must be a JWT",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token request",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "client_assertion=([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)(?:&|$)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token request use HTTP POST",
-        "description": "The token request sent by the RP must be sent in HTTP POST",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token request",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "POST",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP contain a valid Access Token in the UserInfo request",
-        "description": "The UserInfo request from the RP is taken and analyzed. In the Authorization field of the head there must be a valid Access Token",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "UserInfo request",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "Authorization:\\s?Bearer\\s?([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration contain a correct exp parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration contain a correct iat parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the metadata parameter contain a JSON Object",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"metadata\": {\"type\": \"object\"}}, \"required\": [\"metadata\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the metadata parameter contain only allowed types and only once for each",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object with each key representing a type of metadata. These types cannot be repeated and must be a value among the following: 'openid_relying_party', 'openid_provider', 'federation_entity', 'oauth_authorization_server', 'oauth_resource', 'trust_mark_issuer'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\n\\r]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": { \"openid_relying_party\": { \"type\": \"object\" }, \"openid_provider\": { \"type\": \"object\" }, \"federation_entity\": { \"type\": \"object\" }, \"oauth_authorization_server\": { \"type\": \"object\" }, \"oauth_resource\": { \"type\": \"object\" }, \"trust_mark_issuer\": { \"type\": \"object\" } }, \"required\": [\"openid_relying_party\", \"openid_provider\", \"federation_entity\", \"oauth_authorization_server\", \"oauth_resource\", \"trust_mark_issuer\"], \"additionalProperties\": false}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP Authentication Request's JWT contain the 'state' parameter greater than 32 characters",
-        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'state' parameter must be at least 32 alphanumeric characters long. If it is not present or its length is less than 32 alphanumeric characters, then the RP is not compliant with the specifications",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Authentication request",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "request",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"state\": {\"type\": \"string\", \"pattern\": \"^[\\u0020-\\u007E]{32,}$\"}}, \"required\": [\"state\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP Authentication Request's JWT contain the 'nonce' parameter longer than 32 characters",
-        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'nonce' parameter must be at least 32 alphanumeric characters long.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Authentication request",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "request",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"nonce\": {\"type\": \"string\", \"pattern\": \"^[\\u0020-\\u007E]{32,}$\"}}, \"required\": [\"nonce\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP metadata contain correct type of 'client_id' parameter",
-        "description": "In this test the RP metadata are taken and the value of the 'client_id' parameter is an HTTPS URL",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\n\\r]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_relying_party",
-                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"client_id\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"client_id\"]})"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP metadata contain correct type grant_types claim",
-        "description": "In this test the RP metadata are taken and the 'grant_types' parameter is a JSON array",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\n\\r]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_relying_party",
-                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"grant_types\":{\"type\":\"array\"}}, \"requirement\":[\"grant_type\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP metadata contain correct type logo_uri claim",
-        "description": "In this test the RP metadata in the RP Entity Configuration are taken and the value of the logo_uri claim in the 'federation_entity' entity type is an URL",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\n\\r]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.federation_entity",
-                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"logo_uri\"]})"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP metadata contain the 'response_types' parameter as a json",
-        "description": "In this test the RP metadata are taken and the 'response_types' parameter in the 'openid_relying_party' is a JSON array",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\n\\r]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_relying_party",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"response_types\": {\"type\": \"array\"}}, \"required\": [\"response_types\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP's entity configuration contain a correct trust_marks parameter",
-        "description": "To accomplish this test, the Entity configuration of the RP is taken, the payload is decoded (Base64 encoding) and the trust_marks parameter is checked, it must be a JSON array",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"trust_marks\": {\"type\": \"array\"}}, \"required\": [\"trust_marks\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the signed JWT assertion contain a correct aud claim",
-        "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking the aud. Its value must be an URL",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token request",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=client_assertion=)([^&]+)",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"aud\": {\"type\": \"array\", \"format\": \"uri-reference\"}}, \"required\": [\"aud\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the signed JWT assertion contain a correct exp claim",
-        "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking the exp claim. Its value must be a timestap",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token request",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=client_assertion=)([^&]+)",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the signed JWT assertion contain a correct iat claim",
-        "description": "This test can be performed by taking the JWT present in the 'client_assertion' field of the RP's request, base64url decoding the payload and checking the iat claim. Its value must be a timestap",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token request",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=client_assertion=)([^&]+)",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
                   }
                 ]
               }
@@ -2058,296 +2040,6 @@
     },
     {
       "test": {
-        "name": "Does the RP metadata contain incorrect 'id_token_encrypted_response_alg' parameter",
-        "description": "In this test the RP metadata are taken and the value of the 'id_token_encrypted_response_alg' parameter is checked. It must not contain the value ['RSA_1_5'].",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.openid_relying_party.id_token_encrypted_response_alg",
-                    "not contains": [
-                      "RSA_1_5"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration RP contain a correct sub parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the sub parameter is checked. Its value must be equal to the one in the iss parameter",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.sub",
-                    "is": "X_url_RP"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity return a correct HTTP code in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
-        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity correctly sign the Entity Configuration",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken and the three parts of the JWT (header, payload and signature) are base64url decoded. Finally, the signature is validated passing the public key (n, e of jwks parameter that must be taken from the Entity Statement of a superior), the JWS Signature (received signature base64url decoded) and the JWS signing input (header and payload base64url encoded and concatenated with a dot dividing them) to a signature verifier configured for the algorithm described in the Entity Configuration Header",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "jwt check sig": "X_key_RP"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the client_assertion in the token request have a correct signature",
-        "description": "The client_assertion parameter in the token request sent by the RP must be a JWT with a signature",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token request",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "(?<=client_assertion=)([^&]+)",
-                "type": "jwt",
-                "jwt check sig": "X_key_core_RP"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP Authentication Request's JWT contain a correct 'acr_values' parameter",
-        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the presence of the 'acr_values' parameter is checked. If it is present, than it must be a string with the requested 'acr' values, each of them separated by a single space. The supported values are 'https://www.spid.gov.it/SpidL1', 'https://www.spid.gov.it/SpidL2' and 'https://www.spid.gov.it/SpidL3'. If it contains other values or it is missing, than the RP is not compliant with the specifications",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Authentication request",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "request",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.acr_values",
-                    "is in": [
-                      "https://www.spid.gov.it/SpidL1",
-                      "https://www.spid.gov.it/SpidL2",
-                      "https://www.spid.gov.it/SpidL3",
-                      "https://www.spid.gov.it/SpidL1 https://www.spid.gov.it/SpidL2",
-                      "https://www.spid.gov.it/SpidL1 https://www.spid.gov.it/SpidL3",
-                      "https://www.spid.gov.it/SpidL2 https://www.spid.gov.it/SpidL3",
-                      "https://www.spid.gov.it/SpidL1 https://www.spid.gov.it/SpidL2 https://www.spid.gov.it/SpidL3"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP Authentication Request's JWT contain the 'prompt' parameter",
-        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the 'prompt' parameter is checked. It must be set to the value 'consent' or 'consent login'. If it contains other values or it is missing, than the RP is not compliant with the specifications",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Authentication request",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "request",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.prompt",
-                    "is in": [
-                      "consent",
-                      "consent login"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the RP Authentication Request contain a correct value in 'scope' parameter",
-        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'scope' parameter must be set to the value 'openid' then it can (optionally) have the values 'offline_access', 'profile' or 'email' appended.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Authentication request",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "request",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.scope",
-                    "is in": [
-                      "openid",
-                      "openid profile",
-                      "openid email",
-                      "openid offline_access",
-                      "openid offline_access profile",
-                      "openid offline_access email"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the token request contain a correct grant_type parameter",
-        "description": "The grant_type parameter in the URL of the token request sent by the RP must be set to authorization_code or to refresh_token. So in this test a token request is taken and the grant_type parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Token request",
-            "checks": [
-              {
-                "in": "body",
-                "check regex": "(?<=grant_type=)([^&]+)",
-                "is in": [
-                  "authorization_code",
-                  "refresh_token"
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
         "name": "Does the RP's Authentication Request contain the 'code_challenge' parameter",
         "description": "The Authentication request is taken and the presence of the 'code_challenge' parameter is checked. If it is present, than the Authentication Request is using PKCE and is compliant with the specifications, otherwise it is not compliant.",
         "type": "passive",
@@ -2546,6 +2238,29 @@
                 "in": "body",
                 "is present": true,
                 "check regex": "token"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Introspection Request use HTTP POST",
+        "description": "The Introspection request made by the RP use HTTP POST",
+        "type": "passive",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection request",
+            "checks": [
+              {
+                "in": "url",
+                "is present": true,
+                "check": "POST"
               }
             ]
           }
@@ -2831,20 +2546,105 @@
     },
     {
       "test": {
-        "name": "Does the Introspection Request use HTTP POST",
-        "description": "The Introspection request made by the RP use HTTP POST",
+        "name": "Does the RP Authentication Request's JWT contain a correct 'acr_values' parameter",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the presence of the 'acr_values' parameter is checked. If it is present, than it must be a string with the requested 'acr' values, each of them separated by a single space. The supported values are 'https://www.spid.gov.it/SpidL1', 'https://www.spid.gov.it/SpidL2' and 'https://www.spid.gov.it/SpidL3'. If it contains other values or it is missing, than the RP is not compliant with the specifications",
         "type": "passive",
         "sessions": [
-          "s_CIE_introsp"
+          "s1"
         ],
         "operations": [
           {
-            "message type": "Introspection request",
-            "checks": [
+            "message type": "Authentication request",
+            "decode operations": [
               {
-                "in": "url",
-                "is present": true,
-                "check": "POST"
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.acr_values",
+                    "is in": [
+                      "https://www.spid.gov.it/SpidL1",
+                      "https://www.spid.gov.it/SpidL2",
+                      "https://www.spid.gov.it/SpidL3",
+                      "https://www.spid.gov.it/SpidL1 https://www.spid.gov.it/SpidL2",
+                      "https://www.spid.gov.it/SpidL1 https://www.spid.gov.it/SpidL3",
+                      "https://www.spid.gov.it/SpidL2 https://www.spid.gov.it/SpidL3",
+                      "https://www.spid.gov.it/SpidL1 https://www.spid.gov.it/SpidL2 https://www.spid.gov.it/SpidL3"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP Authentication Request's JWT contain the 'prompt' parameter",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the 'prompt' parameter is checked. It must be set to the value 'consent' or 'consent login'. If it contains other values or it is missing, than the RP is not compliant with the specifications",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.prompt",
+                    "is in": [
+                      "consent",
+                      "consent login"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP Authentication Request contain a correct value in 'scope' parameter",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'scope' parameter must be set to the value 'openid' then it can (optionally) have the values 'offline_access', 'profile' or 'email' appended.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.scope",
+                    "is in": [
+                      "openid",
+                      "openid profile",
+                      "openid email",
+                      "openid offline_access",
+                      "openid offline_access profile",
+                      "openid offline_access email"
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -3420,6 +3220,206 @@
                     "is present": "true"
                   }
                 ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity correctly sign the Entity Configuration",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken and the three parts of the JWT (header, payload and signature) are base64url decoded. Finally, the signature is validated passing the public key (n, e of jwks parameter that must be taken from the Entity Statement of a superior), the JWS Signature (received signature base64url decoded) and the JWS signing input (header and payload base64url encoded and concatenated with a dot dividing them) to a signature verifier configured for the algorithm described in the Entity Configuration Header",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "jwt check sig": "X_key_RP"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the client_assertion in the token request have a correct signature",
+        "description": "The client_assertion parameter in the token request sent by the RP must be a JWT with a signature",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
+                "type": "jwt",
+                "jwt check sig": "X_key_core_RP"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the token request contain a correct grant_type parameter",
+        "description": "The grant_type parameter in the URL of the token request sent by the RP must be set to authorization_code or to refresh_token. So in this test a token request is taken and the grant_type parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "(?<=grant_type=)([^&]+)",
+                "is in": [
+                  "authorization_code",
+                  "refresh_token"
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain incorrect 'id_token_signed_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'id_token_signed_response_alg' parameter is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512'].",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode regex": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.id_token_signed_response_alg",
+                    "is not in": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain incorrect 'userinfo_encrypted_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'userinfo_encrypted_response_alg' parameter is checked. It must not contain the value ['RSA_1_5'].",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode regex": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.userinfo_encrypted_response_alg",
+                    "is not in": [
+                      "RSA_1_5"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the RP metadata contain incorrect 'userinfo_signed_response_alg' parameter",
+        "description": "In this test the RP metadata are taken and the value of the 'userinfo_signed_response_alg' parameter is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512'].",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode regex": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_relying_party.userinfo_signed_response_alg",
+                    "is not in": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity return a correct Content-Type in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "checks": [
+              {
+                "in": "head",
+                "url decode": false,
+                "is": "application/entity-statement+jwt",
+                "check param": "Content-Type"
               }
             ]
           }

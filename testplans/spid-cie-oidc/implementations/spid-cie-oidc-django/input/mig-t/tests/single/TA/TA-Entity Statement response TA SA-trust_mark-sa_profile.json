@@ -7,15 +7,15 @@
   "tests": [
     {
       "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the claims claim",
-        "description": "In this test, a Trust Mark issued for an TA must be taken, decrypted and the presence of the claims claim in it is checked.",
+        "name": "Does the issued intermediary Trust Mark contain the sa_profile claim",
+        "description": "A Trust Mark issued by a TA for an SA is taken, decrypted and the presence of the sa_profile claim is checked.",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Entity Statement response TA OP",
+            "message type": "Entity Statement response TA SA",
             "decode operations": [
               {
                 "from": "body",
@@ -29,7 +29,7 @@
                     "checks": [
                       {
                         "in": "payload",
-                        "check": "claims",
+                        "check": "sa_profile",
                         "is present": "true"
                       }
                     ]

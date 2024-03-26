@@ -4,25 +4,25 @@ This folder contains all the testplans supported by MIG, categorized by the type
 
 ## Folder Structure
 
-```
+```bash
 testplans
-├──	testplan_name
-│ 	├── config
-│ 	│   └── testplan-to-mr
-│ 	│       └── templates
-│ 	├── implementations
-│ 	│   ├── implementation_name
-│ 	│   │   ├── input
-│ 	│   │   │   ├── mig-t
-│ 	│   │   │   │   ├── sessions
-│ 	│   │   │   │   └── tests
-│ 	│   │   │   └── testplan-to-mr
-│ 	│   │   └── config
-│ 	│   │   │   ├── mig-t
-│ 	│   │   │   │   └── msg_def.json
-│ 	│   │   │   └── testplan-to-mr
-│ 	│   │   │       └── config_testplan.json
-│ 	│   │   └── generate_mr.sh
+├── testplan_name
+│   ├── config
+│   │   └── testplan-to-mr
+│   │       └── templates
+│   ├── implementations
+│   │   ├── implementation_name
+│   │   │   ├── input
+│   │   │   │   ├── mig-t
+│   │   │   │   │   ├── sessions
+│   │   │   │   │   └── tests
+│   │   │   │   └── testplan-to-mr
+│   │   │   └── config
+│   │   │   │   ├── mig-t
+│   │   │   │   │   └── msg_def.json
+│   │   │   │   └── testplan-to-mr
+│   │   │   │       └── config_testplan.json
+│   │   │   └── generate_mr.sh
 ```
 
 In this folder, each testplan is accompanied by a dedicated subfolder. Within each testplan folder resides a "testplan.csv" file containing the actual testplan. Furthermore, an "implementations" folder is present, encompassing all implementations currently supported by this testplan.
