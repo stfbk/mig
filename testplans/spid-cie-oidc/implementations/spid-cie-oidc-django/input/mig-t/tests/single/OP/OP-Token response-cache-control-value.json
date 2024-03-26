@@ -19,13 +19,13 @@
             "checks": [
               {
                 "in": "head",
-                "check": "Cache-Control",
+                "check param": "Cache-Control",
                 "contains": "no-store"
               }
             ]
           }
         ],
-        "result": "assert_only"
+        "result": "correct flow s1"
       }
     }
   ]

@@ -242,6 +242,9 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
                 if "body" in message_split and item == "body":
                     _check_key_exists(template, "key_"+var, "check regex")
                     _check_key_exists(template, "edit_"+var, "edit regex")
+                elif "url" in message_split and item == "url":
+                    _check_key_exists(template, "key_"+var, "check")
+                    _check_key_exists(template, "edit_"+var, "edit")
                 else:
                     _check_key_exists(template, "key_"+var, "check param")
                     _check_key_exists(template, "edit_"+var, "edit")

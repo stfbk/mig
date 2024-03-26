@@ -13,7 +13,7 @@ bash docker-prepare.sh
 # local build i-mig-t --------
 cd ../../../../../tools/i-mig-t
 # rm mig-t-beta-jar-with-dependencies.jar
-# sudo docker build -t i-mig-t .
+sudo docker build -t i-mig-t .
 cd ../../testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/spid-cie-oidc-django/
 # local build i-mig-t --------
 

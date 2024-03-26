@@ -20,7 +20,7 @@ As for the tools, MIG offers a seamless testing environment known as i-mig-t, a 
 
 ## What is in this Repo
 
-```
+```bash
 mig
 ├── tools
 │   ├── mig-t (submodule)
@@ -113,6 +113,7 @@ A guide on how to add your RP to the testing environment can be found [here](tes
 <summary>Instructions</summary>
 
 To contribute a test plan for a different IdM protocol, please adhere to the [repository's structure](testplans/README.md#folder-structure) within the `testplan` folder.
+
 * Create a `readme.md` file containing information about the test plan you wish to add.
 * The added test plan file should have a `.csv` extension and include all the columns specified in the [testplan.csv](testplans/spid-cie-oidc/testplan.csv) file.
 
@@ -167,7 +168,7 @@ To contribute to `mig-t`, please consult its dedicated [repository](https://gith
 
 Everything in this repository is licensed under the [Apache 2.0 license](LICENSE)
 
-```
+```text
 Copyright 2023, Fondazione Bruno Kessler
 
 Licensed under the Apache License, Version 2.0 (the "License");

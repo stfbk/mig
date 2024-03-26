@@ -16,12 +16,12 @@
         "operations": [
           {
             "message type": "Entity Statement response SA RP",
-            "decode operation": [
+            "decode operations": [
               {
                 "from": "body",
                 "decode param": "[^\\r\\n]*",
                 "type": "jwt",
-                "decode operation": [
+                "decode operations": [
                   {
                     "from": "jwt payload",
                     "type": "jwt",

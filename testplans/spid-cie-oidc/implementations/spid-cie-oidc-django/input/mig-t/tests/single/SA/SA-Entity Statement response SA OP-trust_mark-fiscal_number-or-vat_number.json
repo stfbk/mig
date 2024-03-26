@@ -19,17 +19,18 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
-                "decode operation": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
                     "from": "jwt payload",
                     "type": "jwt",
                     "decode param": "$.trust_marks[0].trust_mark",
-                    "check": [
+                    "checks": [
                       {
                         "in": "payload",
-                        "check regex": "id_code.^\\s*\\{[^}]*(\"fiscal_number\"|\"vat_number\"):[^}]*\\}"
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"fiscal_number\": {}, \"vat_number\":{}},\"anyOf\":[{\"required\":[\"fiscal_number\"]},{\"required\":[\"vat_number\"]}]}},\"required\":[\"id_code\"]}"
                       }
                     ]
                   }
@@ -38,7 +39,7 @@
             ]
           }
         ],
-        "result": "assert_only"
+        "result": "correct flow s1"
       }
     }
   ]

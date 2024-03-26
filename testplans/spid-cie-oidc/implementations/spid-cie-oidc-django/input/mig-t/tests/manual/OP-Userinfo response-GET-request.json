@@ -53,10 +53,10 @@
             "from session": "s1",
             "then": "forward",
             "message type": "UserInfo request",
-            "check": [
+            "checks": [
               {
-                "in": "head",
-                "check regex": "POST"
+                "in": "url",
+                "check regex": "GET"
               }
             ]
           },
@@ -79,23 +79,8 @@
                     "checks": [
                       {
                         "in": "payload",
-                        "check": "given_name",
-                        "is present": "true"
-                      },
-                      {
-                        "in": "payload",
-                        "check": "family_name",
-                        "is present": "true"
-                      },
-                      {
-                        "in": "payload",
-                        "check": "birthdate",
-                        "is present": "true"
-                      },
-                      {
-                        "in": "payload",
-                        "check": "https://attributes.eid.gov.it/fiscal_number",
-                        "is present": "true"
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"iat\":{}, \"exp\":{}, \"aud\":{}, \"iss\":{}, \"family_name\": {}, \"given_name\": {}, \"birthdate\": {}, \"https://attributes.eid.gov.it/fiscal_number\": {}}, \"required\": [\"sub\", \"iss\", \"aud\", \"family_name\", \"given_name\", \"birthdate\", \"https://attributes.eid.gov.it/fiscal_number\"], \"additionalProperties\": false}"
                       }
                     ]
                   }

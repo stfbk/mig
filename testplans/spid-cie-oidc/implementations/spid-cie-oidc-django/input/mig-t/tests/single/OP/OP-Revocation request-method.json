@@ -7,25 +7,25 @@
   "tests": [
     {
       "test": {
-        "name": "Does the HTTP status code of the UserInfo response is 200",
-        "description": "The HTTP status code of the UserInfo response is 200",
+        "name": "Does the OP verify the HTTP method of the Revocation request",
+        "description": "The revocation request must be sent via HTTP POST",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "UserInfo response",
+            "message type": "Revocation request",
             "checks": [
               {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
+                "in": "url",
+                "is present": true,
+                "check": "POST"
               }
             ]
           }
         ],
-        "result": "assert_only"
+        "result": "correct flow s1"
       }
     }
   ]

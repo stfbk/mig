@@ -1,0 +1,46 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the id_code claim of a Trust Mark issued for private organization contain the fiscal_number or vat_number claim",
+        "description": "In this test, a Trust Mark issued for a private entity must be taken, decrypted and the presence of the fiscal_number claim or vat_number in the id_code is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response TA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"fiscal_number\": {}, \"vat_number\":{}},\"anyOf\":[{\"required\":[\"fiscal_number\"]},{\"required\":[\"vat_number\"]}]}},\"required\":[\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

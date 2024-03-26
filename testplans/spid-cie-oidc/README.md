@@ -2,7 +2,7 @@
 
 ## index
 
-- [Testplan description](#testplan)
+- [Testplan description](#testplan-description)
 - [Adding support for your RP](#adding-support-for-your-rp)
 
 ## Testplan description
@@ -36,18 +36,18 @@ The "correct generation" type corresponds to tests where "the tester takes as in
 
 | Pattern name | What we have to do | Information needed by the test | Need by the Oracle |
 | ---- | ---- | ---- | ---- |
-| **HTTP list value** | Verify the value of a param*name* in the *message type* is between a list of value | - | message type \| {head/body/url} \| param_name \| list_of_value
-| **HTTP parameter presence_1** | Verify that the param*name* (i.e., Location) in the *message type* conatins a value (i.e., code,state,iss) | - | message type \| {head/body/url} \| param_name | value
-| **HTTP parameter presence** | Verify the presence in the *message type* of a param*name* (i.e., code,state,iss) | - | message type \| {head/body/url} \| param_name
+| **HTTP list value** | Verify the value of a param*name* in the *message type* is between a list of value | - | message type \| {head/body/url} \| param_name \| list_of_value |
+| **HTTP parameter presence_1** | Verify that the param*name* (i.e., Location) in the *message type* conatins a value (i.e., code,state,iss) | - | message type \| {head/body/url} \| param_name \| value |
+| **HTTP parameter presence** | Verify the presence in the *message type* of a param*name* (i.e., code,state,iss) | - | message type \| {head/body/url} \| param_name |
 | **HTTP parameter type** | Verify the *type* (with a regex) of a param*name* (i.e., code,state,iss) in the *message type* | - | message type \| {head/body/url} \| param_name.type |
 | **HTTP parameter value_1** | Verify that the paramvalue of a param*name* in the *message type* is equal to an *url_encoded* *value* | - | message type \| {head/body/url} \| param_name \| value |
 | **HTTP parameter value** | Verify that the paramvalue of a param*name* in the *message type* is equal to a *value* | - | message type \| {head/body/url} \| param_name \| value |
 | **HTTP Status** | Verify in the *message type* the *HTTP status* | - | message type \| {head/body/url} \| HTTP_status |
-| **JSON in JWT parameter type** | Verify the *type* (regex) of a param*name* located in a param*path* (path separated by dots) in the JSON, in *header/payload* of a decoded JWT (jwt_name) in the *message type* | - | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_path \| type
+| **JSON in JWT parameter type** | Verify the *type* (regex) of a param*name* located in a param*path* (path separated by dots) in the JSON, in *header/payload* of a decoded JWT (jwt_name) in the *message type* | - | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_path \| type |
 | **JWE list values** | Verify the value of a param*name* located in a decoded JWE is between a list (at least one present). Select the *message type*, *JWE_name* interested (all the JWE with [\s\S]*) and then the param | - | message type \| {head/body/url} \| JWE_name \| {header/payload} \| param_name \| list_of_value |
 | **JWE parameter not in value** | Verify the value is not between a list (all) of a param*name* located in a decoded JWE | - | message type \| {head/body/url} \| JWE_name \| {header/payload} \| param_name \| list_of_value
-| **JWE parameter presence** | Verify the presence of a param*name* located in a decoded JWE | - | message type \| {head/body/url} \| JWE_name \| {header/payload} \| param_name
-| **JWE parameter values** | Verify the *value* of a param*name* located in a decoded JWE | - | message type \| {head/body/url} \| JWE_name \| {header/payload} \| param_name \| value
+| **JWE parameter presence** | Verify the presence of a param*name* located in a decoded JWE | - | message type \| {head/body/url} \| JWE_name \| {header/payload} \| param_name |
+| **JWE parameter values** | Verify the *value* of a param*name* located in a decoded JWE | - | message type \| {head/body/url} \| JWE_name \| {header/payload} \| param_name \| value |
 | **JWT Check-Save to JWT_same message** | Send a *message type* and save the value of a param*name* in a JWT_name. Then verify in the same *message type* that a jwt_param_name in the JWT (that is located at jwt_name) has values that are inside the param_name_value saved before | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_path \| saved_param | message type \| {head/body/url} \| jwt_name \| {header/payload} \| jwt_param_name |
 | **JWT Check-Save to JWT** | Send a *message type* and save the value of a param*name* in a JWT_name. Then verify in the second *message type* that a jwt_param_name in the JWT (that is located at jwt_name) has values that are inside the param_name_value saved before | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_path \| saved_param | message type \| {head/body/url} \| jwt_name \| {header/payload} \| jwt_param_name |
 | **JWT list parameter contains** | Verify that the list present in the param*value* of a param*path* located in header/payload of a decoded JWT (jwt_name) in the *message type* contains certain values | - | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_path \| ["param_value1", "param_value2", ...] |
@@ -61,13 +61,13 @@ The "correct generation" type corresponds to tests where "the tester takes as in
 | **JWT parameter type** | Verify the type (reges) in header/payload of a decoded JWT (jwt_name) in the *message type* | - | message type \| {head/body/url} \| jwt_name \| {header/payload} \| type |
 | **JWT parameter values** | Verify the param*value* of a param_name located in header/payload of a decoded JWT (jwt_name) in the *message type* | - | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_name \| param_value |
 | **JWT signature check** | Verify the signature of a JWT (located at jwt*name*) the *message type* | - | message type \| {head/body/url} \| jwt_name \| JWT_public_key |
-| **nested JWT Check-Save to JWT** | Send a *message type* and save the value of a param*name* in a jwt_name specified with a param_path. Then verify in the *message type* that a param_jwt in the JWT (that is located at jwt_name) contains a jwt (jwt_nested_name) which contains a parameter (jwt_param_name) that has a value (saved_param) | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_path \| saved_param | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_jwt \| jwt_nested_name \| {header/payload} \| jwt_param_name \|
+| **nested JWT Check-Save to JWT** | Send a *message type* and save the value of a param*name* in a jwt_name specified with a param_path. Then verify in the *message type* that a param_jwt in the JWT (that is located at jwt_name) contains a jwt (jwt_nested_name) which contains a parameter (jwt_param_name) that has a value (saved_param) | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_path \| saved_param | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_jwt \| jwt_nested_name \| {header/payload} \| jwt_param_name \| |
 | **nested JWT parameter presence** | Verify the presence of a param*name* in a nested JWT (jwt_nested_name) located at param_jwt of the jwt_name in the *message type* | - | message type \| {head/body/url} \| jwt_name \| {header/payload} \| param_jwt \| jwt_nested_name \| {header/payload} \| param_name |
 | **nested JWT parameter type** | Verify that the param_value of a param_name is of a certain type (regex). The param_name is located in a jwt that is located in param of a json (json_param) in another param (jwt_nested_param) of the main jwt (jwt_name) | -  | message type \| {head/body/url} \| jwt_name \| {header/payload} \| json_param \| jwt_nested_param \| {header/payload} \| param_name.type |
 | **nested JWT parameter values** | Verify that the param*value* of a param_name of a nested JWT (jwt_nested_name) located at param_jwt of the jwt_name in the *message type* is inside a list of possible values | - | message type \| {head/body/url} \| jwt_name \| {header/payload/signature} \| param_jwt \| jwt_nested_name \| {header/payload/signature} \| param_name \| ["param_value1", "param_value2", ...] |
 | **nested JWT signature check** | Verify the signature of a nested JWT (jwt*nested_name*) located at param_jwt of the jwt_name in the *message type* | - | message type \| {head/body/url} \| jwt_name \| {header/payload/signature} \| param_jwt \| jwt_nested_name \| JWT_public_key |
 | **Param Check-Save to JWT** | Send a *message type* and save the value of a param*name*. Then verify in another *message type* that a jwt_param_name in the JWT (that is located at jwt_name) has the param_name_value saved before | message type \| {head/body/url} \| param_name \| saved_param | message type \| {head/body/url} \| jwt_name \| {header/payload} \| jwt_param_name |
-| **Param Status** | Send a *message type* with modified parameters then verify the HTTP status of another *message type* | message type \| {head/body/url} \| param_name \| param_value | message type \| {head/body/url} | HTTP_status |
+| **Param Status** | Send a *message type* with modified parameters then verify the HTTP status of another *message type* | message type \| {head/body/url} \| param_name \| param_value | message type \| {head/body/url} \| HTTP_status |
 
 #### Wrong Input
 
@@ -142,13 +142,13 @@ For the tests to work, you will need to edit the [msg_def.json](./implementation
 
 line 61
 
-```
+```json
 "contains": "your-rp-url:your-rp-port"
 ```
 
 line 156
 
-```
+```json
 "check regex": "/fetch\\?sub=http://your-rp-url:your-rp-port" // TODO
 ```
 
@@ -156,13 +156,13 @@ line 156
 
 line 222
 
-```
+```json
 "check regex": "/federation_fetch_endpoint\\?iss=http://your-rp-url:your-rp-port&sub=http://trust-anchor.org:8000"
 ```
 
 line 244
 
-```
+```json
 "check regex": "/federation_fetch_endpoint\\?iss=http://your-rp-url:your-rp-port&sub=http://subject-aggregator.org:8004"
 ```
 

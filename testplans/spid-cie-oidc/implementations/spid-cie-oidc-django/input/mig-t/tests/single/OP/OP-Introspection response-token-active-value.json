@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does the Introspection Endpoint Response have the active parameter",
-        "description": "To test that the Introspection response of the OP's correctly answers to valid tokens, a valid one is sent and the response is analyzed. It must contain the 'active' parameter",
+        "name": "Does the Introspection Endpoint returns true on active tokens",
+        "description": "To test that the Introspection response of the OP's correctly identifies valid tokens, a valid one is sent and the response is analyzed",
         "type": "passive",
         "sessions": [
           "s_CIE_introsp"
@@ -19,13 +19,13 @@
             "checks": [
               {
                 "in": "body",
-                "check regex": "active",
-                "is present": "true"
+                "is present": true,
+                "check regex": "\"active\": true"
               }
             ]
           }
         ],
-        "result": "assert_only"
+        "result": "correct flow s1"
       }
     }
   ]

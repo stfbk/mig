@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT ID Token contain a correct 'exp' parameter in the Payload",
+        "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the type of the 'exp' parameter in the Payload is checked. In particular, its value must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=id_token: \")([^\"]+)",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

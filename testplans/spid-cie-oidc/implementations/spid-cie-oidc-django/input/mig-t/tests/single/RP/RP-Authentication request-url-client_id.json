@@ -19,8 +19,8 @@
             "checks": [
               {
                 "in": "url",
-                "is present": "true",
-                "check param": "client_id"
+                "is present": true,
+                "check": "client_id"
               }
             ]
           }

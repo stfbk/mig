@@ -2,8 +2,8 @@ version: "3"
 
 services:
   burpsuite:
-    #image: i-mig-t # Use this if you build locally
-    image: ghcr.io/stfbk/mig-i-mig-t:latest
+    image: i-mig-t # Use this if you build locally
+    #image: ghcr.io/stfbk/mig-i-mig-t:latest
     volumes:
       - /tmp/.X11-unix/:/tmp/.X11-unix/
       - /etc/localtime:/etc/localtime:ro
@@ -47,7 +47,6 @@ services:
       python3 manage.py runserver 0.0.0.0:8000"
     cap_add:
       - NET_ADMIN
-
 
   cie-provider.org:
     #image: ghcr.io/italia/spid-cie-oidc-django:latest

@@ -23,6 +23,13 @@
             "from session": "s1",
             "then": "forward",
             "message type": "Authentication request",
+            "edit operations": [
+              {
+                "from": "url",
+                "edit": "scope",
+                "value": "openid profile"
+              }
+            ],
             "decode operations": [
               {
                 "from": "url",
@@ -46,10 +53,11 @@
             "from session": "s1",
             "then": "forward",
             "message type": "UserInfo request",
-            "checks": [
+            "edit operations": [
               {
-                "in": "head",
-                "check regex": "POST"
+                "from": "url",
+                "edit regex": "\b(GET|POST)\b",
+                "in": "POST"
               }
             ]
           },
@@ -63,28 +71,47 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
-                    "decode param": "[^\\n\\r]*",
+                    "decode regex": "[^\\n\\r]*",
                     "type": "jwt",
                     "checks": [
                       {
                         "in": "payload",
-                        "check regex": "sub"
+                        "check": "sub",
+                        "is present": "true"
                       },
                       {
                         "in": "payload",
-                        "check regex": "given_name"
+                        "check": "iss",
+                        "is present": "true"
                       },
                       {
                         "in": "payload",
-                        "check regex": "family_name"
+                        "check": "aud",
+                        "is present": "true"
                       },
                       {
                         "in": "payload",
-                        "check regex": "https://attributes.spid.gov.it/fiscal_number"
+                        "check": "family_name",
+                        "is present": "true"
+                      },
+                      {
+                        "in": "payload",
+                        "check": "given_name",
+                        "is present": "true"
+                      },
+                      {
+                        "in": "payload",
+                        "check": "birthdate",
+                        "is present": "true"
+                      },
+                      {
+                        "in": "payload",
+                        "check": "https://attributes.eid.gov.it/fiscal_number",
+                        "is present": "true"
                       }
                     ]
                   }

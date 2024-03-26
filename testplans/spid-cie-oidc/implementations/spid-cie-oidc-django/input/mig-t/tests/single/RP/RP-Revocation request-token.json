@@ -19,7 +19,7 @@
             "checks": [
               {
                 "in": "body",
-                "is present": "true",
+                "is present": true,
                 "check regex": "token"
               }
             ]

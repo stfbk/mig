@@ -32,9 +32,7 @@
             ]
           }
         ],
-        "result": [
-          "s1"
-        ]
+        "result": "correct flow s1"
       }
     }
   ]

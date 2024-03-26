@@ -42,7 +42,25 @@
                   {
                     "jwt from": "payload",
                     "jwt add": "$.claims.userinfo",
+                    "key": "family_name",
+                    "value": ""
+                  },
+                  {
+                    "jwt from": "payload",
+                    "jwt add": "$.claims.userinfo",
                     "key": "given_name",
+                    "value": ""
+                  },
+                  {
+                    "jwt from": "payload",
+                    "jwt add": "$.claims.userinfo",
+                    "key": "birthdate",
+                    "value": ""
+                  },
+                  {
+                    "jwt from": "payload",
+                    "jwt add": "$.claims.userinfo",
+                    "key": "https://attributes.eid.gov.it/fiscal_number",
                     "value": ""
                   },
                   {
@@ -75,7 +93,7 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
@@ -85,7 +103,7 @@
                       {
                         "in": "payload",
                         "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"iat\":{}, \"exp\":{}, \"aud\":{}, \"iss\":{}, \"family_name\": {}, \"given_name\": {}, \"birthdate\": {}, \"https://attributes.eid.gov.it/fiscal_number\": {}}, \"required\": [\"sub\", \"iss\", \"aud\", \"family_name\", \"given_name\", \"birthdate\", \"https://attributes.eid.gov.it/fiscal_number\"], \"additionalProperties\": false}"
                       }
                     ]
                   }
@@ -134,7 +152,7 @@
                 "jwe decrypt": "X_key_jwe",
                 "from": "body",
                 "type": "jwt",
-                "decode param": "[^\\n\\r]*",
+                "decode regex": "[^\\n\\r]*",
                 "decode operations": [
                   {
                     "from": "jwt payload",
@@ -144,7 +162,7 @@
                       {
                         "in": "payload",
                         "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"given_name\": {}}, \"required\": [\"given_name\"], \"additionalProperties\": false}"
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\":{}, \"iat\":{}, \"exp\":{}, \"aud\":{}, \"iss\":{}, \"family_name\": {}, \"given_name\": {}, \"birthdate\": {}, \"https://attributes.eid.gov.it/fiscal_number\": {}}, \"required\": [\"sub\", \"iss\", \"aud\", \"family_name\", \"given_name\", \"birthdate\", \"https://attributes.eid.gov.it/fiscal_number\"], \"additionalProperties\": false}"
                       }
                     ]
                   }

@@ -8,7 +8,7 @@
     {
       "test": {
         "name": "Does the issued oauth_resource Trust Mark contain the claims claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the claims claim in it is checked.",
+        "description": "In this test, a Trust Mark issued for an TA must be taken, decrypted and the presence of the claims claim in it is checked.",
         "type": "passive",
         "sessions": [
           "s1"

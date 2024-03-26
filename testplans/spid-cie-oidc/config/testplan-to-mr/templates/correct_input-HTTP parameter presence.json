@@ -11,7 +11,7 @@
 					{
 						"in": "var3",
 						"key_var3": "var4",
-						"is present": "true"
+						"is present": true
 					}
 				]
 			}
