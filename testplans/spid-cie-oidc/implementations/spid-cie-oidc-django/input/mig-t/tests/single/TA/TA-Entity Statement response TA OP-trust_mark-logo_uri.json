@@ -19,13 +19,20 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode regex": "[^\\r\\n]*",
                 "type": "jwt",
-                "checks": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
-                    "in": "payload",
-                    "check": "$.metadata.federation_entity.logo_uri",
-                    "is present": "true"
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "logo_uri",
+                        "is present": "true"
+                      }
+                    ]
                   }
                 ]
               }

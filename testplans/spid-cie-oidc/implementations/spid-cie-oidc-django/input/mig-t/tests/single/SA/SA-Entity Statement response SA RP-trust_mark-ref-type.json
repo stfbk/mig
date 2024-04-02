@@ -1,0 +1,46 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Trust Mark contain an URL in the ref claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the type of the ref claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks.trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{ \"type\": \"object\", \"properties\": { \"ref\": { \"type\": \"string\", \"format\": \"uri\" } }, \"required\": [\"ref\"] }"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

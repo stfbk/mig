@@ -1,0 +1,41 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP metadata contain the correct value of token_endpoint_auth_methods_supported claim in the openid_provider subclaim",
+        "description": "In this test the OP metadata are taken and the presence of the 'token_endpoint_auth_methods_supported' parameter in the 'openid_provider' subclaim (metadata type) is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode regex": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.token_endpoint_auth_methods_supported[0]",
+                    "is in": [
+                      "private_key_jwt"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does the entity return a correct HTTP code in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
+        "name": "Does the AA's entity configuration contain the trust_marks parameter",
+        "description": "To accomplish this test, the Entity configuration of the AA is taken, the payload is decoded (Base64 encoding) and the presence of the trust_marks parameter is checked.",
         "type": "passive",
         "sessions": [
           "s1"
@@ -16,11 +16,18 @@
         "operations": [
           {
             "message type": "Entity Configuration response AA",
-            "checks": [
+            "decode operations": [
               {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.trust_marks",
+                    "is present": "true"
+                  }
+                ]
               }
             ]
           }
@@ -30,8 +37,218 @@
     },
     {
       "test": {
-        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
-        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
+        "name": "Does entity configuration contain the exp parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.exp",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the iat parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iat",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the iss parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iss parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the jwks parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the jwks parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.jwks",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the metadata parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the metadata parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain the sub parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the sub parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.sub",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the AA metadata contain op_policy_uri claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the presence of the op_policy_uri claim in the 'openid_provider' entity type is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$..metadata.openid_provider.op_policy_uri",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity return a correct Content-Type in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
         "type": "passive",
         "sessions": [
           "s1"
@@ -42,8 +259,9 @@
             "checks": [
               {
                 "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
+                "url decode": false,
+                "is": "application/entity-statement+jwt",
+                "check param": "Content-Type"
               }
             ]
           }
@@ -83,8 +301,8 @@
     },
     {
       "test": {
-        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
-        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
+        "name": "Does the entity return a correct HTTP code in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
         "type": "passive",
         "sessions": [
           "s1"
@@ -94,8 +312,8 @@
             "message type": "Entity Configuration response AA",
             "checks": [
               {
-                "in": "body",
-                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
                 "is present": "true"
               }
             ]
@@ -106,19 +324,19 @@
     },
     {
       "test": {
-        "name": "Does the Entity expose the resolve entity statement endpoint",
-        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
+        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
+        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Resolve Entity Statement response",
+            "message type": "Entity Configuration response AA",
             "checks": [
               {
-                "in": "body",
-                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
                 "is present": "true"
               }
             ]
@@ -339,8 +557,8 @@
     },
     {
       "test": {
-        "name": "Does the AA's entity configuration contain the trust_marks parameter",
-        "description": "To accomplish this test, the Entity configuration of the AA is taken, the payload is decoded (Base64 encoding) and the presence of the trust_marks parameter is checked.",
+        "name": "Does the AA metadata contain correct type logo_uri claim",
+        "description": "In this test the SA metadata in the TA Entity Configuration are taken and the value of the logo_uri claim in the 'federation_entity' entity type is an URL with an .svg file",
         "type": "passive",
         "sessions": [
           "s1"
@@ -351,13 +569,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.trust_marks",
-                    "is present": "true"
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://.*\\\\.svg$\"}},\"required\":[\"logo_uri\"]}"
                   }
                 ]
               }
@@ -369,8 +587,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the exp parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "name": "Does the AA metadata contain correct type resource claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the resource claim in the 'federation_entity' entity type is an HTTPS URL",
         "type": "passive",
         "sessions": [
           "s1"
@@ -381,13 +599,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.exp",
-                    "is present": "true"
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\": {\"resource\": {\"oneOf\": [{\"type\": \"string\", \"format\": \"uri\", \"pattern\": \"^https://\"},{\"type\": \"array\",\"items\": {\"type\": \"string\", \"format\": \"uri\", \"pattern\": \"^https://\"},\"minItems\": 1}]}},\"required\": [\"resource\"]}"
                   }
                 ]
               }
@@ -399,8 +617,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the iat parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "name": "Does the AA metadata contain correct type authorization_endpoint claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the authorization_endpoint claim in the 'federation_entity' entity type is \"private\"",
         "type": "passive",
         "sessions": [
           "s1"
@@ -411,13 +629,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.iat",
-                    "is present": "true"
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\": {\"authorization_endpoint\": {\"type\": \"string\",\"const\": \"private\"}},\"required\": [\"authorization_endpoint\"]}"
                   }
                 ]
               }
@@ -429,8 +647,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the iss parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iss parameter is checked",
+        "name": "Does the AA metadata contain correct type op_policy_uri claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the op_policy_uri claim in the 'openid_provider' entity type is \"private\"",
         "type": "passive",
         "sessions": [
           "s1"
@@ -441,13 +659,13 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
+                "decode param": "[^\\n\\r]*",
                 "type": "jwt",
                 "checks": [
                   {
                     "in": "payload",
-                    "check": "$.iss",
-                    "is present": "true"
+                    "check": "$.metadata.openid_provider",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\": {\"op_policy_uri\": {\"type\": \"string\",\"format\": \"uri\"}},\"required\": [\"op_policy_uri\"]}"
                   }
                 ]
               }
@@ -459,8 +677,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the jwks parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the jwks parameter is checked",
+        "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
+        "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
         "type": "passive",
         "sessions": [
           "s1"
@@ -468,18 +686,11 @@
         "operations": [
           {
             "message type": "Entity Configuration response AA",
-            "decode operations": [
+            "checks": [
               {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.jwks",
-                    "is present": "true"
-                  }
-                ]
+                "in": "body",
+                "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
               }
             ]
           }
@@ -489,127 +700,20 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain the metadata parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the metadata parameter is checked",
+        "name": "Does the Entity expose the resolve entity statement endpoint",
+        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Entity Configuration response AA",
-            "decode operations": [
+            "message type": "Resolve Entity Statement response",
+            "checks": [
               {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does entity configuration contain the sub parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the sub parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response AA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.sub",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the AA metadata contain incorrect dpop_signing_alg_values_supported claim",
-        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the dpop_signing_alg_values_supported claim in the 'oauth_authorization_server' entity type is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response AA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.oauth_authorization_server.dpop_signing_alg_values_supported.one_of",
-                    "not contains": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the AA metadata contain incorrect token_endpoint_auth_signing_alg_values_supported claim",
-        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the token_endpoint_auth_signing_alg_values_supported claim in the 'oauth_authorization_server' entity type is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response AA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.oauth_authorization_server.token_endpoint_auth_signing_alg_values_supported.one_of",
-                    "not contains": [
-                      "none",
-                      "HS256",
-                      "HS384",
-                      "HS512"
-                    ]
-                  }
-                ]
+                "in": "body",
+                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
+                "is present": "true"
               }
             ]
           }
@@ -705,6 +809,76 @@
                     "is in": [
                       "RS256",
                       "RS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the AA metadata contain incorrect dpop_signing_alg_values_supported claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the dpop_signing_alg_values_supported claim in the 'oauth_authorization_server' entity type is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.oauth_authorization_server.dpop_signing_alg_values_supported.one_of",
+                    "not contains": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the AA metadata contain incorrect token_endpoint_auth_signing_alg_values_supported claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the token_endpoint_auth_signing_alg_values_supported claim in the 'oauth_authorization_server' entity type is checked. It must not contain the values ['none', 'HS256', 'HS384', 'HS512']",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.oauth_authorization_server.token_endpoint_auth_signing_alg_values_supported.one_of",
+                    "not contains": [
+                      "none",
+                      "HS256",
+                      "HS384",
+                      "HS512"
                     ]
                   }
                 ]
@@ -1332,30 +1506,6 @@
                 "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "jwt check sig": "X_key_AA"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity return a correct Content-Type in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response AA",
-            "checks": [
-              {
-                "in": "head",
-                "url decode": false,
-                "is": "application/entity-statement+jwt",
-                "check param": "Content-Type"
               }
             ]
           }

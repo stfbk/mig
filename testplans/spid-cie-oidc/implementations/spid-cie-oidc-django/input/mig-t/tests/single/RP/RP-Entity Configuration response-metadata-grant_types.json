@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does the RP metadata contain the grant_types claim",
-        "description": "In this test the RP metadata are taken and the presence of the 'grant_types' parameter is checked",
+        "name": "Does the RP metadata contain the 'grant_types' parameter",
+        "description": "In this test the RP metadata are taken and the presence of the 'grant_types' parameter is checked.",
         "type": "passive",
         "sessions": [
           "s1"
