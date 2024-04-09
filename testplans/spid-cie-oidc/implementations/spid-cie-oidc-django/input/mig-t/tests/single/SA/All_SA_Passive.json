@@ -7,8 +7,8 @@
   "tests": [
     {
       "test": {
-        "name": "Does entity configuration contain a correct exp parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
+        "name": "Does the entity return a correct HTTP code in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
         "type": "passive",
         "sessions": [
           "s1"
@@ -16,18 +16,11 @@
         "operations": [
           {
             "message type": "Entity Configuration response SA",
-            "decode operations": [
+            "checks": [
               {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
-                  }
-                ]
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
               }
             ]
           }
@@ -37,8 +30,8 @@
     },
     {
       "test": {
-        "name": "Does entity configuration contain a correct iat parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
+        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
         "type": "passive",
         "sessions": [
           "s1"
@@ -46,18 +39,11 @@
         "operations": [
           {
             "message type": "Entity Configuration response SA",
-            "decode operations": [
+            "checks": [
               {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
-                  }
-                ]
+                "in": "head",
+                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
+                "is present": "true"
               }
             ]
           }
@@ -67,8 +53,8 @@
     },
     {
       "test": {
-        "name": "Does the metadata parameter contain a JSON Object",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object.",
+        "name": "Does the entity return a correct Content-Type in the EC response",
+        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
         "type": "passive",
         "sessions": [
           "s1"
@@ -76,18 +62,12 @@
         "operations": [
           {
             "message type": "Entity Configuration response SA",
-            "decode operations": [
+            "checks": [
               {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"metadata\": {\"type\": \"object\"}}, \"required\": [\"metadata\"]}"
-                  }
-                ]
+                "in": "head",
+                "url decode": false,
+                "is": "application/entity-statement+jwt",
+                "check param": "Content-Type"
               }
             ]
           }
@@ -97,98 +77,8 @@
     },
     {
       "test": {
-        "name": "Does the metadata parameter contain only allowed types and only once for each",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object with each key representing a type of metadata. These types cannot be repeated and must be a value among the following: 'openid_relying_party', 'openid_provider', 'federation_entity', 'oauth_authorization_server', 'oauth_resource', 'trust_mark_issuer'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response SA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\n\\r]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": { \"openid_relying_party\": { \"type\": \"object\" }, \"openid_provider\": { \"type\": \"object\" }, \"federation_entity\": { \"type\": \"object\" }, \"oauth_authorization_server\": { \"type\": \"object\" }, \"oauth_resource\": { \"type\": \"object\" }, \"trust_mark_issuer\": { \"type\": \"object\" } }, \"required\": [\"openid_relying_party\", \"openid_provider\", \"federation_entity\", \"oauth_authorization_server\", \"oauth_resource\", \"trust_mark_issuer\"], \"additionalProperties\": false}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity configuration of the SA contain a correct trust_marks parameter",
-        "description": "The entity configuration of the SA is taken from its own web endpoint '.well-known/openid-federation', and the configuration metadata are analyzed. Among them, the 'trust_marks' parameter must be present and must be a JSON array containing the Trust Marks.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response SA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"trust_marks\": {\"type\": \"object\", \"additionalProperties\": {\"type\": \"array\"}}}, \"required\": [\"trust_marks\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the TA metadata contain correct type logo_uri claim",
-        "description": "In this test the SA metadata in the TA Entity Configuration are taken and the value of the logo_uri claim in the 'federation_entity' entity type is an URL with an .svg file",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response SA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\n\\r]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.metadata.federation_entity",
-                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://.*\\\\.svg$\"}},\"required\":[\"logo_uri\"]}"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does Entity Statements issued by the SA contain a correct exp parameter",
-        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the exp parameter is checked. It must be a timestamp",
+        "name": "Does the Trust Mark contain correct value for organization_type claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the value of the organization_type claim can be 'public' or 'private'",
         "type": "passive",
         "sessions": [
           "s1"
@@ -199,26 +89,80 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
-                "checks": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "organization_type",
+                        "is in": [
+                          "public",
+                          "private"
+                        ]
+                      }
+                    ]
                   }
                 ]
               }
             ]
           }
         ],
-        "result": "correct flow s1"
+        "result": [
+          "s1"
+        ]
       }
     },
     {
       "test": {
-        "name": "Does Entity Statements issued by the SA contain a correct iat parameter",
-        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the iat parameter is checked. It must be a timestamp",
+        "name": "Does the Trust Mark contain correct value for organization_type claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the value of the organization_type claim can be 'public' or 'private'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "organization_type",
+                        "is in": [
+                          "public",
+                          "private"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": [
+          "s1"
+        ]
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the claims claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the claims claim in it is checked",
         "type": "passive",
         "sessions": [
           "s1"
@@ -229,13 +173,20 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
-                "checks": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "claims",
+                        "is present": "true"
+                      }
+                    ]
                   }
                 ]
               }
@@ -247,25 +198,32 @@
     },
     {
       "test": {
-        "name": "Does Entity Statements issued by the SA contain a correct exp parameter",
-        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the exp parameter is checked. It must be a timestamp",
+        "name": "Does the Trust Mark contain the email claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the email claim in it is checked.",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Entity Statement response SA RP",
+            "message type": "Entity Statement response SA OP",
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
-                "checks": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "email",
+                        "is present": "true"
+                      }
+                    ]
                   }
                 ]
               }
@@ -277,25 +235,32 @@
     },
     {
       "test": {
-        "name": "Does Entity Statements issued by the SA contain a correct iat parameter",
-        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the iat parameter is checked. It must be a timestamp",
+        "name": "Does the Trust Mark contain the exp claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the exp claim in it is checked.",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Entity Statement response SA RP",
+            "message type": "Entity Statement response SA OP",
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
-                "checks": [
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
                   {
-                    "in": "payload",
-                    "check": "$",
-                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "exp",
+                        "is present": "true"
+                      }
+                    ]
                   }
                 ]
               }
@@ -307,8 +272,489 @@
     },
     {
       "test": {
-        "name": "Does the SA's metadata policy for an RP contain the jwks parameter",
-        "description": "In order to check the compliance of a metadata policy issued by the SA, an entity statement for an RP must be fetched in the SA's fetch endpoint. Once obtained the entity statement, the metadata_policy parameter is taken and the presence of the jwks parameter inside the openid_relying_party type is checked. It must contain the RP JWKS related to the OIDC Core operations",
+        "name": "Does the Trust Mark contain the iat claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iat claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "iat",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the id claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "id",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the id_code claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id_code claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "id_code",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the iss claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iss claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "iss",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the logo_uri claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the logo_uri claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "logo_uri",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the organization_name claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_name claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "organization_name",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the organization_type claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_type claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "organization_type",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the policy_uri claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the policy_uri claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "policy_uri",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the ref claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the ref claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "ref",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued intermediary Trust Mark contain the sa_profile claim",
+        "description": "A Trust Mark issued by a TA for an SA is taken, decrypted and the presence of the sa_profile claim is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "sa_profile",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the service_documentation claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the service_documentation claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "service_documentation",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the sub claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the sub claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "sub",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the tos_uri claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the tos_uri claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "tos_uri",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the claims claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the claims claim in it is checked",
         "type": "passive",
         "sessions": [
           "s1"
@@ -319,13 +765,691 @@
             "decode operations": [
               {
                 "from": "body",
-                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "claims",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the email claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the email claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "email",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the exp claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the exp claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "exp",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the iat claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iat claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "iat",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the id claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "id",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the id_code claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id_code claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "id_code",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the iss claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iss claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "iss",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the logo_uri claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the logo_uri claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "logo_uri",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the organization_name claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_name claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "organization_name",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the organization_type claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_type claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "organization_type",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the policy_uri claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the policy_uri claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "policy_uri",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the ref claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the ref claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "ref",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued intermediary Trust Mark contain the sa_profile claim",
+        "description": "A Trust Mark issued by a TA for an SA is taken, decrypted and the presence of the sa_profile claim is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "sa_profile",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the service_documentation claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the service_documentation claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "service_documentation",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the sub claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the sub claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "sub",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the issued oauth_resource Trust Mark contain the tos_uri claim",
+        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the tos_uri claim in it is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "tos_uri",
+                        "is present": "true"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity Statement's JWT payload contain a correct 'iss' claim",
+        "description": "This test can be performed by taking the JWT present in the Entity Statement Response, base64url decoding the payload and checking the iss claim. Its value must be an URL identifying the SA",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "client_assertion",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.iss",
+                    "as": "conf_iss"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "checks": [
                   {
+                    "use variable": "true",
                     "in": "payload",
-                    "check": "$.metadata_policy.openid_relying_party.jwks",
-                    "json schema compliant": "{\"type\":\"object\", \"properties\": {\"value\" :{}}, \"required\": [\"value\"]}"
+                    "check": "$.iss",
+                    "contains": "conf_iss"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity Statement's JWT payload contain a correct 'iss' claim",
+        "description": "This test can be performed by taking the JWT present in the Entity Statement Response, base64url decoding the payload and checking the iss claim. Its value must be an URL identifying the SA",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "client_assertion",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.iss",
+                    "as": "conf_iss"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "use variable": "true",
+                    "in": "payload",
+                    "check": "$.iss",
+                    "contains": "conf_iss"
                   }
                 ]
               }
@@ -607,82 +1731,6 @@
     },
     {
       "test": {
-        "name": "Does entity configuration SA contain a correct sub parameter",
-        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the sub parameter is checked. Its value must be equal to the one in the iss parameter",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response SA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.sub",
-                    "is": "X_url_SA"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity return a correct HTTP code in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must be an HTTP 200 OK response",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response SA",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Entity expose the /.well-known/openid-federation endpoint",
-        "description": "In order to check the presence and correctness of the /.well-known/openid-federation endpoint, an HTTP GET request to the entity's endpoint is done and its entity configuration is expected as response.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response SA",
-            "checks": [
-              {
-                "in": "head",
-                "check regex": "HTTP/?\\d?\\.?\\d?\\s200",
-                "is present": "true"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
         "name": "Does the entity configuration of a considered entity return a Federation Metadata in JOSE format when an HTTP GET request is made to its .well-known/openid-federation endpoint",
         "description": "The considered entity must have published its entity configuration in the .well-known/openid-federation endpoint. So in this test, an HTTP GET request is made to the entity's .well-known/openid-federation endpoint (appended to the URL which identifies the entity) and the response is analyzed. This response has to be the entity configuration of the entity and therefore a Federation Metadata in JOSE format (Content-Type: application/entity-statement+jwt)",
         "type": "passive",
@@ -696,6 +1744,29 @@
               {
                 "in": "body",
                 "check regex": "([\\w=]+)\\.([\\w=]+)\\.([\\w\\-\\+\\/=]*)",
+                "is present": "true"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Entity expose the resolve entity statement endpoint",
+        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Resolve Entity Statement response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
                 "is present": "true"
               }
             ]
@@ -798,20 +1869,327 @@
     },
     {
       "test": {
-        "name": "Does the Entity expose the resolve entity statement endpoint",
-        "description": "In order to check the presence and correctness of the resolve entity statement endpoint, an HTTP GET request containing the parameters 'sub', 'anchor' and 'type' is made to the entity's endpoint and an HTTP 200 OK response containing the resolved metadata for the entity in the request's sub claim is expected.",
+        "name": "Does entity configuration contain a correct exp parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the exp parameter is checked",
         "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "message type": "Resolve Entity Statement response",
-            "checks": [
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
               {
-                "in": "body",
-                "check regex": "[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
-                "is present": "true"
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does entity configuration contain a correct iat parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the presence of the iat parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the metadata parameter contain a JSON Object",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"metadata\": {\"type\": \"object\"}}, \"required\": [\"metadata\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the TA metadata contain correct type logo_uri claim",
+        "description": "In this test the SA metadata in the TA Entity Configuration are taken and the value of the logo_uri claim in the 'federation_entity' entity type is an URL with an .svg file",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://.*\\\\.svg$\"}},\"required\":[\"logo_uri\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the metadata parameter contain only allowed types and only once for each",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object with each key representing a type of metadata. These types cannot be repeated and must be a value among the following: 'openid_relying_party', 'openid_provider', 'federation_entity', 'oauth_authorization_server', 'oauth_resource', 'trust_mark_issuer'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": { \"openid_relying_party\": { \"type\": \"object\" }, \"openid_provider\": { \"type\": \"object\" }, \"federation_entity\": { \"type\": \"object\" }, \"oauth_authorization_server\": { \"type\": \"object\" }, \"oauth_resource\": { \"type\": \"object\" }, \"trust_mark_issuer\": { \"type\": \"object\" } }, \"required\": [\"openid_relying_party\", \"openid_provider\", \"federation_entity\", \"oauth_authorization_server\", \"oauth_resource\", \"trust_mark_issuer\"], \"additionalProperties\": false}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the entity configuration of the SA contain a correct trust_marks parameter",
+        "description": "The entity configuration of the SA is taken from its own web endpoint '.well-known/openid-federation', and the configuration metadata are analyzed. Among them, the 'trust_marks' parameter must be present and must be a JSON array containing the Trust Marks.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"trust_marks\": {\"type\": \"object\", \"additionalProperties\": {\"type\": \"array\"}}}, \"required\": [\"trust_marks\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct exp parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the exp parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct iat parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the iat parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct exp parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the exp parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain a correct iat parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response is base64url decoded and once obtained the decrypted Payload, the the iat parameter is checked. It must be a timestamp",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iat\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"iat\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the SA's metadata policy for an RP contain the jwks parameter",
+        "description": "In order to check the compliance of a metadata policy issued by the SA, an entity statement for an RP must be fetched in the SA's fetch endpoint. Once obtained the entity statement, the metadata_policy parameter is taken and the presence of the jwks parameter inside the openid_relying_party type is checked. It must contain the RP JWKS related to the OIDC Core operations",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata_policy.openid_relying_party.jwks",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\": {\"value\" :{}}, \"required\": [\"value\"]}"
+                  }
+                ]
               }
             ]
           }
@@ -883,41 +2261,14 @@
     },
     {
       "test": {
-        "name": "Does the Entity Statement's JWT payload contain a correct 'iss' claim",
-        "description": "This test can be performed by taking the JWT present in the Entity Statement Response, base64url decoding the payload and checking the iss claim. Its value must be an URL identifying the SA",
-        "type": "active",
+        "name": "Does entity configuration SA contain a correct sub parameter",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the sub parameter is checked. Its value must be equal to the one in the iss parameter",
+        "type": "passive",
         "sessions": [
           "s1"
         ],
         "operations": [
           {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "client_assertion",
-                "type": "jwt",
-                "edits": [
-                  {
-                    "jwt from": "payload",
-                    "jwt save": "$.iss",
-                    "as": "conf_iss"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
             "message type": "Entity Configuration response SA",
             "decode operations": [
               {
@@ -926,68 +2277,9 @@
                 "type": "jwt",
                 "checks": [
                   {
-                    "use variable": "true",
                     "in": "payload",
-                    "check": "$.iss",
-                    "contains": "conf_iss"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Entity Statement's JWT payload contain a correct 'iss' claim",
-        "description": "This test can be performed by taking the JWT present in the Entity Statement Response, base64url decoding the payload and checking the iss claim. Its value must be an URL identifying the SA",
-        "type": "active",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "session": "s1",
-            "action": "start"
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "url",
-                "decode param": "client_assertion",
-                "type": "jwt",
-                "edits": [
-                  {
-                    "jwt from": "payload",
-                    "jwt save": "$.iss",
-                    "as": "conf_iss"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "action": "intercept",
-            "from session": "s1",
-            "then": "forward",
-            "message type": "Entity Configuration response SA",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "use variable": "true",
-                    "in": "payload",
-                    "check": "$.iss",
-                    "contains": "conf_iss"
+                    "check": "$.sub",
+                    "is": "X_url_SA"
                   }
                 ]
               }
@@ -1299,6 +2591,36 @@
     },
     {
       "test": {
+        "name": "Does Entity Statements issued by the SA contain the iss parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iss parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does Entity Statements issued by the SA contain the jwks parameter",
         "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the jwks parameter is checked",
         "type": "passive",
@@ -1377,36 +2699,6 @@
                   {
                     "in": "payload",
                     "check": "$.sub",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does Entity Statements issued by the SA contain the iss parameter",
-        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iss parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.iss",
                     "is present": "true"
                   }
                 ]
@@ -1539,6 +2831,36 @@
     },
     {
       "test": {
+        "name": "Does Entity Statements issued by the SA contain the iss parameter",
+        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iss parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iss",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does Entity Statements issued by the SA contain the jwks parameter",
         "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the jwks parameter is checked",
         "type": "passive",
@@ -1629,36 +2951,6 @@
     },
     {
       "test": {
-        "name": "Does Entity Statements issued by the SA contain the iss parameter",
-        "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the TA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the iss parameter is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "decode param": "[^\\r\\n]*",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "payload",
-                    "check": "$.iss",
-                    "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
         "name": "Does Entity Statements issued by the SA contain the trust_marks parameter",
         "description": "In order to check if the SA issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the SA's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the trust_marks parameter is checked",
         "type": "passive",
@@ -1678,1190 +2970,6 @@
                     "in": "payload",
                     "check": "$.trust_marks",
                     "is present": "true"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued intermediary Trust Mark contain the sa_profile claim",
-        "description": "A Trust Mark issued by a TA for an SA is taken, decrypted and the presence of the sa_profile claim is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "sa_profile",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the claims claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the claims claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "claims",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the email claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the email claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "email",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the exp claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the exp claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "exp",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the iat claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iat claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "iat",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the id claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "id",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the id_code claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id_code claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "id_code",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the logo_uri claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the logo_uri claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "logo_uri",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the organization_name claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_name claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "organization_name",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the organization_type claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_type claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "organization_type",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the policy_uri claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the policy_uri claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "policy_uri",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the ref claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the ref claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "ref",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the service_documentation claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the service_documentation claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "service_documentation",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the sub claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the sub claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "sub",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the tos_uri claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the tos_uri claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "tos_uri",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the iss claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iss claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "iss",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued intermediary Trust Mark contain the sa_profile claim",
-        "description": "A Trust Mark issued by a TA for an SA is taken, decrypted and the presence of the sa_profile claim is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "sa_profile",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the claims claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the claims claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "claims",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the email claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the email claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "email",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the exp claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the exp claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "exp",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the iat claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iat claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "iat",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the id claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "id",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the id_code claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the id_code claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "id_code",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the logo_uri claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the logo_uri claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "logo_uri",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the organization_name claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_name claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "organization_name",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the organization_type claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the organization_type claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "organization_type",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the policy_uri claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the policy_uri claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "policy_uri",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the ref claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the ref claim in it is checked.",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "ref",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the service_documentation claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the service_documentation claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "service_documentation",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the sub claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the sub claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "sub",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued oauth_resource Trust Mark contain the tos_uri claim",
-        "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) must be taken, decrypted and the presence of the tos_uri claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "tos_uri",
-                        "is present": "true"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain the iss claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the presence of the iss claim in it is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "iss",
-                        "is present": "true"
-                      }
-                    ]
                   }
                 ]
               }
@@ -2936,262 +3044,6 @@
                 "decode param": "[^\\r\\n]*",
                 "type": "jwt",
                 "jwt check sig": "X_key_SA"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain correct value for organization_type claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the value of the organization_type claim can be 'public' or 'private'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "organization_type",
-                        "is in": [
-                          "public",
-                          "private"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": [
-          "s1"
-        ]
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain correct value for organization_type claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the value of the organization_type claim can be 'public' or 'private'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "organization_type",
-                        "is in": [
-                          "public",
-                          "private"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": [
-          "s1"
-        ]
-      }
-    },
-    {
-      "test": {
-        "name": "Does the entity return a correct Content-Type in the EC response",
-        "description": "In this test a correct request to the entity's /.well-known/openid-federation endpoint is made and the response is analyzed. It must have a Content-Type parameter set to application/entity-statement+jwt",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Configuration response SA",
-            "checks": [
-              {
-                "in": "head",
-                "url decode": false,
-                "is": "application/entity-statement+jwt",
-                "check param": "Content-Type"
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued intermediary Trust Mark contain a correct sa_profile claim",
-        "description": "A Trust Mark issued for an SA is taken, decrypted and the value of the sa_profile claim can be 'full' or 'light'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{ \"type \": \u00a0\"object \", \"properties \": { \"sa_profile\": { \"type \": \u00a0\"string \", \"enum \": [ \"full \", \u00a0\"light \"]}}, \"required \": [ \"sa_profile \"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the id_code claim of a Trust Mark issued for private organization contain the fiscal_number or vat_number claim",
-        "description": "In this test, a Trust Mark issued for a private entity must be taken, decrypted and the presence of the fiscal_number or vat_number claim in the id_code is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"fiscal_number\": {}, \"vat_number\":{}},\"anyOf\":[{\"required\":[\"fiscal_number\"]},{\"required\":[\"vat_number\"]}]}},\"required\":[\"id_code\"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain the ipa_code claim",
-        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the presence of the id_code claim contains at least the value 'ipa_code'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": { \"id_code\": { \"type\": \"object\", \"properties\": {\"ipa_code\": {}},\"required\": [\"ipa_code\"]}},\"required\": [\"id_code\"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain a correct type of 'ipa_code' claim",
-        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the type of the value of the 'ipa_code' in the id_code claim is checked. It has to be a string",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"ipa_code\": { \"type\":\"string\"}},\"required\":[\"ipa_code\"]}},\"required\":[\"id_code\"]}"
-                      }
-                    ]
-                  }
-                ]
               }
             ]
           }
@@ -3312,6 +3164,43 @@
     },
     {
       "test": {
+        "name": "Does the id_code claim of a Trust Mark issued for private organization contain the fiscal_number or vat_number claim",
+        "description": "In this test, a Trust Mark issued for a private entity must be taken, decrypted and the presence of the fiscal_number or vat_number claim in the id_code is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"fiscal_number\": {}, \"vat_number\":{}},\"anyOf\":[{\"required\":[\"fiscal_number\"]},{\"required\":[\"vat_number\"]}]}},\"required\":[\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does the Trust Mark contain the correct iat type",
         "description": "In this test, an issued Trust Mark must be taken, decrypted and the type of the iat claim in it is checked.",
         "type": "passive",
@@ -3373,6 +3262,117 @@
                         "in": "payload",
                         "check": "$",
                         "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\": \"object\", \"additionalProperties\": {\"type\": \"object\"}}},\"required\": [\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain the ipa_code claim",
+        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the presence of the id_code claim contains at least the value 'ipa_code'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": { \"id_code\": { \"type\": \"object\", \"properties\": {\"ipa_code\": {}},\"required\": [\"ipa_code\"]}},\"required\": [\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain a correct type of 'ipa_code' claim",
+        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the type of the value of the 'ipa_code' in the id_code claim is checked. It has to be a string",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"ipa_code\": { \"type\":\"string\"}},\"required\":[\"ipa_code\"]}},\"required\":[\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain a correct iss claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the iss claim in it is checked. Its value has to be an URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iss\": {\"type\": \"string\", \"format\": \"uri-reference\", \"pattern\": \"^https://\"}}, \"required\": [\"iss\"]}"
                       }
                     ]
                   }
@@ -3534,6 +3534,43 @@
     },
     {
       "test": {
+        "name": "Does the issued intermediary Trust Mark contain a correct sa_profile claim",
+        "description": "A Trust Mark issued for an SA is taken, decrypted and the value of the sa_profile claim can be 'full' or 'light'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{ \"type \": \u00a0\"object \", \"properties \": { \"sa_profile\": { \"type \": \u00a0\"string \", \"enum \": [ \"full \", \u00a0\"light \"]}}, \"required \": [ \"sa_profile \"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does the issued oauth_resource Trust Mark contain a correct service_documentation claim",
         "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) is taken and the service_documentation claim is checked to be an URL",
         "type": "passive",
@@ -3632,191 +3669,6 @@
                         "in": "payload",
                         "check": "$",
                         "json schema compliant": "{\"type\": \"object\", \"properties\": {\"tos_uri\": {\"type\": \"string\", \"format\": \"uri-reference\", \"pattern\": \"^https://\"}}, \"required\": [\"tos_uri\"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain a correct iss claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the iss claim in it is checked. Its value has to be an URL",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA OP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iss\": {\"type\": \"string\", \"format\": \"uri-reference\", \"pattern\": \"^https://\"}}, \"required\": [\"iss\"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the issued intermediary Trust Mark contain a correct sa_profile claim",
-        "description": "A Trust Mark issued for an SA is taken, decrypted and the value of the sa_profile claim can be 'full' or 'light'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{ \"type \": \u00a0\"object \", \"properties \": { \"sa_profile\": { \"type \": \u00a0\"string \", \"enum \": [ \"full \", \u00a0\"light \"]}}, \"required \": [ \"sa_profile \"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the id_code claim of a Trust Mark issued for private organization contain the fiscal_number or vat_number claim",
-        "description": "In this test, a Trust Mark issued for a private entity must be taken, decrypted and the presence of the fiscal_number or vat_number claim in the id_code is checked",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"fiscal_number\": {}, \"vat_number\":{}},\"anyOf\":[{\"required\":[\"fiscal_number\"]},{\"required\":[\"vat_number\"]}]}},\"required\":[\"id_code\"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain the ipa_code claim",
-        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the presence of the id_code claim contains at least the value 'ipa_code'",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": { \"id_code\": { \"type\": \"object\", \"properties\": {\"ipa_code\": {}},\"required\": [\"ipa_code\"]}},\"required\": [\"id_code\"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain a correct type of 'ipa_code' claim",
-        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the type of the value of the 'ipa_code' in the id_code claim is checked. It has to be a string",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"ipa_code\": { \"type\":\"string\"}},\"required\":[\"ipa_code\"]}},\"required\":[\"id_code\"]}"
                       }
                     ]
                   }
@@ -3941,6 +3793,43 @@
     },
     {
       "test": {
+        "name": "Does the id_code claim of a Trust Mark issued for private organization contain the fiscal_number or vat_number claim",
+        "description": "In this test, a Trust Mark issued for a private entity must be taken, decrypted and the presence of the fiscal_number or vat_number claim in the id_code is checked",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"fiscal_number\": {}, \"vat_number\":{}},\"anyOf\":[{\"required\":[\"fiscal_number\"]},{\"required\":[\"vat_number\"]}]}},\"required\":[\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does the Trust Mark contain the correct iat type",
         "description": "In this test, an issued Trust Mark must be taken, decrypted and the type of the iat claim in it is checked.",
         "type": "passive",
@@ -4002,6 +3891,117 @@
                         "in": "payload",
                         "check": "$",
                         "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\": \"object\", \"additionalProperties\": {\"type\": \"object\"}}},\"required\": [\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain the ipa_code claim",
+        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the presence of the id_code claim contains at least the value 'ipa_code'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": { \"id_code\": { \"type\": \"object\", \"properties\": {\"ipa_code\": {}},\"required\": [\"ipa_code\"]}},\"required\": [\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the id_code claim of a Trust Mark issued by an SA for public organization contain a correct type of 'ipa_code' claim",
+        "description": "In this test, a Trust Mark issued for a public entity must be taken, decrypted and the type of the value of the 'ipa_code' in the id_code claim is checked. It has to be a string",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"id_code\": {\"type\":\"object\", \"properties\": {\"ipa_code\": { \"type\":\"string\"}},\"required\":[\"ipa_code\"]}},\"required\":[\"id_code\"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
+        "name": "Does the Trust Mark contain a correct iss claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the iss claim in it is checked. Its value has to be an URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iss\": {\"type\": \"string\", \"format\": \"uri-reference\", \"pattern\": \"^https://\"}}, \"required\": [\"iss\"]}"
                       }
                     ]
                   }
@@ -4163,6 +4163,43 @@
     },
     {
       "test": {
+        "name": "Does the issued intermediary Trust Mark contain a correct sa_profile claim",
+        "description": "A Trust Mark issued for an SA is taken, decrypted and the value of the sa_profile claim can be 'full' or 'light'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks[0].trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{ \"type \": \u00a0\"object \", \"properties \": { \"sa_profile\": { \"type \": \u00a0\"string \", \"enum \": [ \"full \", \u00a0\"light \"]}}, \"required \": [ \"sa_profile \"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    },
+    {
+      "test": {
         "name": "Does the issued oauth_resource Trust Mark contain a correct service_documentation claim",
         "description": "In this test, a Trust Mark issued for an AA (oauth_resource profile) is taken and the service_documentation claim is checked to be an URL",
         "type": "passive",
@@ -4261,43 +4298,6 @@
                         "in": "payload",
                         "check": "$",
                         "json schema compliant": "{\"type\": \"object\", \"properties\": {\"tos_uri\": {\"type\": \"string\", \"format\": \"uri-reference\", \"pattern\": \"^https://\"}}, \"required\": [\"tos_uri\"]}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "result": "correct flow s1"
-      }
-    },
-    {
-      "test": {
-        "name": "Does the Trust Mark contain a correct iss claim",
-        "description": "In this test, an issued Trust Mark must be taken, decrypted and the iss claim in it is checked. Its value has to be an URL",
-        "type": "passive",
-        "sessions": [
-          "s1"
-        ],
-        "operations": [
-          {
-            "message type": "Entity Statement response SA RP",
-            "decode operations": [
-              {
-                "from": "body",
-                "type": "jwt",
-                "decode regex": "[^\\r\\n]*",
-                "decode operations": [
-                  {
-                    "from": "jwt payload",
-                    "type": "jwt",
-                    "decode param": "$.trust_marks[0].trust_mark",
-                    "checks": [
-                      {
-                        "in": "payload",
-                        "check": "$",
-                        "json schema compliant": "{\"type\": \"object\", \"properties\": {\"iss\": {\"type\": \"string\", \"format\": \"uri-reference\", \"pattern\": \"^https://\"}}, \"required\": [\"iss\"]}"
                       }
                     ]
                   }

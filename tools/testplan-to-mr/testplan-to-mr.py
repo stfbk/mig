@@ -232,6 +232,10 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
 
             #handling errors
             global flag
+
+            message_split = [msg.replace("X_key_ALL", "X_key_"+entity) if "X_key_ALL" in msg else msg for msg in message_split]
+            message_split = [msg.replace("X_url_ALL", "X_key_"+entity) if "X_url_ALL" in msg else msg for msg in message_split]
+            
             used_item = deepcopy(message_split)
 
             template = json.load(openfile)
