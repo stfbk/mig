@@ -273,14 +273,13 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
                 log_value.warning(f'Values missing in table {temp} for Pattern: {row["Pattern name"]} and UID: {row["UID"]}')
 
             #print a test suite for each row if not ALL
-            if row['Entity under test'] != 'ALL':
-                t = []
-                t.append(template)
-                singleSuite = {"test suite":{"name":"Single test" , "description":"One test only" ,"filter messages": True}, "tests":t}
-                json_objects = json.dumps(singleSuite, indent = 2)
-                _create_if_not_exist(join(OUT_DIR_SINGLE, row["Entity under test"]))
-                with open(os.path.join(wd, OUT_DIR_SINGLE+'/'+row['Entity under test'], f'{row["UID"]}.json'), 'w') as outfile:
-                        outfile.write(json_objects)
+            t = []
+            t.append(template)
+            singleSuite = {"test suite":{"name":"Single test" , "description":"One test only" ,"filter messages": True}, "tests":t}
+            json_objects = json.dumps(singleSuite, indent = 2)
+            _create_if_not_exist(join(OUT_DIR_SINGLE, entity))
+            with open(os.path.join(wd, OUT_DIR_SINGLE+'/'+entity, f'{row["UID"]}.json'), 'w') as outfile:
+                    outfile.write(json_objects)
 
             tests.append(template)
 

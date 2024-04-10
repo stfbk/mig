@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the metadata parameter contain only allowed types",
+        "description": "To accomplish this test, the Entity configuration of the interested entity is taken, the payload is decoded (Base64 encoding) and the metadata parameter is analyzed. This must be a JSON object with each key representing a type of metadata. These types must be a value among the following: 'openid_relying_party', 'openid_provider', 'federation_entity', 'oauth_authorization_server', 'oauth_resource'",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata",
+                    "json schema compliant": "{\"type\": \"object\",\"anyOf\": [{\"required\": [\"openid_relying_party\"]},{\"required\": [\"openid_provider\"]},{\"required\": [\"federation_entity\"]},{\"required\": [\"oauth_authorization_server\"]},{\"required\": [\"oauth_resource\"]}],\"properties\": {\"openid_relying_party\":{\"type\":\"object\"},\"openid_provider\":{\"type\":\"object\"},\"federation_entity\":{\"type\":\"object\"},\"oauth_authorization_server\":{\"type\":\"object\"},\"oauth_resource\":{\"type\":\"object\"}}, \"additionalProperties\": false}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}
