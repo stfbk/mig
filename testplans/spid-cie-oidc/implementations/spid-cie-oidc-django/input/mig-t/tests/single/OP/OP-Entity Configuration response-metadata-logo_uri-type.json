@@ -25,7 +25,7 @@
                   {
                     "in": "payload",
                     "check": "$.metadata.federation_entity",
-                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\"}},\"required\":[\"logo_uri\"]})"
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"logo_uri\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\": \"^(https?://).*\\\\.svg$\"}},\"required\":[\"logo_uri\"]}"
                   }
                 ]
               }

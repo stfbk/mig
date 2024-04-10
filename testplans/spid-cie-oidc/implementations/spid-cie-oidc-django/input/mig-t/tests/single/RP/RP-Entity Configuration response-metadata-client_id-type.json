@@ -25,7 +25,7 @@
                   {
                     "in": "payload",
                     "check": "$.metadata.openid_relying_party",
-                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"client_id\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"client_id\"]})"
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"client_id\":{\"type\":\"string\", \"format\":\"uri\", \"pattern\":\"^https://\"}},\"required\":[\"client_id\"]}"
                   }
                 ]
               }

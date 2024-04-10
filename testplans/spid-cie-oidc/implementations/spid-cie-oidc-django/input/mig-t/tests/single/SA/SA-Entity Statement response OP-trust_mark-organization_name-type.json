@@ -1,0 +1,46 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Trust Mark contain the correct type of organization_name claim",
+        "description": "In this test, an issued Trust Mark must be taken, decrypted and the type of the organization_name claim in it is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response SA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "type": "jwt",
+                "decode regex": "[^\\r\\n]*",
+                "decode operations": [
+                  {
+                    "from": "jwt payload",
+                    "type": "jwt",
+                    "decode param": "$.trust_marks.trust_mark",
+                    "checks": [
+                      {
+                        "in": "payload",
+                        "check": "$",
+                        "json schema compliant": "{ \"type \": \u00a0\"object \", \"properties \": { \"organization_name \": { \"type \": \u00a0\"string \", \"enum \": [ \"private \", \u00a0\"public \"]}}, \"required \": [ \"organization_name \"]}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

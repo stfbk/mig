@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the AA metadata contain correct type resource claim",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the value of the resource claim in the 'federation_entity' entity type is an HTTPS URL",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\": {\"resource\": {\"oneOf\": [{\"type\": \"string\", \"format\": \"uri\", \"pattern\": \"^https://\"},{\"type\": \"array\",\"items\": {\"type\": \"string\", \"format\": \"uri\", \"pattern\": \"^https://\"},\"minItems\": 1}]}},\"required\": [\"resource\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

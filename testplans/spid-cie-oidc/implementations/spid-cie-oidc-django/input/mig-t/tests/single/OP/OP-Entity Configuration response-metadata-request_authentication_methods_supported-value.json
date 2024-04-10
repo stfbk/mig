@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP metadata contain the correct value of request_authentication_methods_supported claim",
+        "description": "In this test the OP metadata in the OP Entity Configuration are taken and the presence of the request_authentication_methods_supported claim in the 'openid_provider' entity type is checked.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider.request_authentication_methods_supported",
+                    "json schema compliant": "{\"type\": \"object\",\"additionalProperties\": {\"type\": \"array\",\"items\": {\"type\": \"string\",\"const\": \"request_object\"}}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}
