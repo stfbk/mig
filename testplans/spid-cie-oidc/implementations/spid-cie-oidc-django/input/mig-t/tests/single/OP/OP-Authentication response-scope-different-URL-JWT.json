@@ -8,7 +8,7 @@
     {
       "test": {
         "name": "Does the OP refuse Authentication Requests with the scope parameter different in the URL and in the JWT",
-        "description": "The Authentication Request is intercepted and the iss parameter in the URL of the request (scope in the HTTP request) is modified to a valid value but different from the JWT's one. The same parameter in the JWT's payload is left unchanged",
+        "description": "The Authentication Request is intercepted and the scope parameter in the URL is modified to a valid value but different from the scope parameter in the JWT payload that can be found in the request query parameter. The same parameter in the JWT's payload is left unchanged.",
         "type": "active",
         "sessions": [
           "s1"

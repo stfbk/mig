@@ -3,15 +3,17 @@
     "name": "var0",
     "description": "var1",
     "type": "active",
-    "sessions": "session0",
+    "sessions": [
+      "session0"
+    ],
     "operations": [
       {
-        "session": "s1",
+        "session": "session0",
         "action": "start"
       },
       {
         "action": "intercept",
-        "from session": "s1",
+        "from session": "session0",
         "then": "forward",
         "message type": "var2",
         "message operations": [
@@ -24,7 +26,7 @@
       },
       {
         "action": "intercept",
-        "from session": "s1",
+        "from session": "session0",
         "then": "forward",
         "message type": "var6",
         "checks": [
@@ -36,6 +38,6 @@
         ]
       }
     ],
-    "result": "correct flow s1"
+    "result": "correct flow session0"
   }
 }
