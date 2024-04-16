@@ -15,12 +15,12 @@
         ],
         "operations": [
           {
-            "session": "s1",
+            "session": "s_CIE_introsp",
             "action": "start"
           },
           {
             "action": "intercept",
-            "from session": "s1",
+            "from session": "s_CIE_introsp",
             "then": "forward",
             "message type": "Introspection request",
             "edit operations": [
@@ -33,7 +33,7 @@
           },
           {
             "action": "intercept",
-            "from session": "s1",
+            "from session": "s_CIE_introsp",
             "then": "forward",
             "message type": "Introspection response",
             "checks": [
