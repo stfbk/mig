@@ -9,30 +9,30 @@
       "test": {
         "name": "var0",
         "description": "var1",
-        "type": "passive",
+        "type": "active",
         "sessions": [
           "session0"
         ],
         "operations": [
           {
+            "session": "session0",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "session0",
+            "then": "forward",
             "message type": "var2",
-            "decode operations": [
+            "edit operations": [
               {
                 "from": "var3",
-                "decode param": "var4",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "var5",
-                    "check": "$var6",
-                    "not matches regex": "var7"
-                  }
-                ]
+                "edit regex": "var4",
+                "value": "var5"
               }
             ]
           }
         ],
-        "result": "correct flow session0"
+        "result": "incorrect flow session0"
       }
     }
   ]

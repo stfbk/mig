@@ -3,7 +3,9 @@
     "name": "var0",
     "description": "var1",
     "type": "passive",
-    "sessions": "session0",
+    "sessions": [
+      "session0"
+    ],
     "operations": [
       {
         "message type": "var2",
@@ -17,6 +19,6 @@
         ]
       }
     ],
-    "result": "correct flow s1"
+    "result": "correct flow session0"
   }
 }
