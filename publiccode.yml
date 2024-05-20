@@ -1,0 +1,81 @@
+# This repository adheres to the publiccode.yml standard by including this 
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+publiccodeYmlVersion: '0.2'
+applicationSuite: MIG
+landingURL: 'https://github.com/stfbk/mig'
+categories:
+  - sicurezza-informatica
+  - cittadinanza-digitale
+description:
+  it:
+    documentation: 'https://github.com/stfbk/mig/blob/master/README.md'
+    features:
+    - |-
+    Assiste gli amministratori di sistema e i security tester nella conduzione di test di sicurezza e di compliance su implementazioni basate su protocolli di Identity Management come per esempio SAML, OpenID Connect (OIDC) e Open Authorization (OAuth).
+    - |-
+    Comprende una collezione di test human e machine readable per il protocollo di SPID/CIE OIDC.
+    - |-
+    Integra due implementazioni basate sul protocollo SPID/CIE OIDC.
+    genericName: Tool di sicurezza per protocolli di Identity Management
+    longDescription: |
+      Micro-Id-Gym (MIG) è uno strumento flessibile ed estensibile progettato per assistere gli amministratori di sistema e i security tester nella conduzione di test di sicurezza e di compliance sulle implementazioni di protocolli di Identity Management (IdM) come per esempio SAML, OpenID Connect (OIDC) e OAuth. MIG fornisce sia una suite di strumenti per eseguire test di sicurezza e compliance che testplan (inteso come collezione di test) per implementazioni di protocolli di IdM.
+
+      MIG attualmente offre:
+      - un testplan per un protocollo/standard, noto anche come testplan human readable, comprende un insieme di specifiche scritte in un formato facilmente comprensibile dagli esseri umani. Descrive i test necessari per convalidare la conformità di uno specifico protocollo/standard. MIG offre attualmente un testplan human readable che copre il protocollo SPID/CIE OIDC;
+      - un ambiente di test (i-mig-t) facilmente estendibile che integra (i) un'implementazione di riferimento reperibile da Developers Italia del protocollo SPID/CIE OIDC (spid-cie-oidc-django), che include un OpenID Provider, un Relying Party e un Trust Anchor, (ii) un'implementazione di un Relying Party del protocollo SPID/CIE OIDC (spid-cie-oidc-java), (iii) il web proxy di Burp Suite Community Edition (Burp), e (iv) MIG-T, un tool di sicurezza che consente di eseguire test di sicurezza e di compliance;
+      - uno script (testplan-to-pdf.py) progettato per migliorare la leggibilità del testplan human readable convertendolo in formato PDF;
+      - uno script (testplan-to-mr.py) per tradurre la maggior parte dei test human readable in un formato machine readable compatibile con MIG-T.
+
+      MIG, eseguibile tramite Docker, contiene i container di i-mig-t, Burp e le diverse implementazioni, mentre MIG-T, essendo un plugin di Burp, viene fornito come file JAR. Sfruttando le API messe a disposizione da Burp, vengono intercettati i messaggi HTTP generati dalle user action definite nelle sessioni e indicate nel test. A questi messaggi HTTP vengono quindi applicate le direttive definite nel test. Alla fine dell'esecuzione di ogni test, si ottiene un risultato che ne definisce l'esito.
+    shortDescription: |-
+      MIG è uno strumento flessibile per eseguire test di sicurezza e di compliance su implementazioni di protocolli di Identity Management come SAML, OIDC e OAuth.
+developmentStatus: beta
+it:
+  conforme:
+    gdpr: false
+    lineeGuidaDesign: false
+    misureMinimeSicurezza: false
+    modelloInteroperabilita: false
+  countryExtensionVersion: '0.2'
+  piattaforme:
+    anpr: false
+    cie: true
+    pagopa: false
+    spid: true
+legal:
+  license: Apache-2.0
+localisation:
+  availableLanguages:
+    - en
+  localisationReady: false
+maintenance:
+  contacts:
+    - affiliation: Fondazione Bruno Kessler (Trento), Italy
+      email: abisegna@fbk.eu
+      name: Andrea Bisegna
+    - affiliation: Fondazione Bruno Kessler
+      email: mbitussi@fbk.eu
+      name: Matteo Bitussi
+    - affiliation: Fondazione Bruno Kessler
+      email: carbone@fbk.eu
+      name: Roberto Carbone
+    - affiliation: Fondazione Bruno Kessler
+      email: l.cristiano@fbk.eu
+      name: Laura Cristiano
+    - affiliation: Fondazione Bruno Kessler
+      email: emarchesini@fbk.eu
+      name: Eleonora Marchesini
+    - affiliation: Fondazione Bruno Kessler and Department Mathematics 
+      email: ranise@fbk.eu
+      name: Silvio Ranise
+  type: internal
+name: Micro-Id-Gym
+platforms:
+  - linux
+  - windows
+releaseDate: '2024-01-04'
+softwareType: addon
+softwareVersion: v2.2
+url: 'https://github.com/stfbk/mig'
