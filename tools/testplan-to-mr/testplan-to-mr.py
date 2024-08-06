@@ -113,6 +113,45 @@ def _traverse_folder(substitutions):
                 with open(output_file_path, 'w') as output_file:
                     json.dump(data, output_file, indent=2)
 
+def process_row(row):
+    """
+    This function identifies rows with ALL and duplicate them replacing ALL with the name's entity.
+    There are 2 scenarios:
+    1. UID and Entity under test contain "ALL": duplicate the row for each entity
+    2. UID and Entity under test contain a combination, like "TA_SA": duplicate the row for each entity mentioned in the UID, excluding the current entity
+    """
+    
+    entities = ["TA", "SA", "AA", "OP", "RP"]
+    uid_parts = row['UID'].split('-')
+    
+    # Scenario 1: ALL in UID and Entity under test is ALL
+    if "ALL" in row['UID'] and row['Entity under test'] == 'ALL':
+        # Generate new rows for each entity
+        new_rows = []
+        for entity in entities:
+            new_row = row.copy()  # Copy the original row
+            new_row['UID'] = row['UID'].replace('ALL', entity)  # Replace 'ALL' in UID
+            new_row['Entity under test'] = entity  # Set Entity under test to the current entity
+            new_rows.append(new_row)
+        return new_rows
+    
+    # Scenario 2: Specific combinations in UID and Entity under test is either TA or SA
+    elif "_" in uid_parts[0] and "ALL" in uid_parts[1]:
+        # Generate new rows for each entity, excluding the current one
+        new_rows = []
+        for e in uid_parts[0].split('_'):
+            for entity in entities:
+                if entity != e:
+                    new_row = row.copy()  # Copy the original row
+                    new_row['UID'] = row['UID'].replace(uid_parts[0], e).replace("ALL", entity)  # Replace part of UID
+                    new_row['Entity under test'] = e  # Set Entity under test to the new entity
+                    new_rows.append(new_row)
+        return new_rows
+    
+    # No duplication needed
+    else:
+        return [row]
+
 def config_for_implementation():
     # Load JSON config file
     with open('config_file/config_testplan.json', 'r') as f:
@@ -146,10 +185,10 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
         # Filter for the type of the test
         for pattern in patterns:
             # Returns the rows where entity under test is the entity and the type of the column is the wanted type
-            filtered = df_tests[((df_tests["Entity under test"] == entity) | (df_tests["Entity under test"] == "ALL")) 
+            filtered = df_tests[((df_tests["Entity under test"] == entity)) 
                                 & (df_tests["Pattern name"] == pattern)]
 
-            tests = createJson(filtered, pattern, entity)
+            tests = createJson(filtered, entity)
 
             if tests:
                 session1_test.extend(tests)
@@ -175,10 +214,10 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
         # Filter for the type of the test
         for pattern in patterns:
             # Returns the rows where entity under test is the entity and the type of the column is the wanted type
-            filtered = df_tests[((df_tests["Entity under test"] == entity) | (df_tests["Entity under test"] == "ALL")) 
+            filtered = df_tests[((entity in df_tests["Entity under test"]) | (df_tests["Entity under test"] == "ALL")) 
                                 & (df_tests["Pattern name"] == pattern) & (df_tests["Type MIG"] == "Passive")]
 
-            tests = createJson(filtered, pattern, entity)
+            tests = createJson(filtered, entity)
             if tests:
                 passive_test.extend(tests)
                 entity_test.extend(tests)     
@@ -195,7 +234,7 @@ def createTestsfromCsv(entities: list, patterns: str, df_tests: pd.DataFrame):
     with open(os.path.join(wd, OUT_DIR_SINGLE, 'PASSIVE.json'), 'w') as outfile:
         outfile.write(json_objects)
 
-def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
+def createJson(table: pd.DataFrame, entity: str) -> list:
     """
         This function creates the Jsons of the tests that will be added to the file of the corresponding test testType and entity. 
         All the characteristics of the test suite must already be in the file, this function only creates tests (in the "tests" 
@@ -208,7 +247,7 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
 
     for index, row in table.iterrows():
         """
-        Look in the filtered table taking the json written as 'type_name-pattern name.json' per row
+        Look in the filtered table taking the json written as 'type_name-pattern_name.json' per row
         When found an existing file use it, else skip to the next row.
         """
 
@@ -217,7 +256,7 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
         try:
             openfile = open(os.path.join(DIR_TEMPLATES, f'{testType}-{row["Pattern name"]}.json'), 'r')
         except(FileNotFoundError):
-            log_pattern.debug(f'TemplateNotFound: {testType}-{row["Pattern name"]}.json')
+            log_pattern.debug(f'[ERROR] TemplateNotFound: {testType}-{row["Pattern name"]}.json')
             continue
         
         message_split = "" if pd.isna(row["Input for generated MR: Oracle"]) else row["Input for generated MR: Oracle"].split(" | ")
@@ -291,13 +330,21 @@ def createJson(table: pd.DataFrame, pattern: str, entity: str) -> list:
 
 def generate_mr():
     #Returns a dataframe
-    df_tests = pd.read_csv(os.path.join(wd, "input", "testplan.csv"))
+    #df_tests = pd.read_csv(os.path.join(wd, "input", "testplan.csv"))
+    df_tests = pd.read_csv("testplan.csv")
+
+    # Process each row and expand the DataFrame
+    expanded_rows = []
+    for _, row in df_tests.iterrows():
+        expanded_rows.extend(process_row(row))
+
+    # Create a new DataFrame from the processed rows
+    df_tests = pd.DataFrame(expanded_rows)
     
     # Decide for which entity we want to create the tests
     entitiesToTest = "ALL" #input("Which entity do you want to test? (combinations separated by commas or ALL for all the entities) ").upper()
     if entitiesToTest == "ALL":
         entitiesToTest = [x for x in list(set(df_tests["Entity under test"])) if str(x) != "nan"]
-        entitiesToTest.remove("ALL")
     else:
         entitiesToTest = entitiesToTest.split(',')
         for i in range(0, len(entitiesToTest)):
