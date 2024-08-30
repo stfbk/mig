@@ -109,6 +109,45 @@ Overall, this Docker architecture streamlines the setup of a containerized envir
 
 </details>
 
+## Using mig-t in Headless Mode
+
+1. Start MIG-T in headless mode, for example with the command `build_and_run.sh` inside the folder `mig/testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/`
+2. Run the script `run_tests.sh`, passing a test in JSON format or an acronym representing an entity from spid-cie-oidc-django (OP, RP, TA) as a parameter to execute the test suite containing all the tests for that entity. You can also add the `-p` option to execute only the passive tests for that entity
+3. The output of the testing will be saved in the `output.json` file within the context in which the `run_tests.sh` command is executed. For the case of `spid-cie-oidc-django` the file will be in the folder `mig/testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/`
+
+For more information about mig-t, please follow the guidelines reported [here](https://github.com/stfbk/mig-t/blob/main/README.md)
+
+## Details on the image for Headless Mode
+
+<details>
+This Docker architecture is designed to create a containerized environment for running Burp Suite Community Edition and MIG-t, along with the necessary dependencies to facilitate web application testing using Selenium with Firefox. Here's a description of the architecture:
+
+**Base Image:**
+The Docker image is based on Ubuntu 22.04, providing a stable and well-established Linux distribution as the foundation for the containerized environment.
+
+**Package Installation:**
+The Dockerfile begins by updating the package repository and installing various essential packages such as `wget`, `bzip2`, and Java Development Kit (JDK) components to support the execution of Burp Suite and other required software. Additionally, it installs `curl` and `jq` to run the `run_test.sh` script file.
+
+**Burp Suite Installation:**
+The Dockerfile automates the installation of Burp Suite Community Edition by downloading the specified version from PortSwigger's CDN. It makes the necessary setup to place Burp Suite in the `/opt/BurpSuiteCommunity/` directory within the container.
+
+**Selenium and Firefox Setup:**
+The Docker image includes Selenium WebDriver support by downloading and configuring the GeckoDriver for Firefox. It also downloads and installs a specific version of the Firefox browser in the `/opt/` directory and creates a symbolic link to it in `/usr/bin/`.
+
+**Cache Avoidance:**
+A random data download from "<https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h>" is included to prevent Docker from caching files that could change frequently.
+
+**File Copying:**
+The Docker image copies several configuration and application files into the container, including MIG-T a Java application JAR file (`mig-t-beta-jar-with-dependencies.jar`) and Burp Suite configuration files (`project-options.json` and `user-options.json`). These files are placed in the appropriate directories within the container.
+
+**Container Start Command:**
+The Docker image specifies the command to run when the container is started. It launches Burp Suite Community Edition in headless mode with specific configuration files (`user-options.json` and `project-options.json`) using the command `java -Djava.awt.headless=true -jar \
+/opt/BurpSuiteCommunity/burpsuite_community.jar`. The -Djava.awt.headless=true option enables headless mode, which allows Burp Suite to run without a graphical user interface. To disable headless mode, remove the -Djava.awt.headless=true option. The command also includes a confirmation prompt (echo 'y') to automatically accept the terms of service.
+
+Overall, this Docker architecture creates a containerized environment for web application security testing that is fully capable of running in headless mode. By combining Burp Suite with Firefox and Selenium WebDriver, it provides a streamlined and reproducible solution for security professionals and developers who need to automate tests and operate without a graphical user interface.
+
+</details>
+
 ## Problems fixing
 
 ### Docker Installation
