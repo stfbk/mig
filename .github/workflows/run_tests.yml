@@ -1,0 +1,40 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build and run all components
+      run: |
+        cd testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/
+        chmod +x build_and_run.sh
+        ./build_and_run.sh
+
+    - name: Wait for the server to start
+      run: sleep 15
+
+    - name: Run script to send API test requests
+      run: |
+        cd testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/
+        docker exec spid-cie-oidc-django-burpsuite-1 chmod +x run_tests.sh
+        docker exec spid-cie-oidc-django-burpsuite-1 /run_tests.sh RP -p
+        docker cp spid-cie-oidc-django-burpsuite-1:/output.json output.json
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: output.json
+        path: testplans/spid-cie-oidc/implementations/spid-cie-oidc-django/output.json

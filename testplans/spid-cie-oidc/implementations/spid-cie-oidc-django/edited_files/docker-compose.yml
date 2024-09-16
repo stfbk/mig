@@ -9,9 +9,14 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - "$HOME/.Xauthority:/root/.Xauthority:rw"
       - ../config/mig-t/msg_def.json:/opt/BurpSuiteCommunity/msg_def.json
-      - ../logs/:/opt/BurpSuiteCommunity/logs # Log folder 
+      - ../config/mig-t/msg_def.json:/msg_def.json
+      - ../logs/:/opt/BurpSuiteCommunity/logs # Log folder
+      - ../input:/input # Input folder
+      - ../run_tests.sh:/run_tests.sh # Script to run tests
+      - ../test1.json:/test1.json # Example test
     ports:
       - 9095:9095
+      - 3000:3000 # Expose port 3000 from Docker to the host to be able to use the APIs.
       #- 5005:5005 # To enable java debugger
     networks:
       - oidcfed
