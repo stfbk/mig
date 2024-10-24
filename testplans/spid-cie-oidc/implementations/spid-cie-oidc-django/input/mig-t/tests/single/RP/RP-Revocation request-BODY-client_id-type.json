@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Revocation Request contain correct type of client_id of the RP making the request",
+        "description": "The Revocation request made by the RP is taken and the value of the client_id parameter is an HTTPS URL that identifies the RP",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "(?<=client_id=)(https[^&]+)",
+                "is present": true
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

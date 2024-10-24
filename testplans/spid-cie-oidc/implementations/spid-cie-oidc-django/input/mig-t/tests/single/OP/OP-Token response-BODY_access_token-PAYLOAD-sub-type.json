@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT Access Token contain the correct 'sub' parameter type in the Payload.",
+        "description": "The Access Token present in the Token Response is analyzed and the presence of the 'sub' parameter in the Payload is checked. It is a String MUST NOT exceed 255 ASCII Char.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=\"access_token\": \")[^\"]+",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\": {\"type\": \"string\", \"maxLength\": 255, \"pattern\": \"^[\\\\x00-\\\\x7F]*$\"}}, \"required\": [\"sub\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

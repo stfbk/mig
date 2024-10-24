@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the AA metadata contain the correct grant_types_supported claim type",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the presence of the grant_types_supported claim in the 'oauth_authorization_server' entity type is checked. It must be a JSON Array",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$metadata.oauth_authorization_server",
+                    "json schema compliant": "{\"type\":\"object\",\"properties\":{\"grant_types_supported\":{\"type\":\"array\"}},\"required\":[\"grant_types_supported\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

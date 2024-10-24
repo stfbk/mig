@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP Authentication Request's JWT contain the 'exp' parameter is a Number",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'exp' parameter must be a Number",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"exp\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"exp\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

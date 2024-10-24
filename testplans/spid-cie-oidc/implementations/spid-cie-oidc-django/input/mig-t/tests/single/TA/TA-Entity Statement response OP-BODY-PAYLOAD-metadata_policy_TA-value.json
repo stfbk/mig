@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the TA contain the metadata_policy parameter",
+        "description": "In order to check if the TA issues correct Entity statements the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence if the metadata_policy parameter is checked. It must be a JSON Object and MUST contain [\"openid_relying_party\", \"openid_provider\"]",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response TA OP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{ \"type\": \"object\", \"properties\": { \"metadata_policy\": { \"type\": \"object\", \"properties\": { \"openid_relying_party\": { \"type\": \"object\", \"additionalProperties\": true }, \"openid_provider\": { \"type\": \"object\", \"additionalProperties\": true } }, \"required\": [\"openid_relying_party\", \"openid_provider\"] } }, \"required\": [\"metadata_policy\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

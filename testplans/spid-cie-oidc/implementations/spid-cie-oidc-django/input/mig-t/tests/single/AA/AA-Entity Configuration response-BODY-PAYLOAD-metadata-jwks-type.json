@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the AA metadata contain the correct jwks claim type",
+        "description": "In this test the AA metadata in the AA Entity Configuration are taken and the presence of the jwks claim in the 'oauth_authorization_server' entity type is checked. It must be a JSON Object that contains keys, which is a JSON Array, which contains at least kty, which is a string",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$metadata.oauth_authorization_server.jwks",
+                    "json schema compliant": "{\"type\":\"object\",\"properties\":{\"keys\":{\"type\":\"array\",\"properties\":{\"kty\":{\"type\":\"string\"}},\"required\":[\"kty\"]}},\"required\":[\"keys\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

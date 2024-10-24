@@ -1,0 +1,40 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the UserInfo Response's JWE contain a correct cty parameter in the JOSE Header",
+        "description": "The JWE Token contained in the UserInfo response is taken and analyzed. If it contains the 'cty' parameter set to 'JWT' in the JOSE header, then it is compliant with the specification",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "UserInfo response",
+            "decode operations": [
+              {
+                "jwe decrypt": "X_key_jwe",
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.cty",
+                    "is": "JWT"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

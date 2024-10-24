@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the SA metadata contain the correct federation_trust_mark_status_endpoint claim type",
+        "description": "In this test the SA metadata in the SA Entity Configuration are taken and the presence of the federation_trust_mark_status_endpoint claim in the 'federation_entity' entity type is checked. It MUST be an URL.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\": {\"federation_trust_mark_status_endpoint\": {\"type\": \"string\",\"format\": \"uri-refrence\"}},\"required\": [\"federation_trust_mark_status_endpoint\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

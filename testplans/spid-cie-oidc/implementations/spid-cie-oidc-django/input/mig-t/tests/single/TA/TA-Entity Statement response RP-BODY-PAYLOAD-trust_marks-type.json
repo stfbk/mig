@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the entity contain the trust_marks parameter",
+        "description": "In order to check if the entity issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the entity's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload. It must be a JSON Array that contains JSON Objects.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response TA RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\": {\"trust_marks\": {\"type\": \"array\",\"items\": { \"type\": \"object\"}}},\"required\": [\"trust_marks\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

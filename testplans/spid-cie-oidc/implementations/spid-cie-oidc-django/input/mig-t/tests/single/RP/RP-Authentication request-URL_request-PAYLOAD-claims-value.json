@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP Authentication Request's JWT contain the correct 'claims' parameter type",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'claims' parameter must be a JSON Object.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$claims",
+                    "json schema compliant": "{\"type\":\"object\",\"properties\":{\"scope\":{\"type\":\"string\"},\"claims\":{\"type\":\"object\",\"properties\":{\"userinfo\":{\"$ref\":\"#/definitions/commonProperties\"},\"id_token\":{\"$ref\":\"#/definitions/commonProperties\"}}}},\"required\":[\"scope\",\"claims\"],\"if\":{\"properties\":{\"scope\":{\"pattern\":\"\\\\bprofile\\\\b\"}}},\"then\":{\"properties\":{\"claims\":{\"properties\":{\"userinfo\":{\"required\":[\"given_name\",\"family_name\",\"birthdate\",\"https://attributes.eid.gov.it/fiscal_number\"]},\"id_token\":{\"required\":[\"given_name\",\"family_name\",\"birthdate\",\"https://attributes.eid.gov.it/fiscal_number\"]}},\"required\":[\"userinfo\",\"id_token\"]}}},\"else\":{\"if\":{\"properties\":{\"scope\":{\"pattern\":\"\\\\bemail\\\\b\"}}},\"then\":{\"properties\":{\"claims\":{\"properties\":{\"userinfo\":{\"required\":[\"email\",\"email_verified\"]},\"id_token\":{\"required\":[\"email\",\"email_verified\"]}},\"required\":[\"userinfo\",\"id_token\"]}}},\"else\":{\"if\":{\"properties\":{\"scope\":{\"pattern\":\"\\\\bprofile\\\\b.*\\\\bemail\\\\b|\\\\bemail\\\\b.*\\\\bprofile\\\\b\"}}},\"then\":{\"properties\":{\"claims\":{\"properties\":{\"userinfo\":{\"required\":[\"given_name\",\"family_name\",\"birthdate\",\"https://attributes.eid.gov.it/fiscal_number\",\"email\",\"email_verified\"]},\"id_token\":{\"required\":[\"given_name\",\"family_name\",\"birthdate\",\"https://attributes.eid.gov.it/fiscal_number\",\"email\",\"email_verified\"]}},\"required\":[\"userinfo\",\"id_token\"]}}},\"else\":{\"properties\":{\"claims\":{\"properties\":{\"userinfo\":{\"required\":[]},\"id_token\":{\"required\":[]}}}}}}},\"definitions\":{\"commonProperties\":{\"type\":\"object\",\"properties\":{\"given_name\":{\"type\":[\"string\",\"null\"]},\"family_name\":{\"type\":[\"string\",\"null\"]},\"place_of_birth\":{\"type\":[\"object\",\"null\"],\"properties\":{\"locality\":{\"type\":[\"string\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"locality\",\"region\"]},\"birthdate\":{\"type\":[\"string\",\"null\"]},\"gender\":{\"type\":[\"string\",\"null\"],\"enum\":[\"female\",\"male\",null]},\"https://attributes.eid.gov.it/fiscal_number\":{\"type\":[\"string\",\"null\"]},\"email\":{\"type\":[\"string\",\"null\"],\"format\":\"email\"},\"email_verified\":{\"type\":[\"boolean\",\"null\"]},\"document_details\":{\"type\":[\"object\",\"null\"],\"properties\":{\"type\":{\"type\":[\"string\",\"null\"],\"enum\":[\"cartaIdentita\",\"passaporto\",\"patenteGuida\",\"patenteNautica\",\"librettoPensione\",\"patentinoImpTermici\",\"portoArmi\",\"tesseraRiconoscimento\",null]},\"document_number\":{\"type\":[\"string\",\"null\"]},\"issuer\":{\"type\":[\"object\",\"null\"],\"properties\":{\"name\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"]},\"date_of_issuance\":{\"type\":[\"string\",\"null\"],\"format\":\"date\",\"pattern\":\"^\\\\d{4}-\\\\d{2}-\\\\d{2}$\"},\"date_of_expiry\":{\"type\":[\"string\",\"null\"],\"format\":\"date\",\"pattern\":\"^\\\\d{4}-\\\\d{2}-\\\\d{2}$\"}},\"required\":[\"type\",\"document_number\",\"issuer\",\"date_of_issuance\",\"date_of_expiry\"]},\"phone_number\":{\"type\":[\"string\",\"null\"],\"pattern\":\"^[0-9]+$\"},\"phone_number_verified\":{\"type\":[\"boolean\",\"null\"]},\"address\":{\"type\":[\"object\",\"null\"],\"properties\":{\"street_address\":{\"type\":\"string\"},\"postal_code\":{\"type\":\"string\"},\"locality\":{\"type\":\"string\"},\"region\":{\"type\":\"string\"},\"country_code\":{\"type\":\"string\",\"pattern\":\"^[A-Z]{2}$\"}},\"required\":[\"street_address\",\"postal_code\",\"locality\",\"region\",\"country_code\"]}},\"patternProperties\":{\"^https?:\\\\/\\\\/.+\\\\/fiscal_number$\":{\"type\":[\"string\",\"null\"],\"pattern\":\"^TINT-[A-Za-z0-9]+$\"},\"^https?:\\\\/\\\\/.+\\\\/landline_number$\":{\"type\":[\"string\",\"null\"],\"pattern\":\"^[0-9]+$\"},\"^https?:\\\\/\\\\/.+\\\\/e_delivery_service$\":{\"type\":[\"string\",\"null\"],\"format\":\"email\"}},\"additionalProperties\":false}}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

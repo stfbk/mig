@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP Authentication Request's JWT contain the 'state' parameter greater than 32 characters",
+        "description": "The Authentication request is taken, the JWT Token in the request parameter base64url decoded and the value of the 'state' parameter must be at least 32 alphanumeric characters long. If it is not present or its length is less than 32 alphanumeric characters, then the RP is not compliant with the specifications",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication response",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "(?<=state=)(?<=state=)[\\x20-\\x7E]{32,}?(?=&)",
+                "is present": true
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

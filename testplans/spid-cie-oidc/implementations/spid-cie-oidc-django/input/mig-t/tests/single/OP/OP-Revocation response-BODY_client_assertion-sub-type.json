@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Revocation request in client_assertion JWT contain the correct type of 'sub' parameter",
+        "description": "The Revocation request is taken, the JWT Token in the client_assertion parameter base64url decoded and the presence of the 'sub' parameter is checked. If it missing, than the RP is not compliant with the specifications. It must be a String.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Revocation request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=client_assertion=)([^&]+)",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\", \"properties\": {\"sub\": {\"type\": \"string\"}}, \"required\":[\"sub\"]})"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

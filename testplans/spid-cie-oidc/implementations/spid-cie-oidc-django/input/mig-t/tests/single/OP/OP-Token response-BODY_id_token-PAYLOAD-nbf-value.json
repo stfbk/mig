@@ -1,0 +1,54 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the issued JWT ID Token contain a correct 'nbf' parameter value in the Payload",
+        "description": "The ID Token present in the Token Response is taken, the payload is base64url decoded, analyzed and the presence of the 'nbf' parameter in the Payload is checked. In particular, it must match with the value of iat.",
+        "type": "active",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "session": "s1",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s1",
+            "then": "forward",
+            "message type": "Token response",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=id_token: \")([^\"]+)",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.iat",
+                    "as": "saved_iat"
+                  }
+                ],
+                "checks": [
+                  {
+                    "use variable": "true",
+                    "in": "payload",
+                    "check": "$.nbf",
+                    "contains": "saved_iat"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

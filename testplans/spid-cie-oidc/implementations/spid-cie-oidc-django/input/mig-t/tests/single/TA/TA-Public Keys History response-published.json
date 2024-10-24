@@ -20,7 +20,7 @@
               {
                 "in": "body",
                 "check regex": "\\[\\s*\"[^\"]*\"(?:,\\s*\"[^\"]*\")*\\s*\\]$",
-                "is present": "true"
+                "is present": true
               }
             ]
           }

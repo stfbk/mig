@@ -1,0 +1,46 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP contain a correct JWT alg value",
+        "description": "In this test the Authentication Request is taken and the presence of the alg parameter in the request_url is checked. It must be between [ RS256, RS512, ES256, ES512, PS256, PS512].",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$.alg",
+                    "is in": [
+                      "RS256",
+                      "RS512",
+                      "ES256",
+                      "ES512",
+                      "PS256",
+                      "PS512"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

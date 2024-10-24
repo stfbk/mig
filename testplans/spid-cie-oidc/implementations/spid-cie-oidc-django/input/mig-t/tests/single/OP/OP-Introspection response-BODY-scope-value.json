@@ -1,0 +1,69 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test suite": {
+        "name": "Single test",
+        "description": "One test only",
+        "filter messages": true
+      },
+      "tests": [
+        {
+          "test": {
+            "name": "Does the Introspection Endpoint Response have the correct value scope parameter",
+            "description": "To test that the Introspection response of the OP's correctly answers to valid tokens, a valid one is sent and the response is analyzed. It must be Uniquely Identifier of the OP",
+            "type": "active",
+            "sessions": [
+              "s_CIE_introsp"
+            ],
+            "operations": [
+              {
+                "session": "s_CIE_introsp",
+                "action": "start"
+              },
+              {
+                "action": "intercept",
+                "from session": "s_CIE_introsp",
+                "then": "forward",
+                "message type": "scope",
+                "decode operations": [
+                  {
+                    "from": "Introspection response",
+                    "decode param": "body",
+                    "type": "jwt",
+                    "edits": [
+                      {
+                        "jwt from": "(?<=\\\"scope\\\": \\\")[^\\\"]+",
+                        "jwt save": "$.saved_scope",
+                        "as": "payload"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "action": "intercept",
+                "from session": "s_CIE_introsp",
+                "then": "forward",
+                "message type": "Authentication request",
+                "checks": [
+                  {
+                    "use variable": "true",
+                    "in": "url",
+                    "check regex": "request",
+                    "contains": "payload"
+                  }
+                ]
+              }
+            ],
+            "result": "correct flow s_CIE_introsp"
+          }
+        }
+      ]
+    }
+  ]
+}

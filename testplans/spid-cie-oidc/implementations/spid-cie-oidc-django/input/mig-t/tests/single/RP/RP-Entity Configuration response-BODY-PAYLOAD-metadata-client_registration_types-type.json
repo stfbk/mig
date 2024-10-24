@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP metadata contain correct type client_registration_types parameter",
+        "description": "In this test the RP metadata are taken and the client_registration_types parameter in the 'openid_provider' subclaim (metadata type) is checked to be a JSON Array of strings.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\n\\r]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.openid_provider",
+                    "json schema compliant": "{\"type\":\"object\", \"properties\":{\"client_registration_types\":{\"type\":\"array\", \"items\":{\"type\":\"string\"}}},\"required\":[\"client_registration_types\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

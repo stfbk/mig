@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does Entity Statements issued by the SA contain the correct jwks parameter type",
+        "description": "In order to check if the entity issues correct Entity statements, a request for an entity statement is made (HTTP GET request in the entity's fetch endpoint) and the response is analyzed. Therefore, the Entity Statement Payload contained in the response are base64url decoded, once obtained the decrypted Payload, the presence and type of the jwks parameter is checked. It must be a JSON Object that contains keys, a JSON Array, which contains at least kty, a string",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Statement response TA AA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$jwks",
+                    "json schema compliant": "{\"type\":\"object\",\"properties\":{\"keys\":{\"type\":\"array\",\"properties\":{\"kty\":{\"type\":\"string\"}},\"required\":[\"kty\"]}},\"required\":[\"keys\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

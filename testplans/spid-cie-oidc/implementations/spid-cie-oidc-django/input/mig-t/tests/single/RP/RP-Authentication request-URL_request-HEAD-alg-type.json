@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the RP contain a correct JWT alg type",
+        "description": "In this test the Authentication Request is taken and the presence of the alg parameter in the request_url is checked. It must be a string",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Authentication request",
+            "decode operations": [
+              {
+                "from": "url",
+                "decode param": "request",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "header",
+                    "check": "$",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\":{\"alg\": {\"type\": \"string\"}},\"required\": [\"alg\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

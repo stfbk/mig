@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the metadata contain the correct organization_name claim type",
+        "description": "In this test the metadata in the Entity Configuration are taken and the presence of the organization_name claim in the 'federation_entity' entity type is checked. It must be a String.",
+        "type": "passive",
+        "sessions": [
+          "s1"
+        ],
+        "operations": [
+          {
+            "message type": "Entity Configuration response SA",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.metadata.federation_entity",
+                    "json schema compliant": "{\"type\": \"object\",\"properties\": {\"organization_name\": {\"type\": \"string\"}},\"required\": [\"organization_name\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s1"
+      }
+    }
+  ]
+}

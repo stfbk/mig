@@ -1,0 +1,39 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP verify the presence of iat in the token in the Introspection request",
+        "description": "Since the OP has to verify the client assertion in the Introspection Request, this test consist in intercepting a legitimate request, take the JWT of the client assertion and check the iat parameter",
+        "type": "passive",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=token=)([^&]+)",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "in": "payload",
+                    "check": "$.iat",
+                    "is present": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_CIE_introsp"
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the OP verify the value of client_id in the token in the Introspection request",
+        "description": "Since the OP has to verify the client assertion in the Introspection Request, this test consist in intercepting a legitimate request, take the JWT of the client assertion and check the client_id parameter. It must uniquely identifies the RP",
+        "type": "active",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "session": "s_CIE_introsp",
+            "action": "start"
+          },
+          {
+            "action": "intercept",
+            "from session": "s_CIE_introsp",
+            "then": "forward",
+            "message type": "Entity Configuration response RP",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "[^\\r\\n]*",
+                "type": "jwt",
+                "edits": [
+                  {
+                    "jwt from": "payload",
+                    "jwt save": "$.client_id",
+                    "as": "saved_client_id"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "action": "intercept",
+            "from session": "s_CIE_introsp",
+            "then": "forward",
+            "message type": "Introspection request",
+            "decode operations": [
+              {
+                "from": "body",
+                "decode param": "(?<=token=)([^&]+)",
+                "type": "jwt",
+                "checks": [
+                  {
+                    "use variable": "true",
+                    "in": "payload",
+                    "check": "$.client_id",
+                    "contains": "saved_client_id"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_CIE_introsp"
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Introspection Endpoint Response have the correct value client_id parameter",
+        "description": "To test that the Introspection response of the OP's correctly answers to valid tokens, a valid one is sent and the response is analyzed. It must be Uniquely Identifier of the OP",
+        "type": "passive",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "\"client_id\": \"X_url_RP\"",
+                "is present": true
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_CIE_introsp"
+      }
+    }
+  ]
+}

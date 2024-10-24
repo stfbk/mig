@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the Introspection Endpoint Response have the aud parameter",
+        "description": "To test that the Introspection response of the OP's correctly answers to valid tokens, a valid one is sent and the response is analyzed. It must contain the aud parameter",
+        "type": "passive",
+        "sessions": [
+          "s_CIE_introsp"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": true,
+                "check regex": "\"aud\""
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_CIE_introsp"
+      }
+    }
+  ]
+}
