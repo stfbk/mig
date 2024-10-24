@@ -1,0 +1,52 @@
+{
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "active",
+    "sessions": [
+      "session0"
+    ],
+    "operations": [
+      {
+        "session": "session0",
+        "action": "start"
+      },
+      {
+        "action": "intercept",
+        "from session": "session0",
+        "then": "forward",
+        "message type": "var2",
+        "decode operations": [
+          {
+            "from": "var3",
+            "decode param": "var4",
+            "type": "jwt",
+            "edits": [
+              {
+                "jwt from": "var5",
+                "jwt remove": "var6"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "action": "intercept",
+        "from session": "session0",
+        "then": "forward",
+        "message type": "var7",
+        "checks": [
+          {
+            "in": "var8",
+            "check regex": "HTTP/?\\d?\\.?\\d?\\svar9"
+          },
+          {
+            "in": "var_10",
+            "check": "var_11"
+          }
+        ]
+      }
+    ],
+    "result": "assert_only"
+  }
+}

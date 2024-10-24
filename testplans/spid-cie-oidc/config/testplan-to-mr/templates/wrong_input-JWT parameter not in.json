@@ -1,39 +1,30 @@
 {
-  "test suite": {
-    "name": "Single test",
-    "description": "One test only",
-    "filter messages": true
-  },
-  "tests": [
-    {
-      "test": {
-        "name": "var0",
-        "description": "var1",
-        "type": "passive",
-        "sessions": [
-          "session0"
-        ],
-        "operations": [
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "passive",
+    "sessions": [
+      "session0"
+    ],
+    "operations": [
+      {
+        "message type": "var2",
+        "decode operations": [
           {
-            "message type": "var2",
-            "decode operations": [
+            "from": "var3",
+            "decode param": "var4",
+            "type": "jwt",
+            "checks": [
               {
-                "from": "var3",
-                "decode param": "var4",
-                "type": "jwt",
-                "checks": [
-                  {
-                    "in": "var5",
-                    "check": "$var6",
-                    "not matches regex": "var7"
-                  }
-                ]
+                "in": "var5",
+                "check": "$var6",
+                "not matches regex": "var7"
               }
             ]
           }
-        ],
-        "result": "correct flow session0"
+        ]
       }
-    }
-  ]
+    ],
+    "result": "correct flow session0"
+  }
 }
