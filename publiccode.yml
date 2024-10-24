@@ -40,6 +40,8 @@ it:
     cie: true
     pagopa: false
     spid: true
+  riuso:
+    codiceIPA: fbk
 legal:
   license: Apache-2.0
 localisation:
@@ -71,7 +73,7 @@ name: Micro-Id-Gym
 platforms:
   - linux
   - windows
-releaseDate: '2024-01-04'
+releaseDate: '2024-10-16'
 softwareType: addon
 softwareVersion: v2.2
 url: 'https://github.com/stfbk/mig'
