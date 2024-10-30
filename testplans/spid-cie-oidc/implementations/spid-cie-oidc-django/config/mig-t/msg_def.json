@@ -284,6 +284,22 @@
             ]
         },
         {
+            "name": "Entity Statement request TA AA",
+            "is request": true,
+            "response name": "Entity Statement response TA AA",
+            "checks": [
+                {
+                    "in": "url",
+                    "check regex": "/fetch\\?sub=http://attribute-authority.org:8004"
+                },
+                {
+                    "in": "head",
+                    "check param": "Host",
+                    "contains": "trust-anchor.org:8000"
+                }
+            ]
+        },
+        {
             "name": "Entity Statement request SA RP",
             "is request": true,
             "response name": "Entity Statement response SA RP",
@@ -307,6 +323,22 @@
                 {
                     "in": "url",
                     "check regex": "/fetch\\?sub=http://cie-provider.org:8002"
+                },
+                {
+                    "in": "head",
+                    "check param": "Host",
+                    "contains": "soggetti-aggregatori.org:8004"
+                }
+            ]
+        },
+        {
+            "name": "Entity Statement request SA AA",
+            "is request": true,
+            "response name": "Entity Statement response SA AA",
+            "checks": [
+                {
+                    "in": "url",
+                    "check regex": "/fetch\\?sub=http://attribute-authority.org:8004"
                 },
                 {
                     "in": "head",
@@ -645,22 +677,6 @@
                 {
                     "in": "url",
                     "check regex": "/resolve/\\?sub=attribute-authority.org"
-                },
-                {
-                    "in": "head",
-                    "check param": "Host",
-                    "contains": "soggetti-aggregatori.org:8004"
-                }
-            ]
-        },
-        {
-            "name": "Resolve Entity Statement request SA TA",
-            "is request": true,
-            "response name": "Resolve Entity Statement response SA TA",
-            "checks": [
-                {
-                    "in": "url",
-                    "check regex": "/resolve/\\?sub=trust-anchor.org:8000"
                 },
                 {
                     "in": "head",
