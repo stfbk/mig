@@ -124,13 +124,15 @@ class TestGenerator:
             entities = ["TA", "SA", "AA", "OP", "RP"]
             if "ALL" in rows['UID']:
                 if "ALL" in uid_parts[1] and "ALL" not in uid_parts[0]:
+                    if "Entity Statement" in row["UID"] and "SA" in rows['UID'].split('-')[0]:
+                        entities.remove("TA")
                     entities.remove(rows['UID'].split('-')[0])
                 if "ALL" in uid_parts[0] and "_" in message: #ALL the entities are removed
                     entities = [item for item in entities if item not in message_ent.split('_')]
                 if "ALL" in uid_parts[0] and "_" in oracle: #ALL the entities are removed
                     entities = [item for item in entities if item not in oracle_ent.split('_')]
                 new_rows.extend(self._replace_value(rows, "ALL", entities))
-            else:
+            elif "_" not in rows['UID'].split('-')[0]:
                 new_rows.append(rows)
         
         return new_rows
