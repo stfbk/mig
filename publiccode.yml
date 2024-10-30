@@ -2,12 +2,12 @@
 # metadata file that makes public software easily discoverable.
 # More info at https://github.com/italia/publiccode.yml
 
-publiccodeYmlVersion: '0.4'
+publiccodeYmlVersion: '0.4.0'
 applicationSuite: MIG
 landingURL: 'https://github.com/stfbk/mig'
 categories:
-  - sicurezza-informatica
-  - cittadinanza-digitale
+  - it-security
+  - digital-citizenship
 description:
   it:
     documentation: 'https://github.com/stfbk/mig/blob/master/README.md'
@@ -27,7 +27,7 @@ description:
 
       MIG, eseguibile tramite Docker, contiene i container di i-mig-t, Burp e le diverse implementazioni, mentre MIG-T, essendo un plugin di Burp, viene fornito come file JAR. Sfruttando le API messe a disposizione da Burp, vengono intercettati i messaggi HTTP generati dalle user action definite nelle sessioni e indicate nel test. A questi messaggi HTTP vengono quindi applicate le direttive definite nel test. Alla fine dell'esecuzione di ogni test, si ottiene un risultato che ne definisce l'esito.
     shortDescription: |-
-      MIG è uno strumento flessibile per eseguire test di sicurezza e di compliance su implementazioni di protocolli di Identity Management come SAML, OIDC e OAuth.
+      MIG è uno strumento per eseguire test di sicurezza e di compliance su implementazioni di protocolli di Identity Management come SAML, OIDC e OAuth.
 developmentStatus: beta
 it:
   conforme:
