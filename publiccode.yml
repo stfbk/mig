@@ -55,14 +55,17 @@ maintenance:
       email: abisegna@fbk.eu
       name: Andrea Bisegna
     - affiliation: Fondazione Bruno Kessler
-      email: mbitussi@fbk.eu
-      name: Matteo Bitussi
+      email: sbrunello@fbk.eu
+      name: Simone Brunello
     - affiliation: Fondazione Bruno Kessler
       email: carbone@fbk.eu
       name: Roberto Carbone
     - affiliation: Fondazione Bruno Kessler
       email: l.cristiano@fbk.eu
       name: Laura Cristiano
+    - affiliation: Fondazione Bruno Kessler
+      email: pdematteis@fbk.eu
+      name: Pietro De Matteis
     - affiliation: Fondazione Bruno Kessler
       email: emarchesini@fbk.eu
       name: Eleonora Marchesini
