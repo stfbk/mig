@@ -12,7 +12,7 @@
         "decode operations": [
           {
             "from": "var3",
-            "decode param": "var4",
+            "decode regex": "var4",
             "type": "jwt",
             "jwt check sig": "var5"
           }

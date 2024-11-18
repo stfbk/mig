@@ -1,0 +1,44 @@
+{
+  "test": {
+    "name": "var0",
+    "description": "var1",
+    "type": "active",
+    "sessions": [
+      "session0"
+    ],
+    "operations": [
+      {
+        "session": "session0",
+        "action": "start"
+      },
+      {
+        "action": "intercept",
+        "from session": "session0",
+        "then": "forward",
+        "message type": "var6",
+        "message operations": [
+          {
+            "from": "var7",
+            "save": "var8",
+            "as": "var9"
+          }
+        ]
+      },
+      {
+        "action": "intercept",
+        "from session": "session0",
+        "then": "forward",
+        "message type": "var2",
+        "checks": [
+          {
+            "use variable": "true",
+            "in": "var3",
+            "check": "var4",
+            "is": "var5"
+          }
+        ]
+      }
+    ],
+    "result": "correct flow session0"
+  }
+}

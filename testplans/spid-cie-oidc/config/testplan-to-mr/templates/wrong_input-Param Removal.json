@@ -19,12 +19,27 @@
         "edit operations": [
           {
             "from": "var3",
-            "edit regex": "var4",
-            "value": "var5"
+            "remove": "var4"
+          }
+        ]
+      },
+      {
+        "action": "intercept",
+        "from session": "session0",
+        "then": "forward",
+        "message type": "var5",
+        "checks": [
+          {
+            "in": "var6",
+            "check regex": "HTTP/?\\d?\\.?\\d?\\svar7"
+          },
+          {
+            "in": "var8",
+            "check": "var9"
           }
         ]
       }
     ],
-    "result": "incorrect flow session0"
+    "result": "assert_only"
   }
 }

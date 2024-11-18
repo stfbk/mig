@@ -13,7 +13,7 @@
 					{
 						"in": "var3",
 						"check regex": "var4",
-						"is present": "true"
+						"is present": true
 					}
 				]
 			}
