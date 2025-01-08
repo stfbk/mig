@@ -346,7 +346,10 @@ def generate_mr():
 
     # Create a new DataFrame from the processed rows
     df_tests = pd.DataFrame(expanded_rows)
-    
+
+    # Print the new DataFrame
+    #df_tests.to_csv("testplan_output.csv", index=False)
+
     entitiesToTest = [x for x in list(set(df_tests["Entity under test"])) if str(x) != "nan"]
     patternsToTest = [item for item in list(set(df_tests["Pattern name"])) if isinstance(item, str) and "/" not in item]
 
