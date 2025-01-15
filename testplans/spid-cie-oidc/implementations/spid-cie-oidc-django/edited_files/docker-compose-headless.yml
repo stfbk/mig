@@ -7,7 +7,6 @@ services:
     #TODO: change once released
     #image: ghcr.io/stfbk/mig-i-mig-t:latest
     volumes:
-      - /tmp/.X11-unix/:/tmp/.X11-unix/
       - /etc/localtime:/etc/localtime:ro
       - "$HOME/.Xauthority:/root/.Xauthority:rw"
       - ../config/mig-t/msg_def.json:/opt/BurpSuiteCommunity/msg_def.json
@@ -23,7 +22,14 @@ services:
       - oidcfed
     environment:
       - DISPLAY
+      - HEADLESS_MODE=true
       #- INSTALL4J_JAVA_HOME="/usr/lib/jvm/openjdk-11" # To enable java debugger
       #- JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" # To enable java debugger
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/index.html | grep 200"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 50s
     stdin_open: true
     tty: true

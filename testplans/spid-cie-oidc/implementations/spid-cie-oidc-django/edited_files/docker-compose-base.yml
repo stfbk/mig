@@ -1,0 +1,85 @@
+services:
+
+  trust-anchor.org:
+    #image: ghcr.io/italia/spid-cie-oidc-django:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./examples-docker/federation_authority:/django-project
+    depends_on:
+      burpsuite:
+        condition: service_healthy
+    networks:
+      - oidcfed
+    command: |
+      bash -c "
+      echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 9095;type = http-connect; }' > /etc/redsocks.conf &&
+      /usr/sbin/redsocks -c /etc/redsocks.conf &
+      iptables -t nat -A OUTPUT -p tcp --dport 8002 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8001 -j REDIRECT --to-port 12345 &&
+      cd /django-project/ &&
+      python3 manage.py migrate &&
+      python3 manage.py loaddata dumps/example.json &&
+      python3 manage.py runserver 0.0.0.0:8000"
+    cap_add:
+      - NET_ADMIN
+
+  cie-provider.org:
+    #image: ghcr.io/italia/spid-cie-oidc-django:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./examples-docker/provider:/django-project
+    networks:
+      - oidcfed
+    depends_on:
+      - burpsuite
+      - trust-anchor.org
+    command: |
+      bash -c "
+      echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 9095;type = http-connect; }' > /etc/redsocks.conf &&
+      /usr/sbin/redsocks -c /etc/redsocks.conf &
+      iptables -t nat -A OUTPUT -p tcp --dport 8001 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8000 -j REDIRECT --to-port 12345 &&
+      cd /django-project/ &&
+      python3 manage.py migrate &&
+      python3 manage.py loaddata dumps/example.json &&
+      python3 manage.py runserver 0.0.0.0:8002"
+    cap_add:
+      - NET_ADMIN
+
+  relying-party.org:
+    #image: ghcr.io/italia/spid-cie-oidc-django:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./examples-docker/relying_party:/django-project
+    networks:
+      - oidcfed
+    depends_on:
+      - burpsuite
+      - trust-anchor.org
+    command: |
+      bash -c "
+      echo 'base {log_debug = off;log_info = on;log = stderr;redirector = iptables;} redsocks {local_ip = localhost;local_port = 12345;ip = burpsuite;port = 9095;type = http-connect; }' > /etc/redsocks.conf &&
+      /usr/sbin/redsocks -c /etc/redsocks.conf &
+      iptables -t nat -A OUTPUT -p tcp --dport 8002 -j REDIRECT --to-port 12345 &&
+      iptables -t nat -A OUTPUT -p tcp --dport 8000 -j REDIRECT --to-port 12345 &&
+      cd /django-project/ &&
+      python3 manage.py migrate &&
+      python3 manage.py loaddata dumps/example.json &&
+      python3 manage.py runserver 0.0.0.0:8001"
+    cap_add:
+      - NET_ADMIN
+
+networks:
+  oidcfed:

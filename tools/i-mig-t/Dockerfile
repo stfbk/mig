@@ -3,7 +3,6 @@ FROM ubuntu:22.04
 # Basic needs
 RUN apt update && apt install -y wget bzip2 libqt5gui5 libcanberra-gtk-module libcanberra-gtk3-module libnss3 libdbus-glib-1-2 openjdk-19-jdk
 
-ENV DISPLAY=$DISPLAY
 
 # Burp installation
 RUN wget -O burpsuite_community_linux_v2023_7_1.sh 'https://portswigger-cdn.net/burp/releases/download?product=community&version=2023.7.1&type=Linux' &&\
@@ -27,13 +26,23 @@ COPY ./config/burp/user-options.json /opt/BurpSuiteCommunity/
 
 # Preconfigure BurpSuite
 # TO ENABLE DEBUGGER, COMMENT THIS
-RUN yes | /opt/BurpSuiteCommunity/BurpSuiteCommunity --user-config-file=user-options.json --config-file=project-options.json
+# RUN yes | /opt/BurpSuiteCommunity/BurpSuiteCommunity --user-config-file=user-options.json --config-file=project-options.json
 
 # magic to avoid Docker caching the file even if they change
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 
 COPY ./mig-t-beta-jar-with-dependencies.jar /root/
-COPY ./config/mig-t/config.json /opt/BurpSuiteCommunity/
 
-# Start configuration
-CMD ["./opt/BurpSuiteCommunity/BurpSuiteCommunity", "--user-config-file=user-options.json", "--config-file=project-options.json"]
+# Copy mig-t configuration into home
+COPY ./config/mig-t/config.json /
+
+# Copy script to run BurpSuite
+COPY ./script/mig-t/startBurpMig.sh /
+RUN chmod +x startBurpMig.sh
+
+# Set environment variable to run BurpSuite and Firefox in headless mode
+# true -> run in headless mode, false otherwise
+ENV HEADLESS_MODE=false
+
+# Start BurpSuite
+CMD ["sh", "-c", "./startBurpMig.sh"]
