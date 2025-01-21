@@ -12,6 +12,7 @@ services:
       - ../logs/:/opt/BurpSuiteCommunity/logs # Log folder 
     ports:
       - 9095:9095
+      - 3000:3000
       #- 5005:5005 # To enable java debugger
     networks:
       - oidcfed
