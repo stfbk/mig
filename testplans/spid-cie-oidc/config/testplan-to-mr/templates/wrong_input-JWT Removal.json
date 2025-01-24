@@ -24,7 +24,7 @@
             "edits": [
               {
                 "jwt from": "var5",
-                "jwt removal": "$.var6"
+                "jwt remove": "$.var6"
               },
               {
                 "jwt sign": "var7"

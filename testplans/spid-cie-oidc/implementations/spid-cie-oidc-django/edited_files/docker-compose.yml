@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   burpsuite:
     #image: i-mig-t # Use this if you build locally
