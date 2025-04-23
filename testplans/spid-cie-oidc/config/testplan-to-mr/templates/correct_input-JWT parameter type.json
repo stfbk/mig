@@ -17,7 +17,7 @@
             "checks": [
               {
                 "in": "var5",
-                "check": "$var6",
+                "check": "$.var6",
                 "json schema compliant": "var7"
               }
             ]
