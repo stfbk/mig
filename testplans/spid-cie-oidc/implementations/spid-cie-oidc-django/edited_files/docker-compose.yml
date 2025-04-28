@@ -17,7 +17,7 @@ services:
       - ../run_tests.sh:/run_tests.sh # Script to run tests
     ports:
       - 9095:9095
-      - 3000:3000 # Expose port 3000 from Docker to the host to be able to use the APIs.
+      - 3000:3000
       #- 5005:5005 # To enable java debugger
     networks:
       - oidcfed
