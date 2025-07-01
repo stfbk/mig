@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the AS correctly contain the code parameter on redirect in a successful authentication",
+        "description": "In order to check if the AS correctly handles a successful authentication request, a correct request is sent by a client and the behavior of the OP is analyzed. In particular, the client must be redirected to its redirect_uri and the redirect must have 'code' as query parameter",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Authorization response",
+            "checks": [
+              {
+                "in": "head",
+                "check param": "Location",
+                "contains": "code"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: 
+	Is it a param check? false
+	regex: grant_type
+	Where: BODY
+	Op: IS_PRESENT
+	Op val: is present
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: ACF_Access Token Request
+==========================================================
+HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Fri, 16 May 2025 16:24:24 GMT
+Content-Type: application/json
+Content-Length: 3612
+Connection: close
+Cache-Control: no-store
+Pragma: no-cache
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ4Z0ZzYU8wV2FSMmc4MjNJbUxZNU5mR2JHbWowcFJzUWItZW1SS0RkU3JVIn0.eyJleHAiOjE3NDc0MTI5NjQsImlhdCI6MTc0NzQxMjY2NCwiYXV0aF90aW1lIjoxNzQ3NDEyNjY0LCJqdGkiOiIzOTgzNjEwMy1mODU4LTQ3MjktOWJhNi1lNjY4YzA4OGFjZTAiLCJpc3MiOiJodHRwczovL2tleWNsb2FrLmNsaWVudC5vYXV0aDIuZmJrdGVzdGluZy5mYmsuZXU6ODExMS9yZWFsbXMvbXl0ZXN0cmVhbG0iLCJhdWQiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJzdWIiOiJlYTVhZGJkMy0yNjBmLTQ3YzctOWYwMi03YTBiZmIxNWQ0YWEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJzZXNzaW9uX3N0YXRlIjoiM2EzZWNhZmMtZWY5OC00MmM3LTg2OWEtOWNiMzEyMjliNDMyIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCByZWFkOnNlY3JldCIsInNpZCI6IjNhM2VjYWZjLWVmOTgtNDJjNy04NjlhLTljYjMxMjI5YjQzMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQUNGX2ZpcnN0bmFtZSBBQ0ZfbGFzdG5hbWUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhY2ZfdXNlcm5hbWUiLCJnaXZlbl9uYW1lIjoiQUNGX2ZpcnN0bmFtZSIsImZhbWlseV9uYW1lIjoiQUNGX2xhc3RuYW1lIiwiZW1haWwiOiJhY2ZfZW1haWxAdGVzdC5jb20ifQ.qhAM7FiIabAUKnDwe63sL03Zw6FWGs8ZrbuGf8eECZARbW-qCFcDwX8Zm4WT8CzIQdl8R_3BuHoeo29C50VXvI30WvQswOZHPKjQL5uCjiblSwlmbXY6-jgjV0jg12NCcUV6WCi-welFGYEY2PiIShi3by5Cn_1XYTvvMVwENWc7yCTlWcfDdSMeq8qFuYTZWwjx1iVmZMTR1Xho1TFa0ZCe3sNBCm3L01-Rf492CmHzeySXxb4Zs54zoBvV5GZQLPkmFz7fLmHwXZCSMfEo_4oVNiP88BLVI-SpmrNsV0CuCllSi1J6ZlkGPXM4KMSX66tw3Dba4nOgADJAm4fYsQ","expires_in":300,"refresh_expires_in":1800,"refresh_token":"eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0NzFjMzBiMC0wZTAwLTRlOGYtOWEwOC0xOTUzNjhhODdmOWYifQ.eyJleHAiOjE3NDc0MTQ0NjQsImlhdCI6MTc0NzQxMjY2NCwianRpIjoiOGRjODFmYTQtMjcxYy00YzNkLTlkNTItNGY5NzA5YjBiYWE5IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5jbGllbnQub2F1dGgyLmZia3Rlc3RpbmcuZmJrLmV1OjgxMTEvcmVhbG1zL215dGVzdHJlYWxtIiwiYXVkIjoiaHR0cHM6Ly9rZXljbG9hay5jbGllbnQub2F1dGgyLmZia3Rlc3RpbmcuZmJrLmV1OjgxMTEvcmVhbG1zL215dGVzdHJlYWxtIiwic3ViIjoiZWE1YWRiZDMtMjYwZi00N2M3LTlmMDItN2EwYmZiMTVkNGFhIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6IkFDRl9QVUJDTElFTlRfdGVzdCIsInNlc3Npb25fc3RhdGUiOiIzYTNlY2FmYy1lZjk4LTQyYzctODY5YS05Y2IzMTIyOWI0MzIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIHJlYWQ6c2VjcmV0Iiwic2lkIjoiM2EzZWNhZmMtZWY5OC00MmM3LTg2OWEtOWNiMzEyMjliNDMyIn0.7CyZ2hMS1ZjOiACwvCzNLpXZbaAU5rTKdylLjdkmBDkeLJs-_ExwPk_RXtIF0alQKJ2a4WHxJrZN8Iu7RIvCug","token_type":"Bearer","id_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ4Z0ZzYU8wV2FSMmc4MjNJbUxZNU5mR2JHbWowcFJzUWItZW1SS0RkU3JVIn0.eyJleHAiOjE3NDc0MTI5NjQsImlhdCI6MTc0NzQxMjY2NCwiYXV0aF90aW1lIjoxNzQ3NDEyNjY0LCJqdGkiOiJkMWRiNWM3Zi1hNDExLTRiMmMtYmJlOS1jNGZhZWI0NDIyMzkiLCJpc3MiOiJodHRwczovL2tleWNsb2FrLmNsaWVudC5vYXV0aDIuZmJrdGVzdGluZy5mYmsuZXU6ODExMS9yZWFsbXMvbXl0ZXN0cmVhbG0iLCJhdWQiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJzdWIiOiJlYTVhZGJkMy0yNjBmLTQ3YzctOWYwMi03YTBiZmIxNWQ0YWEiLCJ0eXAiOiJJRCIsImF6cCI6IkFDRl9QVUJDTElFTlRfdGVzdCIsInNlc3Npb25fc3RhdGUiOiIzYTNlY2FmYy1lZjk4LTQyYzctODY5YS05Y2IzMTIyOWI0MzIiLCJhdF9oYXNoIjoia3BsQU4xaHM0WXVCZHlkNFhtbm5vUSIsInNpZCI6IjNhM2VjYWZjLWVmOTgtNDJjNy04NjlhLTljYjMxMjI5YjQzMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQUNGX2ZpcnN0bmFtZSBBQ0ZfbGFzdG5hbWUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhY2ZfdXNlcm5hbWUiLCJnaXZlbl9uYW1lIjoiQUNGX2ZpcnN0bmFtZSIsImZhbWlseV9uYW1lIjoiQUNGX2xhc3RuYW1lIiwiZW1haWwiOiJhY2ZfZW1haWxAdGVzdC5jb20ifQ.OhRUyoiVpu0k2sNfUbTRhjtuP5MYC9XD8dW9DWukBElf-bOrHzFXOoPEYfQvOgkgX9HwBKNPr5s8iUw5eupqc7bLzMNJKQOdbN6eU-ke9EudAO1Haai0Wua4Xhs5_NFXfVRCmUkoQlYFarH0Xd6duX9YcIi7DtD2_kwCmBRuL588PGC-_BR52WOK_N72_FLLbOGjYV3Y1GG6ndrUZRHIwH5jRxaMsmFTK6SmIWCiwzJv3Ews6EqZg0qGO16TdIVm8jYk6ttRA4sxpwYhZrktqeoPBi6NKPX_jXs-Gkuz8ZYMZJ5FshK5AuzRcPmNXNZ09SwpXOzsuSyJjpUbGW_jMQ","not-before-policy":0,"session_state":"3a3ecafc-ef98-42c7-869a-9cb31229b432","scope":"openid profile email read:secret"}

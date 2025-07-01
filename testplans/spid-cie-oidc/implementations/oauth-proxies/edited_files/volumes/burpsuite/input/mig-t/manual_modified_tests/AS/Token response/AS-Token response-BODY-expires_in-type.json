@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the AS issue the expires_in in a ACF_Access Token response",
+        "description": "In this test an RP makes a correct authentication request and, once received the code, the CLIENT tries to exchange it in the token endpoint. The response is then analyzed and it must contain the expires_in parameter",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Access Token response",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "\"expires_in\"\\s*:\\s*\\d+",
+                "is present": true
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+| name | description | type | result | applicable |
+|-----------|-------------|------|--------|------------|
+|Is the Introspection request sent to the /introspect endpoint|The Introspection request must sent by the RS to the /introspect endpoint|passive|true|true|

@@ -1,0 +1,120 @@
+{
+    "message_types": [
+        {
+            "name": "ACF_Authorization request",
+            "is request": true,
+            "response name": "ACF_Authentication error response",
+            "checks": [
+                {
+                    "in": "url",
+                    "check regex": "response_type=code"
+                },
+				{
+                    "in": "url",
+                    "check regex": "client_id="
+                },
+				{
+                    "in": "head",
+                    "check regex": "GET"
+                }
+            ]
+        },
+        {
+            "name": "ACF_Authorization response",
+            "is request": false,
+            "checks": [
+                {
+                    "in": "head",
+                    "check param": "Location",
+                    "contains": "code="
+                }
+            ]
+        },
+        {
+            "name": "ACF_Access Token Request",
+            "is request": true,
+            "response name": "ACF_Access Token response",
+            "checks": [
+				{
+					"in": "body",
+					"check regex": "grant_type=authorization_code"
+				},
+				{
+					"in": "body",
+					"check regex": "code="
+				},
+				{
+                    "in": "head",
+                    "check regex": "POST"
+                },
+				{
+                    "in": "url",
+                    "check regex": "/token"
+                }
+            ]
+        },
+      {
+            "name": "CCF_Access Token Request",
+            "is request": true,
+            "response name": "CCF_Access Token response",
+            "checks": [
+				{
+					"in": "body",
+					"check regex": "grant_type=client_credentials"
+				},
+				{
+                    "in": "head",
+                    "check regex": "POST"
+                },
+				{
+                    "in": "url",
+                    "check regex": "/token"
+                }
+            ]
+        },
+        {
+            "name": "Revocation request",
+            "is request": true,
+            "response name": "Revocation response",
+            "checks": [
+                {
+                    "in": "url",
+                    "check regex": "/revoke"
+                },
+				{
+                    "in": "head",
+                    "check param": "Content-Type",
+                    "contains": "application/x-www-form-urlencoded"
+                },
+				{
+					"in": "body",
+					"check regex": "token="
+				},
+				{
+                    "in": "head",
+                    "check regex": "POST"
+                }
+				
+            ]
+        },
+        {
+            "name": "Introspection request",
+            "is request": true,
+            "response name": "Introspection response",
+            "checks": [
+                {
+                    "in": "url",
+                    "check regex": "/introspect"
+                },
+				{
+					"in": "body",
+					"check regex": "token="
+				},
+				{
+                    "in": "head",
+                    "check regex": "POST"
+                }
+            ]
+        }
+    ]
+}

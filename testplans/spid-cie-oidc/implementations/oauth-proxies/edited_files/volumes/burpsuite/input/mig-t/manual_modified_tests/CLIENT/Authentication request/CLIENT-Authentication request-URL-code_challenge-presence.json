@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the CLIENT Authentication Request contain the 'code_challenge' parameter",
+        "description": "The Authentication request is taken and the presence of the 'code_challenge' parameter is checked. If it is present, than the Authentication Request is using PKCE and is compliant with the specifications, otherwise it is not compliant.",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Authorization request",
+            "checks": [
+              {
+                "in": "url",
+                "is present": true,
+                "check": "code_challenge"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

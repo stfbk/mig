@@ -1,0 +1,16 @@
+# Mapping the Oauth2Proxy Proxy
+address=/${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}/${OAUTH2PROXY_PROXY_PRIVATE_IP}
+
+# Mapping the Resource Server Proxy
+address=/${RESOURCESERVER_NAME}.${CLIENT_TEST_DOMAIN}/${RESOURCESERVER_PROXY_PRIVATE_IP}
+
+# Mapping to the Keycloak proxy
+address=/${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}/${KEYCLOAK_PROXY_PRIVATE_IP}
+
+port=${NGINX_INTERNAL_DNS_PORT}
+filter-AAAA # Disables ipv6 responses
+no-resolv
+log-queries
+log-facility=/var/log/dnsmasq.internal.log
+listen-address=${OAUTH2PROXY_PROXY_PRIVATE_IP}
+bind-interfaces

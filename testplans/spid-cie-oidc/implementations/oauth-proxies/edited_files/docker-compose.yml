@@ -1,0 +1,334 @@
+services:
+  burpsuite:
+    image: i-mig-t # Use this if you build locally
+    #image: ghcr.io/stfbk/mig-i-mig-t:latest
+    container_name: ${BURP_NAME}
+    volumes:
+      - /tmp/.X11-unix/:/tmp/.X11-unix/
+      - /etc/localtime:/etc/localtime:ro
+      - "$HOME/.Xauthority:/root/.Xauthority:rw"
+      - ./volumes/burpsuite/config/mig-t/msg_def.json:/opt/BurpSuiteCommunity/msg_def.json:ro
+      - ../logs/:/opt/BurpSuiteCommunity/logs
+      - ./volumes/CA/root/rootCA.crt:/usr/local/share/ca-certificates/rootCA.crt:ro
+      - ./volumes/CA/burpsuite/burpsuite.crt:/etc/nginx/certs/burpsuite.crt:ro # Leaf certificate of the proxy signed by the CA
+      - ./volumes/CA/burpsuite/burpsuite.key:/etc/nginx/certs/burpsuite.key:ro # Private key of the server
+      - ./volumes/burpsuite/dnsmasq_local/dnsmasq.local.conf:/etc/dnsmasq.local.conf:ro # Bringing inside the container the local nginx
+      - ./volumes/burpsuite/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Nginx configuration
+    ports:
+      - ${BURP_LISTENING_PORT}:${BURP_LISTENING_PORT}
+      - 3000:3000
+      #- 5005:5005 # To enable java debugger
+    networks:
+      private_network:
+        ipv4_address: ${BURP_PRIVATE_IP}
+    dns:
+      - 127.0.0.1
+    environment:
+      - DISPLAY
+      #- INSTALL4J_JAVA_HOME="/usr/lib/jvm/openjdk-11" # To enable java debugger
+      #- JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" # To enable java debugger
+    stdin_open: true
+    tty: true
+    command: |
+      bash -c "
+        update-ca-certificates &&
+        dnsmasq -C /etc/dnsmasq.local.conf &&
+        nginx &&
+        /opt/BurpSuiteCommunity/BurpSuiteCommunity --user-config-file=/opt/BurpSuiteCommunity/user-options.json --config-file=/opt/BurpSuiteCommunity/project-options.json &&
+        tail -f /dev/null
+      "
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+  keycloak:
+    # image: quay.io/keycloak/keycloak:24.0.1
+    build:
+      context: ./KeycloakContainer
+    container_name: ${KEYCLOAK_NAME}
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+    volumes:
+      - ./volumes/CA/keycloak/keycloak.p12:/etc/keycloak/keycloak.p12:ro # Keystore needed by keycloak to use https. Contains certificate and private key
+      - ./volumes/CA/root/rootCA.crt:/usr/local/share/ca-certificates/rootCA.crt:ro # Installing rootCA
+      - ./volumes/keycloak/config/keycloak.conf:/opt/keycloak/conf/keycloak.conf # Keycloak configuration moved to a dedicated file! No more env variables...
+    ports:
+      - ${KEYCLOAK_LISTENING_PORT}:${KEYCLOAK_LISTENING_PORT}
+    networks:
+      keycloak_public_network:
+        ipv4_address: ${KEYCLOAK_PUBLIC_IP}
+    command: |
+      bash -c "
+        update-ca-certificates &&
+        exec /opt/keycloak/bin/kc.sh start --verbose --health-enabled=true
+      "
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+  configure_script:
+    build: ScriptsContainer
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KEYCLOAK_NEW_REALM=${KEYCLOAK_NEW_REALM}
+      - KEYCLOAK_HEALTH_CHECK_INTERVAL=${KEYCLOAK_HEALTH_CHECK_INTERVAL}
+      - ACF_CLIENT_ID=${ACF_CLIENT_ID}
+      - ACF_USER_USERNAME=${ACF_USER_USERNAME}
+      - ACF_USER_PASSWORD=${ACF_USER_PASSWORD}
+      - CCF_CLIENT_ID=${CCF_CLIENT_ID}
+      - KEYCLOAK_URL=http://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${KEYCLOAK_PROXY_INTERNAL_LISTENING_PORT}
+      - OAUTH2_PROXY_REDIRECT_URL=https://${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}:${BURP_EXTERNAL_PROXY_LISTENING_PORT}/oauth2/callback
+      - KEYCLOAK_ACCESS_TOKEN_SIGNED_RESPONSE_ALG=${KEYCLOAK_ACCESS_TOKEN_SIGNED_RESPONSE_ALG}
+      - EXTRA_SCOPE_AS_OPTIONALS=${EXTRA_SCOPE_AS_OPTIONALS}
+      - EXTRA_SCOPE_NAMES=${EXTRA_SCOPE_NAMES}
+      - EXTRA_SCOPE_GIVE=${EXTRA_SCOPE_GIVE}
+      - RESOURCESERVER_CLIENT_ID=${RESOURCESERVER_CLIENT_ID}
+      - RESOURCESERVER_CLIENT_SECRET=${RESOURCESERVER_CLIENT_SECRET}
+      - DEBUG_CONFIGURER_PRINTJTWKEYS=${DEBUG_CONFIGURER_PRINTJTWKEYS}
+    dns:
+      - ${OAUTH2PROXY_PROXY_PRIVATE_IP}
+    depends_on:
+      - ${KEYCLOAK_NAME}
+      - nginx-keycloak-proxy
+    networks:
+      private_network:
+        ipv4_address: ${CONFIGURE_PRIVATE_IP}
+    command: |
+      bash -c "
+        # Start the main application
+        exec python /app/main.py
+      "
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+  # Client for ACF
+  oauth2-proxy:
+    build: ./Oauth2-proxy
+    container_name: ${OAUTH2PROXY_NAME}
+    volumes:
+      - ./volumes/CA/root/rootCA.crt:/usr/local/share/ca-certificates/rootCA.crt:ro # Installing rootCA
+      - ./volumes/CA/oauth2proxy/oauth2proxy.crt:/etc/ssl/certs/oauth2proxy.crt:ro # Leaf certificate of the proxy signed by the CA
+      - ./volumes/CA/oauth2proxy/oauth2proxy.key:/etc/ssl/private/oauth2proxy.key:ro # Private key of the server
+      - ./volumes/oauth2proxy/config/oauth2proxy.toml:/etc/oauth2-proxy/oauth2-proxy.toml # Installation of the configuration
+    environment:
+      - KEYCLOAK_URL=https://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${OAUTH2PROXY_EXTERNAL_PROXY_LISTENING_PORT} #Keycloak URL so that the healthcheck can do its job
+      - KEYCLOAK_HEALTH_CHECK_INTERVAL=${KEYCLOAK_HEALTH_CHECK_INTERVAL}
+    dns:
+      - ${OAUTH2PROXY_PROXY_PUBLIC_IP} # Use the dns provided by dnsmasq on nginx container
+    ports:
+      - ${OAUTH2PROXY_LISTENING_PORT}:${OAUTH2PROXY_LISTENING_PORT}
+    command: |
+      bash -c "
+        update-ca-certificates &&
+        chmod +x ./healthchecks/keycloak_healthcheck.sh &&
+        ./healthchecks/keycloak_healthcheck.sh &&
+        exec oauth2-proxy oauth2-proxy --config /etc/oauth2-proxy/oauth2-proxy.toml
+        #tail -f /dev/null
+      "
+    depends_on:
+      configure_script:
+        condition: service_completed_successfully
+    networks:
+      oauth2proxy_public_network:
+        ipv4_address: ${OAUTH2PROXY_PUBLIC_IP}
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+  resource-server:
+    build: ./ResourceServer
+    container_name: ${RESOURCESERVER_NAME}
+    volumes:
+      - ./volumes/CA/root/rootCA.crt:/usr/local/share/ca-certificates/rootCA.crt:ro # Installing rootCA
+      - ./volumes/CA/resource-server/resource-server.crt:/etc/ssl/certs/resource-server.crt:ro # Leaf certificate of the resource server  signed by the CA
+      - ./volumes/CA/resource-server/resource-server.key:/etc/ssl/private/resource-server.key:ro # Private key of the server
+    environment:
+      - RESOURCESERVER_CLIENT_ID=${RESOURCESERVER_CLIENT_ID}
+      - RESOURCESERVER_CLIENT_SECRET=${RESOURCESERVER_CLIENT_SECRET}
+      - RESOURCESERVER_REQUIREDSCOPES=${RESOURCESERVER_REQUIREDSCOPES}
+      - RESOURCESERVER_SECURE_ENDPOINT=${RESOURCESERVER_SECURE_ENDPOINT}
+      - RESOURCESERVER_HEALTH_ENDPOINT=${RESOURCESERVER_HEALTH_ENDPOINT}
+      - RESOURCESERVER_BASE_RESOURCE_ENDPOINT=${RESOURCESERVER_BASE_RESOURCE_ENDPOINT}
+      - INTROSPECTION_ENDPOINT=https://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${RESOURCESERVER_EXTERNAL_PROXY_LISTENING_PORT}/realms/${KEYCLOAK_NEW_REALM}/protocol/openid-connect/token/introspect
+      - TOKEN_ENDPOINT=https://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${RESOURCESERVER_EXTERNAL_PROXY_LISTENING_PORT}/realms/${KEYCLOAK_NEW_REALM}/protocol/openid-connect/token
+      - JWKS_ENDPOINT=https://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${RESOURCESERVER_EXTERNAL_PROXY_LISTENING_PORT}/realms/${KEYCLOAK_NEW_REALM}/protocol/openid-connect/certs
+      - LOGOUT_ENDPOINT=https://${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}:${BURP_EXTERNAL_PROXY_LISTENING_PORT}/oauth2/sign_out?rd=https://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${BURP_EXTERNAL_PROXY_LISTENING_PORT}/realms/${KEYCLOAK_NEW_REALM}/protocol/openid-connect/logout
+      - ACF_CLIENT_ID=${ACF_CLIENT_ID}
+      - DEBUG_RESOURCESERVER_PRINT_TOKENS=${DEBUG_RESOURCESERVER_PRINT_TOKENS}
+      - DEBUG_RESOURCESERVER_HEALTHCHECK_PRINTREQUEST=${DEBUG_RESOURCESERVER_HEALTHCHECK_PRINTREQUEST}
+    dns:
+      - ${RESOURCESERVER_PROXY_PUBLIC_IP}
+    command: |
+      bash -c "
+        update-ca-certificates &&
+        exec uvicorn main:app --host ${RESOURCESERVER_PUBLIC_IP} --port ${RESOURCESERVER_LISTENING_PORT} --ssl-keyfile /etc/ssl/private/resource-server.key --ssl-certfile /etc/ssl/certs/resource-server.crt
+      "
+    ports:
+      - ${RESOURCESERVER_LISTENING_PORT}:${RESOURCESERVER_LISTENING_PORT}
+    networks:
+      resourceserver_public_network:
+        ipv4_address: ${RESOURCESERVER_PUBLIC_IP}
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+    depends_on:
+      configure_script:
+        condition: service_completed_successfully
+  nginx-client-proxy:
+    build: ./NginxContainer
+    container_name: nginx-client-proxy
+    volumes:
+      - ./volumes/oauth2proxy_nginx/dnsmasq_local/dnsmasq.local.conf:/etc/dnsmasq.local.conf:ro # Bringing inside the container all DNS configurations
+      - ./volumes/oauth2proxy_nginx/dnsmasq_internal/dnsmasq.internal.conf:/etc/dnsmasq.internal.conf:ro
+      - ./volumes/oauth2proxy_nginx/dnsmasq_external/dnsmasq.external.conf:/etc/dnsmasq.external.conf:ro
+      - ./volumes/oauth2proxy_nginx/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Nginx configuration
+      - ./volumes/CA/root/rootCA.crt:/usr/local/share/ca-certificates/rootCA.crt:ro # Installing rootCA
+      - ./volumes/CA/oauth2proxy-proxy/oauth2proxy-proxy.crt:/etc/nginx/certs/oauth2proxy-proxy.crt:ro # Leaf certificate of the proxy signed by the CA
+      - ./volumes/CA/oauth2proxy-proxy/oauth2proxy-proxy.key:/etc/nginx/certs/oauth2proxy-proxy.key:ro # Private key of the server
+    ports:
+      - ${OAUTH2PROXY_INTERNAL_PROXY_LISTENING_PORT}:${OAUTH2PROXY_INTERNAL_PROXY_LISTENING_PORT}
+      - ${OAUTH2PROXY_EXTERNAL_PROXY_LISTENING_PORT}:${OAUTH2PROXY_EXTERNAL_PROXY_LISTENING_PORT}
+    command: |
+      bash -c "
+        # Setup redsocks configuration
+        echo 'base {log_debug = off; log_info = on; log = stderr; redirector = iptables;} 
+        redsocks {local_ip = localhost; local_port = ${SOCKS_LISTENING_PORT}; ip = ${BURP_PRIVATE_IP}; port = ${BURP_LISTENING_PORT}; type = http-connect;}' > /etc/redsocks.conf &&
+      
+        # Start redsocks in the background
+        /usr/sbin/redsocks -c /etc/redsocks.conf & 
+      
+        # Apply iptables rules, to be later adjusted according to the client
+        iptables -t nat -A OUTPUT -p tcp --dport ${RESOURCESERVER_INTERNAL_PROXY_LISTENING_PORT} -j REDIRECT --to-port ${SOCKS_LISTENING_PORT} &&
+        iptables -t nat -A OUTPUT -p tcp --dport ${KEYCLOAK_PROXY_INTERNAL_LISTENING_PORT} -j REDIRECT --to-port ${SOCKS_LISTENING_PORT} &&
+        update-ca-certificates &&
+        
+        dnsmasq -C /etc/dnsmasq.local.conf &&
+        dnsmasq -C /etc/dnsmasq.internal.conf &&
+        dnsmasq -C /etc/dnsmasq.external.conf &&
+        
+        exec nginx -g 'daemon off;'
+      "
+    networks:
+      private_network:
+        ipv4_address: ${OAUTH2PROXY_PROXY_PRIVATE_IP}
+      oauth2proxy_public_network:
+        ipv4_address: ${OAUTH2PROXY_PROXY_PUBLIC_IP}
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+  nginx-resource-server-proxy:
+    build: ./NginxContainer
+    container_name: nginx-resource-server-proxy
+    volumes:
+      - ./volumes/resourceserver_nginx/dnsmasq_local/dnsmasq.local.conf:/etc/dnsmasq.local.conf:ro
+      - ./volumes/resourceserver_nginx/dnsmasq_external/dnsmasq.external.conf:/etc/dnsmasq.external.conf:ro
+      - ./volumes/resourceserver_nginx/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Nginx configuration
+      - ./volumes/CA/root/rootCA.crt:/usr/local/share/ca-certificates/rootCA.crt:ro # Installing rootCA
+      - ./volumes/CA/resource-server-proxy/resource-server-proxy.crt:/etc/nginx/certs/resource-server-proxy.crt:ro # Leaf certificate of the proxy signed by the CA
+      - ./volumes/CA/resource-server-proxy/resource-server-proxy.key:/etc/nginx/certs/resource-server-proxy.key:ro # Private key of the server
+    ports:
+      - ${RESOURCESERVER_INTERNAL_PROXY_LISTENING_PORT}:${RESOURCESERVER_INTERNAL_PROXY_LISTENING_PORT}
+      - ${RESOURCESERVER_EXTERNAL_PROXY_LISTENING_PORT}:${RESOURCESERVER_EXTERNAL_PROXY_LISTENING_PORT}
+    command: |
+      bash -c "
+        # Setup redsocks configuration
+        echo 'base {log_debug = off; log_info = on; log = stderr; redirector = iptables;} 
+        redsocks {local_ip = localhost; local_port = ${SOCKS_LISTENING_PORT}; ip = ${BURP_PRIVATE_IP}; port = ${BURP_LISTENING_PORT}; type = http-connect;}' > /etc/redsocks.conf &&
+
+        # Start redsocks in the background
+        /usr/sbin/redsocks -c /etc/redsocks.conf & 
+
+        # Apply iptables rules, to be later adjusted according to the client
+        iptables -t nat -A OUTPUT -p tcp --dport ${OAUTH2PROXY_INTERNAL_PROXY_LISTENING_PORT} -j REDIRECT --to-port ${SOCKS_LISTENING_PORT} &&
+        iptables -t nat -A OUTPUT -p tcp --dport ${KEYCLOAK_PROXY_INTERNAL_LISTENING_PORT} -j REDIRECT --to-port ${SOCKS_LISTENING_PORT} &&
+        update-ca-certificates &&
+
+        dnsmasq -C /etc/dnsmasq.local.conf &&
+        dnsmasq -C /etc/dnsmasq.external.conf &&
+
+        exec nginx -g 'daemon off;'
+      "
+    networks:
+      private_network:
+        ipv4_address: ${RESOURCESERVER_PROXY_PRIVATE_IP}
+      resourceserver_public_network:
+        ipv4_address: ${RESOURCESERVER_PROXY_PUBLIC_IP}
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+  nginx-keycloak-proxy:
+    build: ./NginxContainer
+    container_name: nginx-keycloak-proxy
+    volumes:
+      - ./volumes/keycloak_nginx/dnsmasq_local/dnsmasq.local.conf:/etc/dnsmasq.local.conf:ro
+      - ./volumes/keycloak_nginx/dnsmasq_external/dnsmasq.external.conf:/etc/dnsmasq.external.conf:ro
+      - ./volumes/keycloak_nginx/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Nginx configuration
+      - ./volumes/CA/root/rootCA.crt:/usr/local/share/ca-certificates/rootCA.crt:ro # Installing rootCA
+    ports:
+      - ${KEYCLOAK_PROXY_INTERNAL_LISTENING_PORT}:${KEYCLOAK_PROXY_INTERNAL_LISTENING_PORT}
+      - ${KEYCLOAK_PROXY_EXTERNAL_LISTENING_PORT}:${KEYCLOAK_PROXY_EXTERNAL_LISTENING_PORT}
+    command: |
+      bash -c "
+        # Setup redsocks configuration
+        echo 'base {log_debug = off; log_info = on; log = stderr; redirector = iptables;} 
+        redsocks {local_ip = localhost; local_port = ${SOCKS_LISTENING_PORT}; ip = ${BURP_PRIVATE_IP}; port = ${BURP_LISTENING_PORT}; type = http-connect;}' > /etc/redsocks.conf &&
+
+        # Start redsocks in the background
+        /usr/sbin/redsocks -c /etc/redsocks.conf & 
+
+        # Apply iptables rules, to be later adjusted according to the client
+        iptables -t nat -A OUTPUT -p tcp --dport ${OAUTH2PROXY_INTERNAL_PROXY_LISTENING_PORT} -j REDIRECT --to-port ${SOCKS_LISTENING_PORT} &&
+        iptables -t nat -A OUTPUT -p tcp --dport ${RESOURCESERVER_INTERNAL_PROXY_LISTENING_PORT} -j REDIRECT --to-port ${SOCKS_LISTENING_PORT} &&
+        update-ca-certificates &&
+        
+        dnsmasq -C /etc/dnsmasq.local.conf &&
+        dnsmasq -C /etc/dnsmasq.external.conf &&
+
+        exec nginx -g 'daemon off;'
+      "
+    networks:
+      private_network:
+        ipv4_address: ${KEYCLOAK_PROXY_PRIVATE_IP}
+      keycloak_public_network:
+        ipv4_address: ${KEYCLOAK_PROXY_PUBLIC_IP}
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: '1'
+      net.ipv6.conf.default.disable_ipv6: '1'
+      net.ipv6.conf.lo.disable_ipv6: '1'
+networks:
+  private_network:
+    driver: macvlan
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: ${PRIVATE_SUBNET}
+  oauth2proxy_public_network:
+    driver: macvlan
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: ${OAUTH2PROXY_PUBLIC_SUBNET}
+  resourceserver_public_network:
+    driver: macvlan
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: ${RESOURCESERVER_PUBLIC_SUBNET}
+  keycloak_public_network:
+    driver: macvlan
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: ${KEYCLOAK_PUBLIC_SUBNET}

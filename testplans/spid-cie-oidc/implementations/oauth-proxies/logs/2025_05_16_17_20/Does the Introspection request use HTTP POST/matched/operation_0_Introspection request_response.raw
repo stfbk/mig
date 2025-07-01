@@ -1,0 +1,33 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: 
+	Is it a param check? false
+	regex: POST
+	Where: HEAD
+	Op: IS_PRESENT
+	Op val: is present
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: Introspection request
+==========================================================
+HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Fri, 16 May 2025 17:20:37 GMT
+Content-Type: application/json
+Content-Length: 717
+Connection: close
+Cache-Control: no-cache
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{"exp":1747416337,"iat":1747416037,"auth_time":1747416036,"jti":"a5ed8d89-2630-4b26-a598-767d22929762","iss":"https://keycloak.client.oauth2.fbktesting.fbk.eu:8111/realms/mytestrealm","aud":"ACF_PUBCLIENT_test","sub":"ea5adbd3-260f-47c7-9f02-7a0bfb15d4aa","typ":"Bearer","azp":"ACF_PUBCLIENT_test","session_state":"cb0038cd-d492-45dd-82c2-d9135595cfa2","scope":"openid profile email read:secret","sid":"cb0038cd-d492-45dd-82c2-d9135595cfa2","email_verified":true,"name":"ACF_firstname ACF_lastname","preferred_username":"acf_username","given_name":"ACF_firstname","family_name":"ACF_lastname","email":"acf_email@test.com","client_id":"ACF_PUBCLIENT_test","username":"acf_username","token_type":"Bearer","active":true}

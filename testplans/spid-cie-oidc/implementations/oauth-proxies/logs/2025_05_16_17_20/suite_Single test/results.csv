@@ -1,0 +1,2 @@
+name,description,type,result,applicable
+Does the Introspection request use HTTP POST,The Introspection request sent by the RS must be sent in HTTP POST,passive,true,true

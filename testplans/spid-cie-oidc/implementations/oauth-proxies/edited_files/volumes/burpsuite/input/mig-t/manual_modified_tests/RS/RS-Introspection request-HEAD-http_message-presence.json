@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Is the Introspection request sent to the /introspect endpoint",
+        "description": "The Introspection request must sent by the RS to the /introspect endpoint",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection request",
+            "checks": [
+              {
+                "in": "head",
+                "check regex": "/introspect",
+                "is present": true
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

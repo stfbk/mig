@@ -1,0 +1,37 @@
+provider = "keycloak-oidc"
+
+oidc_issuer_url = "https://keycloak.client.oauth2.fbktesting.fbk.eu:8111/realms/mytestrealm"
+client_id = "ACF_PUBCLIENT_test"
+client_secret = "RUYGFS2k4lt4Gn65S18kgUTf5XD96C6sCqIMwn4iW1g"
+redirect_url = "https://oauth2proxy.client.oauth2.fbktesting.fbk.eu:10095/oauth2/callback"
+
+cookie_secret = "AZo6hPU6F8-fp_hyIP_-AHRLRlx0HuY="
+cookie_domains = ["oauth2proxy.client.oauth2.fbktesting.fbk.eu","resource-server.client.oauth2.fbktesting.fbk.eu"]
+cookie_secure = true # Can be turned to true if the access to the proxy for the browser is put behind https
+
+email_domains = ["*"]
+
+code_challenge_method = "S256"
+scope = "openid email profile"
+pass_authorization_header=true
+pass_host_header=false # OTHERWISE USES REQUEST HOSTNAME AND NOT THE UPSTREAM ONE!!!
+pass_access_token= true # Pass also the access token to the backend
+set_authorization_header=true
+
+https_address = "10.0.1.11:10011"
+
+standard_logging = true
+request_logging = true
+show_debug_on_error = true
+
+tls_cert_file = "/etc/ssl/certs/oauth2proxy.crt"
+tls_key_file = "/etc/ssl/private/oauth2proxy.key"
+
+upstreams  = ["https://resource-server.client.oauth2.fbktesting.fbk.eu:8111/"]
+
+# Optional debug setting
+# set_xauthrequest = true
+
+whitelist_domains = [
+  "keycloak.client.oauth2.fbktesting.fbk.eu:10095",         # <-- Keycloak domain for logout
+]

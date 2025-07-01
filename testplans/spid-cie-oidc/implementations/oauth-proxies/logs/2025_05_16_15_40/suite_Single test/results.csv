@@ -1,0 +1,2 @@
+name,description,type,result,applicable
+Does the successful ACF_Access Token response contain the ID token,The CLIENT receiving the ACF_Access Token response and that sent a correct token request must check the presence of the ID token,passive,true,true

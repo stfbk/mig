@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 # Basic needs
-RUN apt update && apt install -y wget bzip2 libqt5gui5 libcanberra-gtk-module libcanberra-gtk3-module libnss3 libdbus-glib-1-2 openjdk-19-jdk
+RUN apt update && apt install -y wget bzip2 libqt5gui5 libcanberra-gtk-module libcanberra-gtk3-module libnss3 libdbus-glib-1-2 openjdk-19-jdk nginx dnsmasq ca-certificates
 
 ENV DISPLAY=$DISPLAY
 
@@ -36,4 +36,4 @@ COPY ./mig-t-beta-jar-with-dependencies.jar /root/
 COPY ./config/mig-t/config.json /opt/BurpSuiteCommunity/
 
 # Start configuration
-CMD ["./opt/BurpSuiteCommunity/BurpSuiteCommunity", "--user-config-file=user-options.json", "--config-file=project-options.json"]
+CMD /opt/BurpSuiteCommunity/BurpSuiteCommunity --user-config-file=/opt/BurpSuiteCommunity/user-options.json --config-file=/opt/BurpSuiteCommunity/project-options.json && tail -f /dev/null

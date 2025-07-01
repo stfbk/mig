@@ -1,0 +1,109 @@
+events {}
+
+http {
+    # Conditional logging for 502 only
+    map $status $log_502 {
+        default 0;
+        502     1;
+    }
+    # Custom log format
+    log_format custom_502_log '$remote_addr - $remote_user [$time_local] '
+                          '"$request" $status $body_bytes_sent '
+                          '"$http_referer" "$http_user_agent" '
+                          'upstream: $upstream_addr, upstream_status: $upstream_status, '
+                          'request_time: $request_time, upstream_response_time: $upstream_response_time, '
+                          'host: $host, '
+                          'full_request: "$scheme://$host$request_uri"';
+
+    # Log 502s to stdout
+    access_log /dev/stdout custom_502_log if=$log_502;
+    # error_log /dev/stdout info;
+    # Once the request is intercepted for the local change, use the internal proxy to reroute ipv6=off disables ipv6!
+    resolver ${OAUTH2PROXY_PROXY_PRIVATE_IP}:${BURP_INTERNAL_DNS_PORT} valid=30s ipv6=off;
+    # Extraction of the subdomain, aka what is before the first dot!
+    map $host $subdomain {
+        default "";
+        ~^(?<sub>[^.]+)\.${CLIENT_TEST_DOMAIN_ESCAPED_REGEXP}$ $sub;
+    }
+
+    # Mapping of the subdomain to target the correct
+    map $subdomain $target_upstream {
+        default "";
+        ${KEYCLOAK_NAME}       ${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${KEYCLOAK_PROXY_INTERNAL_LISTENING_PORT};
+        ${RESOURCESERVER_NAME}      ${RESOURCESERVER_NAME}.${CLIENT_TEST_DOMAIN}:${RESOURCESERVER_INTERNAL_PROXY_LISTENING_PORT};
+        ${OAUTH2PROXY_NAME}         ${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}:${OAUTH2PROXY_INTERNAL_PROXY_LISTENING_PORT};
+    }
+    # LOCAL HTTPS GENERAL HTTPS TERMINATION
+    server {
+        listen 127.0.0.1:${BURP_EXTERNAL_PROXY_LISTENING_PORT} ssl bind;
+        server_name .${CLIENT_TEST_DOMAIN};
+
+        # --- SSL CERTIFICATES ---
+        # The full certificate chain (leaf cert + any intermediate CAs, none because I have only the root), signed by your local CA
+        ssl_certificate     /etc/nginx/certs/burpsuite.crt;
+        # The private key corresponding to the above certificate
+        ssl_certificate_key /etc/nginx/certs/burpsuite.key;
+
+        # --- SSL/TLS SETTINGS ---
+        # Accept only recent and secure TLS versions
+        ssl_protocols TLSv1.2 TLSv1.3;
+        # Use only strong ciphers and avoid MD5 or NULL
+        ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5';
+        # Prefer the server's cipher choice over the client's
+        ssl_prefer_server_ciphers on;
+
+        # OPTIONAL: Some clients in the enterprise setting use mTLS.
+        # I leave the possibility to implement it by adding the cert one day and
+        # decrementing the following lines
+        # ssl_client_certificate /etc/nginx/certs/...;  # CA to verify client certs
+        # ssl_verify_client optional;  # or 'on' for mandatory verification
+
+        location / {
+            # Dynamic proxy_pass using upstream value from map
+            proxy_pass http://$target_upstream;
+            # Optional fallback
+            if ($target_upstream = "") {
+                return ${NGINX_ERROR_WRONG_SUBDOMAIN};
+            }
+        }
+    }
+    # LOCAL HTTPS TERMINATION FOR REDIRECT URI
+    server {
+        listen 127.0.0.1:${OAUTH2PROXY_EXTERNAL_PROXY_LISTENING_PORT} ssl bind;
+        server_name ${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN};
+
+        # --- SSL CERTIFICATES ---
+        # The full certificate chain (leaf cert + any intermediate CAs, none because I have only the root), signed by your local CA
+        ssl_certificate     /etc/nginx/certs/burpsuite.crt;
+        # The private key corresponding to the above certificate
+        ssl_certificate_key /etc/nginx/certs/burpsuite.key;
+
+        # --- SSL/TLS SETTINGS ---
+        # Accept only recent and secure TLS versions
+        ssl_protocols TLSv1.2 TLSv1.3;
+        # Use only strong ciphers and avoid MD5 or NULL
+        ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5';
+        # Prefer the server's cipher choice over the client's
+        ssl_prefer_server_ciphers on;
+
+        # OPTIONAL: Some clients in the enterprise setting use mTLS.
+        # I leave the possibility to implement it by adding the cert one day and
+        # decrementing the following lines
+        # ssl_client_certificate /etc/nginx/certs/...;  # CA to verify client certs
+        # ssl_verify_client optional;  # or 'on' for mandatory verification
+
+        location / {
+            # Dynamic proxy_pass using upstream value from map
+            proxy_pass http://$target_upstream;
+            # Optional fallback
+            proxy_set_header Host $host;
+            proxy_set_header ${NGINX_CUSTOM_HEADERS_PREFIX}-Real-IP $remote_addr;
+            proxy_set_header ${NGINX_CUSTOM_HEADERS_PREFIX}-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header ${NGINX_CUSTOM_HEADERS_PREFIX}-Forwarded-Proto $scheme;
+            proxy_set_header ${NGINX_CUSTOM_HEADERS_PREFIX}-Forwarded-Port $server_port;
+            if ($target_upstream = "") {
+                return ${NGINX_ERROR_WRONG_SUBDOMAIN};
+            }
+        }
+    }
+}

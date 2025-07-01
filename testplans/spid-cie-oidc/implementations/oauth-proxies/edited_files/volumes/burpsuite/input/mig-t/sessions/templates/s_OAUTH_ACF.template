@@ -1,0 +1,8 @@
+open | https://${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}:${BURP_EXTERNAL_PROXY_LISTENING_PORT}${RESOURCESERVER_BASE_RESOURCE_ENDPOINT}${RESOURCESERVER_SECURE_ENDPOINT} |
+click | xpath=/html/body/section/div/form/button |
+type | id=username | ${ACF_USER_USERNAME} |
+type | id=password | ${ACF_USER_PASSWORD} |
+click | id=kc-login |
+click | id=resource-logout |
+click | id=kc-logout |
+wait | 1000

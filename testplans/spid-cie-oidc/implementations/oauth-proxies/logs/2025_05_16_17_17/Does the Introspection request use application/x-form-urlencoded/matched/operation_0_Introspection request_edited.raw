@@ -1,0 +1,34 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: Content-Type
+	Is it a param check? false
+	regex: 
+	Where: HEAD
+	Op: IS
+	Op val: application/x-form-urlencoded
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: Introspection request
+==========================================================
+POST /realms/mytestrealm/protocol/openid-connect/token/introspect HTTP/1.0
+Host: keycloak.client.oauth2.fbktesting.fbk.eu
+X-Real-IP: 10.0.2.11
+X-Forwarded-For: 10.0.2.11
+X-Forwarded-Proto: https
+X-Forwarded-Port: 8112
+Connection: close
+Content-Length: 1291
+Accept: */*
+Accept-Encoding: gzip, deflate
+User-Agent: python-httpx/0.28.1
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic UmVzb3VyY2VTZXJ2ZXJDbGllbnRJZEZvckludHJvc3BlY3Q6UlVZR0ZTMms0bHQ0R242NVMxOGtnVVRmNVhEOTZDNmFGcUlNd240aVcxZw==
+
+token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ4Z0ZzYU8wV2FSMmc4MjNJbUxZNU5mR2JHbWowcFJzUWItZW1SS0RkU3JVIn0.eyJleHAiOjE3NDc0MTYxMTUsImlhdCI6MTc0NzQxNTgxNSwiYXV0aF90aW1lIjoxNzQ3NDE1ODE0LCJqdGkiOiI2ZDg3MTk3Ny0wYmYyLTQyZjItYmViMC0xYjBlOGE4Mjc1MGEiLCJpc3MiOiJodHRwczovL2tleWNsb2FrLmNsaWVudC5vYXV0aDIuZmJrdGVzdGluZy5mYmsuZXU6ODExMS9yZWFsbXMvbXl0ZXN0cmVhbG0iLCJhdWQiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJzdWIiOiJlYTVhZGJkMy0yNjBmLTQ3YzctOWYwMi03YTBiZmIxNWQ0YWEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJzZXNzaW9uX3N0YXRlIjoiZTUxZTcxNzMtMmFhNy00OGU1LWI5YzEtZGNjMjg1NTdmN2I2Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCByZWFkOnNlY3JldCIsInNpZCI6ImU1MWU3MTczLTJhYTctNDhlNS1iOWMxLWRjYzI4NTU3ZjdiNiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQUNGX2ZpcnN0bmFtZSBBQ0ZfbGFzdG5hbWUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhY2ZfdXNlcm5hbWUiLCJnaXZlbl9uYW1lIjoiQUNGX2ZpcnN0bmFtZSIsImZhbWlseV9uYW1lIjoiQUNGX2xhc3RuYW1lIiwiZW1haWwiOiJhY2ZfZW1haWxAdGVzdC5jb20ifQ.lFQG1P9UdPdSO1EpoA4TSJ_Id74tbO-hGmRe3BJnVqgDzx6Me6qzToW7u7LYcS0vLvoNPpCnVBVkQsrQh2IeFjwsSKVpt5HMe8y2prApFHJe-14l1eW41-VkLdRmwEtYKEcTu-Qs6IMysJdrkxp76sywdct_MBqqY2WupqpztNXjNS9dFWEIckfMoNFhikeVp96Sfqy1ld2-g2csqh-XSMIAWUhpVb_vVqbBaqgwAqlSYw99lBXQ8pge_Yywxlw74e0oRC2EFw26l3om-BCtYHDdjnGgHUxP2ox4_sVXn-jN3tjznf_pxVgLXtohhfdpXQ3cm5zWqp9xQCUVpYdl_Q

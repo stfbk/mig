@@ -1,0 +1,13 @@
+HTTP/1.1 302 Found
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 14 May 2025 06:06:21 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 507
+Connection: close
+Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 UTC
+Location: https://keycloak.client.oauth2.fbktesting.fbk.eu:8111/realms/mytestrealm/protocol/openid-connect/auth?approval_prompt=force&client_id=ACF_PUBCLIENT_test&code_challenge=rJINUDGEJeTlK51P6AwKWzH4SAh82WsouTSQNvkuLjs&code_challenge_method=S256&redirect_uri=https%3A%2F%2Foauth2proxy.client.oauth2.fbktesting.fbk.eu%3A10095%2Foauth2%2Fcallback&response_type=code&scope=openid+email+profile&state=u_2NTL3P0cAH_6HyLJenlDq84-1pT1PbwrSElcQp-G4%3A%2Fresource%2Fsecure
+Set-Cookie: _oauth2_proxy_csrf=CIrATr66kMjp3XgT9k94889zTI9gHyE1TMNEbdVlfcm2LGjuIHba6_W0-dW6wFA_5GQZZBF-nPucanrtqjUejfvQE40VMfmJPRLFa7cCf7fVKju6YwqHLrJk2rcOtZp5HOL8FqnbkVo4aR02R2iJEEeU--JmMFF3n7NdE5sOSnhJY8NgjVtxmPPbP7N_krh6C0YbFuwRmsiWVCcxipnqWuABXGP8VeEczfHsm4XtrA8PVLOw-uko8P9bQo856Pfa1AvNmEHfmr0_Xd5Gi-XnYQg0hvPME5pg6ZnwR0Jc|1747202781|h2j_AmLXZcHxitqsIm9wj71nJw8U9mZw_oXANl2E0Aw=; Path=/; Domain=oauth2proxy.client.oauth2.fbktesting.fbk.eu; Max-Age=900; HttpOnly; Secure
+
+<a href="https://keycloak.client.oauth2.fbktesting.fbk.eu:8111/realms/mytestrealm/protocol/openid-connect/auth?approval_prompt=force&amp;client_id=ACF_PUBCLIENT_test&amp;code_challenge=rJINUDGEJeTlK51P6AwKWzH4SAh82WsouTSQNvkuLjs&amp;code_challenge_method=S256&amp;redirect_uri=https%3A%2F%2Foauth2proxy.client.oauth2.fbktesting.fbk.eu%3A10095%2Foauth2%2Fcallback&amp;response_type=code&amp;scope=openid+email+profile&amp;state=u_2NTL3P0cAH_6HyLJenlDq84-1pT1PbwrSElcQp-G4%3A%2Fresource%2Fsecure">Found</a>.
+

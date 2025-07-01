@@ -1,0 +1,39 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: 
+	Is it a param check? false
+	regex: (?<=code=)[a-zA-Z0-9]+(?=&)
+	Where: HEAD
+	Op: IS_PRESENT
+	Op val: is present
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: ACF_Authorization response
+==========================================================
+HTTP/1.1 302 Found
+Server: nginx/1.18.0 (Ubuntu)
+Date: Fri, 16 May 2025 14:21:15 GMT
+Content-Length: 0
+Connection: close
+Cache-Control: no-store, must-revalidate, max-age=0
+Set-Cookie: KC_RESTART=;Version=1;Path=/realms/mytestrealm/;Max-Age=0
+Set-Cookie: KEYCLOAK_IDENTITY=eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0NzFjMzBiMC0wZTAwLTRlOGYtOWEwOC0xOTUzNjhhODdmOWYifQ.eyJleHAiOjE3NDc0NDEyNzUsImlhdCI6MTc0NzQwNTI3NSwianRpIjoiYWNhMmEzZDYtMWNiMS00Njc5LTgzYzAtYjhiY2VhMjJmN2YwIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5jbGllbnQub2F1dGgyLmZia3Rlc3RpbmcuZmJrLmV1OjgxMTEvcmVhbG1zL215dGVzdHJlYWxtIiwic3ViIjoiZWE1YWRiZDMtMjYwZi00N2M3LTlmMDItN2EwYmZiMTVkNGFhIiwidHlwIjoiU2VyaWFsaXplZC1JRCIsInNlc3Npb25fc3RhdGUiOiJhMmZkZWE5MS0zZGJhLTQzYWEtOWRjOC05ZTgwNDFlNWM2ZjciLCJzaWQiOiJhMmZkZWE5MS0zZGJhLTQzYWEtOWRjOC05ZTgwNDFlNWM2ZjciLCJzdGF0ZV9jaGVja2VyIjoiOUdfZVVFbTVFcExnODF6U05jM1RHbDVsdnhGbl9Ea2Uzb1Y4Z28xMXo2RSJ9.oDr64XBJe3XG_6iYWkyXtqXomeXoZzyn3OPMnJ8QNWyKQBs6rxS_DCxH94VVPi6SVulFOCaKvsX0gd6iKn6xuw;Version=1;Path=/realms/mytestrealm/;Secure;HttpOnly;SameSite=None
+Set-Cookie: KEYCLOAK_IDENTITY_LEGACY=eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0NzFjMzBiMC0wZTAwLTRlOGYtOWEwOC0xOTUzNjhhODdmOWYifQ.eyJleHAiOjE3NDc0NDEyNzUsImlhdCI6MTc0NzQwNTI3NSwianRpIjoiYWNhMmEzZDYtMWNiMS00Njc5LTgzYzAtYjhiY2VhMjJmN2YwIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5jbGllbnQub2F1dGgyLmZia3Rlc3RpbmcuZmJrLmV1OjgxMTEvcmVhbG1zL215dGVzdHJlYWxtIiwic3ViIjoiZWE1YWRiZDMtMjYwZi00N2M3LTlmMDItN2EwYmZiMTVkNGFhIiwidHlwIjoiU2VyaWFsaXplZC1JRCIsInNlc3Npb25fc3RhdGUiOiJhMmZkZWE5MS0zZGJhLTQzYWEtOWRjOC05ZTgwNDFlNWM2ZjciLCJzaWQiOiJhMmZkZWE5MS0zZGJhLTQzYWEtOWRjOC05ZTgwNDFlNWM2ZjciLCJzdGF0ZV9jaGVja2VyIjoiOUdfZVVFbTVFcExnODF6U05jM1RHbDVsdnhGbl9Ea2Uzb1Y4Z28xMXo2RSJ9.oDr64XBJe3XG_6iYWkyXtqXomeXoZzyn3OPMnJ8QNWyKQBs6rxS_DCxH94VVPi6SVulFOCaKvsX0gd6iKn6xuw;Version=1;Path=/realms/mytestrealm/;Secure;HttpOnly
+Set-Cookie: KEYCLOAK_SESSION="mytestrealm/ea5adbd3-260f-47c7-9f02-7a0bfb15d4aa/a2fdea91-3dba-43aa-9dc8-9e8041e5c6f7";Version=1;Path=/realms/mytestrealm/;Max-Age=36000;Secure;SameSite=None
+Set-Cookie: KEYCLOAK_SESSION_LEGACY="mytestrealm/ea5adbd3-260f-47c7-9f02-7a0bfb15d4aa/a2fdea91-3dba-43aa-9dc8-9e8041e5c6f7";Version=1;Path=/realms/mytestrealm/;Max-Age=36000;Secure
+Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'none';
+Location: https://oauth2proxy.client.oauth2.fbktesting.fbk.eu:10095/oauth2/callback?state=MoWH2Imzlhqo9ZTOhKSx_0e87Jb_Q0dLS-IBseYhG_Q%3A%2Fresource%2Fsecure&session_state=a2fdea91-3dba-43aa-9dc8-9e8041e5c6f7&iss=https%3A%2F%2Fkeycloak.client.oauth2.fbktesting.fbk.eu%3A8111%2Frealms%2Fmytestrealm&code=e6db866e-8293-4533-abe0-29f726cdbb6c.a2fdea91-3dba-43aa-9dc8-9e8041e5c6f7.96dfd066-b6e9-42f5-b761-38abd513e4d3
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Robots-Tag: none
+X-XSS-Protection: 1; mode=block
+

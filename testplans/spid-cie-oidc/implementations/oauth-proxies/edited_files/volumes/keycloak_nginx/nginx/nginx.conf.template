@@ -1,0 +1,62 @@
+events {}
+
+http {
+    # Conditional logging for 502 only
+    map $status $log_502 {
+        default 0;
+        502     1;
+    }
+    # Custom log format
+    log_format custom_502_log '$remote_addr - $remote_user [$time_local] '
+                          '"$request" $status $body_bytes_sent '
+                          '"$http_referer" "$http_user_agent" '
+                          'upstream: $upstream_addr, upstream_status: $upstream_status, '
+                          'request_time: $request_time, upstream_response_time: $upstream_response_time, '
+                          'host: $host, '
+                          'full_request: "$scheme://$host$request_uri"';
+
+    # Log 502s to stdout
+    access_log /dev/stdout custom_502_log if=$log_502;
+    # error_log /dev/stdout info;
+    # Use local dnsmasq as DNS server, ipv6=off disables ipv6!
+    resolver 127.0.0.1:${NGINX_LOCAL_DNS_PORT} valid=30s ipv6=off;
+    # Extraction of the subdomain, aka what is before the first dot!
+    map $host $subdomain {
+        default "";
+        ~^(?<sub>[^.]+)\.${CLIENT_TEST_DOMAIN_ESCAPED_REGEXP}$ $sub;
+    }
+
+    # Mapping of the subdomain to target the correct
+    # INTERNAL PROXY SIDE
+    map $subdomain $target_upstream_internal {
+        default "";
+        ${KEYCLOAK_NAME}         ${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${KEYCLOAK_LISTENING_PORT};
+    }
+    # INTERNAL PROXY SIDE SERVER
+    server {
+        listen ${KEYCLOAK_PROXY_PRIVATE_IP}:${KEYCLOAK_PROXY_INTERNAL_LISTENING_PORT} bind;
+        server_name .${CLIENT_TEST_DOMAIN};
+
+        location / {
+            allow ${BURP_PRIVATE_IP}; # Needed for the login!
+            allow ${RESOURCESERVER_PROXY_PRIVATE_IP};
+            allow ${OAUTH2PROXY_PROXY_PRIVATE_IP};
+            allow ${CONFIGURE_PRIVATE_IP};
+            deny all;
+
+            # Dynamic proxy_pass using upstream value from map
+            proxy_pass https://$target_upstream_internal;
+
+            proxy_set_header Host $host;
+            proxy_set_header ${NGINX_CUSTOM_HEADERS_PREFIX}-Real-IP $remote_addr;
+            proxy_set_header ${NGINX_CUSTOM_HEADERS_PREFIX}-Forwarded-For $proxy_add_x_forwarded_for;
+
+            # Optional fallback
+            if ($target_upstream_internal = "") {
+                return ${NGINX_ERROR_WRONG_SUBDOMAIN};
+            }
+        }
+    }
+    # If you want to add back the external, please take it from the client version and adapt the allow, listen and certificates
+    # NOTE: YOU HAVE TO BRING IN THE CERTIFICATE AND KEY VIA A VOLUME!
+}

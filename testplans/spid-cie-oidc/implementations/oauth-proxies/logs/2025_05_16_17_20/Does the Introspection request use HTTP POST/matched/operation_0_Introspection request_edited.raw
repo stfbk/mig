@@ -1,0 +1,34 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: 
+	Is it a param check? false
+	regex: POST
+	Where: HEAD
+	Op: IS_PRESENT
+	Op val: is present
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: Introspection request
+==========================================================
+POST /realms/mytestrealm/protocol/openid-connect/token/introspect HTTP/1.0
+Host: keycloak.client.oauth2.fbktesting.fbk.eu
+X-Real-IP: 10.0.2.11
+X-Forwarded-For: 10.0.2.11
+X-Forwarded-Proto: https
+X-Forwarded-Port: 8112
+Connection: close
+Content-Length: 1291
+Accept: */*
+Accept-Encoding: gzip, deflate
+User-Agent: python-httpx/0.28.1
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic UmVzb3VyY2VTZXJ2ZXJDbGllbnRJZEZvckludHJvc3BlY3Q6UlVZR0ZTMms0bHQ0R242NVMxOGtnVVRmNVhEOTZDNmFGcUlNd240aVcxZw==
+
+token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ4Z0ZzYU8wV2FSMmc4MjNJbUxZNU5mR2JHbWowcFJzUWItZW1SS0RkU3JVIn0.eyJleHAiOjE3NDc0MTYzMzcsImlhdCI6MTc0NzQxNjAzNywiYXV0aF90aW1lIjoxNzQ3NDE2MDM2LCJqdGkiOiJhNWVkOGQ4OS0yNjMwLTRiMjYtYTU5OC03NjdkMjI5Mjk3NjIiLCJpc3MiOiJodHRwczovL2tleWNsb2FrLmNsaWVudC5vYXV0aDIuZmJrdGVzdGluZy5mYmsuZXU6ODExMS9yZWFsbXMvbXl0ZXN0cmVhbG0iLCJhdWQiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJzdWIiOiJlYTVhZGJkMy0yNjBmLTQ3YzctOWYwMi03YTBiZmIxNWQ0YWEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJzZXNzaW9uX3N0YXRlIjoiY2IwMDM4Y2QtZDQ5Mi00NWRkLTgyYzItZDkxMzU1OTVjZmEyIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCByZWFkOnNlY3JldCIsInNpZCI6ImNiMDAzOGNkLWQ0OTItNDVkZC04MmMyLWQ5MTM1NTk1Y2ZhMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQUNGX2ZpcnN0bmFtZSBBQ0ZfbGFzdG5hbWUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhY2ZfdXNlcm5hbWUiLCJnaXZlbl9uYW1lIjoiQUNGX2ZpcnN0bmFtZSIsImZhbWlseV9uYW1lIjoiQUNGX2xhc3RuYW1lIiwiZW1haWwiOiJhY2ZfZW1haWxAdGVzdC5jb20ifQ.Mwz31UWDS3GExfC7ztaaBjggHvTpGYmme8G_Gm4gc0apxJwVhQE5UzHz9KrNYTk_GZnmDeTvEkvEVo2VN8QHMLAmstC4YIHnsip1NToba8EZkcW3RZ4q3OT222Xgmy5tOg08Qk_Z1H5hICu0mW0B9EJf5w-ZluYCwiSZjOMKGokTOShQK82iiSMCm_-N0ESD8xDjklwjYM_h7YAorH_Z3j1TrkNxXVS0WTMmlMwqgDYw9F3X7EgZPy7ZgGwMZRkgUGDJ7AqjoWzg4lokYThzFR5DbsQIwWgEPTl1GYlZr4bQshjYyhvqodxmDKFHrZBfqf2cNlWHJgnAESP8sf3zEw

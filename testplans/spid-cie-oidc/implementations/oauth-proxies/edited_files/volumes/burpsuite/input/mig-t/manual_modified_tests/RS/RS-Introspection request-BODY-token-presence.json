@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the successful Introspection request contain the token",
+        "description": "The RS must send the token it wants to introspect in the request",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "Introspection request",
+            "checks": [
+              {
+                "in": "body",
+                "is present": true,
+                "check regex": "(?:^|&)\\s*token\\s*="
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

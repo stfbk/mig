@@ -1,0 +1,33 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: Content-Type
+	Is it a param check? false
+	regex: 
+	Where: HEAD
+	Op: IS
+	Op val: application/x-form-urlencoded
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: ACF_Access Token Request
+==========================================================
+POST /realms/mytestrealm/protocol/openid-connect/token HTTP/1.0
+Host: keycloak.client.oauth2.fbktesting.fbk.eu
+X-Real-IP: 10.0.1.11
+X-Forwarded-For: 10.0.1.11
+X-Forwarded-Proto: https
+X-Forwarded-Port: 8111
+Connection: close
+Content-Length: 387
+User-Agent: oauth2-proxy/undefined
+Authorization: Basic QUNGX1BVQkNMSUVOVF90ZXN0OlJVWUdGUzJrNGx0NEduNjVTMThrZ1VUZjVYRDk2QzZzQ3FJTXduNGlXMWc=
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate
+
+code=7ddfb215-84e0-4faf-bd8b-db763a8a29a4.6f72ec99-607a-4001-b6ac-25b6e6196a90.96dfd066-b6e9-42f5-b761-38abd513e4d3&code_verifier=MUKpg0ZnDcbhaE4-L5cAuWX2O8UO835HbydvE_hUMtj_Za18MmmjrREFAG-dhMiMBOr1BSNKs2yLhsSR3y9Vn60Ss6D482ortvejKj-f0yE4lLEOVwTj7HXluGAqRORi&grant_type=authorization_code&redirect_uri=https%3A%2F%2Foauth2proxy.client.oauth2.fbktesting.fbk.eu%3A10095%2Foauth2%2Fcallback

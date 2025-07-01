@@ -1,0 +1,2 @@
+name,description,type,result,applicable
+Does the successful token response contain a valid access token,In this test a correct Token request is sent and the response is analyzed. It must contain the access token parameter and its value must be a JWT,passive,true,true

@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the ACF_Access Token Request use application/x-form-urlencoded",
+        "description": "The ACF_Access Token Request sent by the CLIENT must be sent using application/x-form-urlencoded",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Access Token Request",
+            "checks": [
+              {
+                "in": "head",
+                "check": "Content-Type",
+                "is": "application/x-form-urlencoded"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+name,description,type,result,applicable
+Does the CLIENT insert the response type in the url of the request,In this test the ACF_Authorization request is taken and the presence of the scope parameter in the URL is checked,passive,true,true

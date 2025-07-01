@@ -1,0 +1,3 @@
+| name | description | type | result | applicable |
+|-----------|-------------|------|--------|------------|
+|Does the successful Introspection request contain the token|The RS must send the token it wants to introspect in the request|passive|true|true|

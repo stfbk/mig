@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the ACF_Access Token Request contain the code parameter",
+        "description": "The ACF_Access Token Request sent by the CLIENT must contain code parameter in the BODY",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Access Token Request",
+            "checks": [
+              {
+                "in": "body",
+                "is present": true,
+                "check regex": "code"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

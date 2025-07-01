@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the ACF_Access Token Request contain a correct grant_type parameter",
+        "description": "The grant_type parameter in the BODY of the ACF_Access Token Request sent by the CLIENT must be set to authorization_code. So in this test a token request is taken and the grant_type parameter is checked",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Access Token Request",
+            "checks": [
+              {
+                "in": "body",
+                "check regex": "(?:^|&)grant_type=authorization_code",
+                "is present": true
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

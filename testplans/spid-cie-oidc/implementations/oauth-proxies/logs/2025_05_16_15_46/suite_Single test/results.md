@@ -1,0 +1,3 @@
+| name | description | type | result | applicable |
+|-----------|-------------|------|--------|------------|
+|Does the successful ACF_Access Token response contain the token type|The RP receiving the ACF_Access Token response and that sent a correct token request must check the presence of the token_type|passive|true|true|

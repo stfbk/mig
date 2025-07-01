@@ -1,0 +1,13 @@
+GET /oauth2/static/css/bulma.min.css HTTP/1.1
+Host: oauth2proxy.client.oauth2.fbktesting.fbk.eu:10095
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/css,*/*;q=0.1
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://oauth2proxy.client.oauth2.fbktesting.fbk.eu:10095/resource/secure
+Sec-Fetch-Dest: style
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+Te: trailers
+Connection: close
+

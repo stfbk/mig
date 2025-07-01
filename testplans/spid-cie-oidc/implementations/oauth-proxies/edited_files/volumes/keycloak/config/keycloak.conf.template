@@ -1,0 +1,22 @@
+# === Admin User must be in the env ===
+
+# === HTTPS Configuration ===
+https-key-store-file=/etc/keycloak/keycloak.p12
+https-key-store-password=${KEYCLOAK_CA_KEYSTORE_PASSWORD}
+https-key-store-type=PKCS12
+https-key-alias=${KEYCLOAK_CA_KEYSTORE_ALIAS}
+https-port=${KEYCLOAK_LISTENING_PORT}
+
+# === Hostname Settings ===
+# It has to be from the POV of the Oauth2proxy
+hostname-url=https://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${OAUTH2PROXY_EXTERNAL_PROXY_LISTENING_PORT}
+
+# === Health Checks Enabled must be in the CLI ===
+
+# === Old Settings I used for testing ===
+# proxy-address-forwarding=true
+# hostname-strict=true
+# cookie-domain=${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}
+# log-level=TRACE
+# Some settings have not yet been updated to be included in this file, so I had to keep them in their old place...
+# Future updates should allow moving them here, making it possible to have a cleaner configuration all in one place.

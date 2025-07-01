@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the successful ACF_Access Token response contain the token type",
+        "description": "The AS receiving the ACF_Access Token response and that sent a correct token request must check the presence of the token_type",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Access Token response",
+            "checks": [
+              {
+                "in": "body",
+                "is present": true,
+                "check regex": "token_type"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

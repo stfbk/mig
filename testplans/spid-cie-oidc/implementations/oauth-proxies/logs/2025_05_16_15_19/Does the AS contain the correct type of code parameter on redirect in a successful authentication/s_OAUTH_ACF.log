@@ -1,0 +1,8 @@
+open | https://oauth2proxy.client.oauth2.fbktesting.fbk.eu:10095/resource/secure |
+click | xpath=/html/body/section/div/form/button |
+type | id=username | ACF_username
+type | id=password | ACF_password
+click | id=kc-login |
+click | id=resource-logout |
+click | id=kc-logout |
+wait | 1000 |

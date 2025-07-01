@@ -1,0 +1,11 @@
+# Make everything go through the local proxy
+address=/${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}/127.0.0.1
+address=/${RESOURCESERVER_NAME}.${CLIENT_TEST_DOMAIN}/127.0.0.1
+address=/${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}/127.0.0.1
+
+interface=lo
+port=${BURP_LOCAL_DNS_PORT}
+filter-AAAA # Disables ipv6 responses
+no-resolv
+log-queries
+log-facility=/var/log/dnsmasq.local.log

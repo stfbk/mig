@@ -1,0 +1,13 @@
+GET /v1/country?key=7e40f68c-7938-4c5d-9f95-e61647c213eb HTTP/1.1
+Host: location.services.mozilla.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/json
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: cross-site
+Te: trailers
+Connection: close
+

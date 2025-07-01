@@ -1,0 +1,3 @@
+| name | description | type | result | applicable |
+|-----------|-------------|------|--------|------------|
+|Does the ACF_Access Token Request contain the code parameter|The ACF_Access Token Request sent by the CLIENT must contain code parameter in the BODY|passive|false|false|

@@ -1,0 +1,3 @@
+| name | description | type | result | applicable |
+|-----------|-------------|------|--------|------------|
+|Does the ACF_Access Token Request contain a correct grant_type parameter|The grant_type parameter in the BODY of the ACF_Access Token Request sent by the CLIENT must be set to authorization_code or to refresh_token. So in this test a token request is taken and the grant_type parameter is checked|passive|false|true|

@@ -1,0 +1,3 @@
+| name | description | type | result | applicable |
+|-----------|-------------|------|--------|------------|
+|Does the ACF_Access Token Request use application/x-form-urlencoded|The ACF_Access Token Request sent by the CLIENT must be sent using application/x-form-urlencoded|passive|true|true|

@@ -1,0 +1,37 @@
+provider = "keycloak-oidc"
+
+oidc_issuer_url = "https://${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${OAUTH2PROXY_EXTERNAL_PROXY_LISTENING_PORT}/realms/${KEYCLOAK_NEW_REALM}"
+client_id = "${ACF_CLIENT_ID}"
+client_secret = "${CCF_CLIENT_SECRET}"
+redirect_url = "https://${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}:${BURP_EXTERNAL_PROXY_LISTENING_PORT}/oauth2/callback"
+
+cookie_secret = "${OAUTH2PROXY_COOKIE_SECRET}"
+cookie_domains = ["${OAUTH2PROXY_NAME}.${CLIENT_TEST_DOMAIN}","${RESOURCESERVER_NAME}.${CLIENT_TEST_DOMAIN}"]
+cookie_secure = true # Can be turned to true if the access to the proxy for the browser is put behind https
+
+email_domains = ${OAUTH2PROXY_EMAIL_DOMAINS}
+
+code_challenge_method = "S256"
+scope = "openid email profile"
+pass_authorization_header=true
+pass_host_header=false # OTHERWISE USES REQUEST HOSTNAME AND NOT THE UPSTREAM ONE!!!
+pass_access_token= true # Pass also the access token to the backend
+set_authorization_header=true
+
+https_address = "${OAUTH2PROXY_PUBLIC_IP}:${OAUTH2PROXY_LISTENING_PORT}"
+
+standard_logging = true
+request_logging = true
+show_debug_on_error = true
+
+tls_cert_file = "/etc/ssl/certs/oauth2proxy.crt"
+tls_key_file = "/etc/ssl/private/oauth2proxy.key"
+
+upstreams  = ["https://${RESOURCESERVER_NAME}.${CLIENT_TEST_DOMAIN}:${OAUTH2PROXY_EXTERNAL_PROXY_LISTENING_PORT}/"]
+
+# Optional debug setting
+# set_xauthrequest = true
+
+whitelist_domains = [
+  "${KEYCLOAK_NAME}.${CLIENT_TEST_DOMAIN}:${BURP_EXTERNAL_PROXY_LISTENING_PORT}",         # <-- Keycloak domain for logout
+]

@@ -1,0 +1,8 @@
+address=/.${CLIENT_TEST_DOMAIN}/${OAUTH2PROXY_PROXY_PUBLIC_IP}
+no-resolv
+port=${NGINX_EXTERNAL_DNS_PORT}
+log-queries
+log-facility=/var/log/dnsmasq.external.log
+filter-AAAA # Disables ipv6 responses
+listen-address=${OAUTH2PROXY_PROXY_PUBLIC_IP}
+bind-interfaces

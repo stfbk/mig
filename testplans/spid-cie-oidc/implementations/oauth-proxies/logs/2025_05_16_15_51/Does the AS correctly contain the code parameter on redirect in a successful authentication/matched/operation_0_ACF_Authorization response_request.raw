@@ -1,0 +1,38 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: Location
+	Is it a param check? true
+	regex: 
+	Where: HEAD
+	Op: CONTAINS
+	Op val: code
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: ACF_Authorization response
+==========================================================
+POST /realms/mytestrealm/login-actions/authenticate?session_code=FaumS2vrpq2s0MQhQflasQsrqn8vPFuh2-JWL4_h0ts&execution=245a919d-a253-412e-ab6d-7a704b4cb671&client_id=ACF_PUBCLIENT_test&tab_id=_1ur98qlWwA HTTP/1.1
+Host: keycloak.client.oauth2.fbktesting.fbk.eu:8111
+Cookie: AUTH_SESSION_ID=3d4a2571-3874-417c-882c-0371fc2e0582.003aa786845d-13993; AUTH_SESSION_ID_LEGACY=3d4a2571-3874-417c-882c-0371fc2e0582.003aa786845d-13993; KC_RESTART=eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0NzFjMzBiMC0wZTAwLTRlOGYtOWEwOC0xOTUzNjhhODdmOWYifQ.eyJjaWQiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL29hdXRoMnByb3h5LmNsaWVudC5vYXV0aDIuZmJrdGVzdGluZy5mYmsuZXU6MTAwOTUvb2F1dGgyL2NhbGxiYWNrIiwiYWN0IjoiQVVUSEVOVElDQVRFIiwibm90ZXMiOnsic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsImlzcyI6Imh0dHBzOi8va2V5Y2xvYWsuY2xpZW50Lm9hdXRoMi5mYmt0ZXN0aW5nLmZiay5ldTo4MTExL3JlYWxtcy9teXRlc3RyZWFsbSIsInJlc3BvbnNlX3R5cGUiOiJjb2RlIiwiY29kZV9jaGFsbGVuZ2VfbWV0aG9kIjoiUzI1NiIsImNsaWVudF9yZXF1ZXN0X3BhcmFtX2FwcHJvdmFsX3Byb21wdCI6ImZvcmNlIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9vYXV0aDJwcm94eS5jbGllbnQub2F1dGgyLmZia3Rlc3RpbmcuZmJrLmV1OjEwMDk1L29hdXRoMi9jYWxsYmFjayIsInN0YXRlIjoiT1hRNUlBUXNrZGZBYi1ObVM2X2dxMWYzcTlLWDRib1lCcnA0bkN5WHM2YzovcmVzb3VyY2Uvc2VjdXJlIiwiY29kZV9jaGFsbGVuZ2UiOiI4YUR4OTRwNFhqOU44aVFkbU03Vk00Y3o0N2JTaFpLYWUzWGZwWDJ5NlNFIn19.kgaTVtJ2pyn3Gz0Um2_SZzt6eWEr6rs1Bi2VH_rTl20cZBFvxRlCqzuTzwCQfYic00qZJ0actAk5sLKl0lXAGQ
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 57
+Origin: null
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+Te: trailers
+Connection: close
+
+username=ACF_username&password=ACF_password&credentialId=

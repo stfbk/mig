@@ -1,0 +1,2 @@
+Name: Does the CLIENT ACF_Authorization response's JWT contain the 'state' parameter greater than 32 characters
+Variables: 

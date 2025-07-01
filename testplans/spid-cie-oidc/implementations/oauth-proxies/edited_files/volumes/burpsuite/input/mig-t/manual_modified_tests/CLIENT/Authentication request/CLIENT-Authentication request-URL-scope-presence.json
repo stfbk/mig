@@ -1,0 +1,32 @@
+{
+  "test suite": {
+    "name": "Single test",
+    "description": "One test only",
+    "filter messages": true
+  },
+  "tests": [
+    {
+      "test": {
+        "name": "Does the CLIENT insert the response type in the url of the request",
+        "description": "In this test the ACF_Authorization request is taken and the presence of the scope parameter in the URL is checked",
+        "type": "passive",
+        "sessions": [
+          "s_OAUTH_ACF"
+        ],
+        "operations": [
+          {
+            "message type": "ACF_Authorization request",
+            "checks": [
+              {
+                "in": "url",
+                "is present": true,
+                "check": "scope"
+              }
+            ]
+          }
+        ],
+        "result": "correct flow s_OAUTH_ACF"
+      }
+    }
+  ]
+}

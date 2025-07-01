@@ -1,0 +1,8 @@
+address=/.${CLIENT_TEST_DOMAIN}/${KEYCLOAK_PROXY_PUBLIC_IP}
+no-resolv
+port=${NGINX_EXTERNAL_DNS_PORT}
+filter-AAAA # Disables ipv6 responses
+log-queries
+log-facility=/var/log/dnsmasq.external.log
+listen-address=${KEYCLOAK_PROXY_PUBLIC_IP}
+bind-interfaces

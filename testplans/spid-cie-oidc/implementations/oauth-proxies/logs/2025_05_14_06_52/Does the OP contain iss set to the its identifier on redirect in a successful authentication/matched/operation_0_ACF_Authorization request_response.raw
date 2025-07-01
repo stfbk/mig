@@ -1,0 +1,141 @@
+===================== Operation Info =========================
+Checks: ====================================
+Check:
+	What: 
+	Is it a param check? false
+	regex: (?<=client_id=)[^&]+
+	Where: URL
+	Op: IS_PRESENT
+	Op val: is present
+	Value list: []
+	Use variable: false
+	Url decode: true
+Decode Operations: =========================
+
+
+===================== Message info =========================
+=	Intercepted from session: 
+=	Message name: ACF_Authorization request
+==========================================================
+HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 14 May 2025 06:52:00 GMT
+Content-Type: text/html;charset=utf-8
+Content-Length: 4678
+Connection: close
+Set-Cookie: AUTH_SESSION_ID=0810087f-c298-4b8c-b77e-2241f196e361.8c40a4e524e1-46569;Version=1;Path=/realms/mytestrealm/;Secure;HttpOnly;SameSite=None
+Set-Cookie: AUTH_SESSION_ID_LEGACY=0810087f-c298-4b8c-b77e-2241f196e361.8c40a4e524e1-46569;Version=1;Path=/realms/mytestrealm/;Secure;HttpOnly
+Cache-Control: no-store, must-revalidate, max-age=0
+Set-Cookie: KC_RESTART=eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3YmY2ZjQ4Yy05ZWJlLTQxOWQtYWIwMS04NzZmZDZjYjQ2NjIifQ.eyJjaWQiOiJBQ0ZfUFVCQ0xJRU5UX3Rlc3QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL29hdXRoMnByb3h5LmNsaWVudC5vYXV0aDIuZmJrdGVzdGluZy5mYmsuZXU6MTAwOTUvb2F1dGgyL2NhbGxiYWNrIiwiYWN0IjoiQVVUSEVOVElDQVRFIiwibm90ZXMiOnsic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsImlzcyI6Imh0dHBzOi8va2V5Y2xvYWsuY2xpZW50Lm9hdXRoMi5mYmt0ZXN0aW5nLmZiay5ldTo4MTExL3JlYWxtcy9teXRlc3RyZWFsbSIsInJlc3BvbnNlX3R5cGUiOiJjb2RlIiwiY29kZV9jaGFsbGVuZ2VfbWV0aG9kIjoiUzI1NiIsImNsaWVudF9yZXF1ZXN0X3BhcmFtX2FwcHJvdmFsX3Byb21wdCI6ImZvcmNlIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9vYXV0aDJwcm94eS5jbGllbnQub2F1dGgyLmZia3Rlc3RpbmcuZmJrLmV1OjEwMDk1L29hdXRoMi9jYWxsYmFjayIsInN0YXRlIjoiUHVwLTBfcm1NRlNLdk1MTUxwVXBPcC1IeW5nZEVMZGhZNFFTOV9rYXYxazovcmVzb3VyY2Uvc2VjdXJlIiwiY29kZV9jaGFsbGVuZ2UiOiJ4VVNNY0tqZ1RhcEtvUUpDdzBVMDFmMGx3X2wtZVUxejJSbnFXOWFfVzY4In19.t90pnSC8k1CaA5GR40qhbObEJzlapDOQc5nHIZqPdIUrgZX3JHgvlUuo_d1rDWzC-TBfQ-ssSvKXFWxXKd3T3g;Version=1;Path=/realms/mytestrealm/;Secure;HttpOnly
+Content-Language: en
+Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'none';
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Robots-Tag: none
+X-XSS-Protection: 1; mode=block
+
+<!DOCTYPE html>
+<html class="login-pf">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+
+            <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Sign in to mytestrealm</title>
+    <link rel="icon" href="/resources/pt04b/login/keycloak/img/favicon.ico" />
+            <link href="/resources/pt04b/common/keycloak/node_modules/@patternfly/patternfly/patternfly.min.css" rel="stylesheet" />
+            <link href="/resources/pt04b/common/keycloak/node_modules/patternfly/dist/css/patternfly.min.css" rel="stylesheet" />
+            <link href="/resources/pt04b/common/keycloak/node_modules/patternfly/dist/css/patternfly-additions.min.css" rel="stylesheet" />
+            <link href="/resources/pt04b/common/keycloak/lib/pficon/pficon.css" rel="stylesheet" />
+            <link href="/resources/pt04b/login/keycloak/css/login.css" rel="stylesheet" />
+    <script src="/resources/pt04b/login/keycloak/js/menu-button-links.js" type="module"></script>
+        <script type="module">
+            import { checkCookiesAndSetTimer } from "/resources/pt04b/login/keycloak/js/authChecker.js";
+
+            checkCookiesAndSetTimer(
+              "0810087f-c298-4b8c-b77e-2241f196e361",
+              "o951elmqnCg",
+              "/realms/mytestrealm/login-actions/restart?client_id=ACF_PUBCLIENT_test&tab_id=o951elmqnCg&skip_logout=true"
+            );
+        </script>
+</head>
+
+<body class="">
+<div class="login-pf-page">
+    <div id="kc-header" class="login-pf-page-header">
+        <div id="kc-header-wrapper"
+             class="">mytestrealm</div>
+    </div>
+    <div class="card-pf">
+        <header class="login-pf-header">
+                <h1 id="kc-page-title">        Sign in to your account
+
+</h1>
+      </header>
+      <div id="kc-content">
+        <div id="kc-content-wrapper">
+
+
+        <div id="kc-form">
+          <div id="kc-form-wrapper">
+                <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="https://keycloak.client.oauth2.fbktesting.fbk.eu:8111/realms/mytestrealm/login-actions/authenticate?session_code=D6f_0GynmBnCQnDLJs97JpRQtqa_oJG7Ain-e9Ih2Jg&amp;execution=31e80203-041d-414c-bcd7-a0ac5a2749ca&amp;client_id=ACF_PUBCLIENT_test&amp;tab_id=o951elmqnCg" method="post">
+                        <div class="form-group">
+                            <label for="username" class="pf-c-form__label pf-c-form__label-text">Username or email</label>
+
+                            <input tabindex="2" id="username" class="pf-c-form-control" name="username" value=""  type="text" autofocus autocomplete="username"
+                                   aria-invalid=""
+                            />
+
+
+                        </div>
+
+                    <div class="form-group">
+                        <label for="password" class="pf-c-form__label pf-c-form__label-text">Password</label>
+
+                        <div class="pf-c-input-group">
+                            <input tabindex="3" id="password" class="pf-c-form-control" name="password" type="password" autocomplete="current-password"
+                                   aria-invalid=""
+                            />
+                            <button class="pf-c-button pf-m-control" type="button" aria-label="Show password"
+                                    aria-controls="password" data-password-toggle tabindex="4"
+                                    data-icon-show="fa fa-eye" data-icon-hide="fa fa-eye-slash"
+                                    data-label-show="Show password" data-label-hide="Hide password">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group login-pf-settings">
+                        <div id="kc-form-options">
+                            </div>
+                            <div class="">
+                            </div>
+
+                      </div>
+
+                      <div id="kc-form-buttons" class="form-group">
+                          <input type="hidden" id="id-hidden-input" name="credentialId" />
+                          <input tabindex="7" class="pf-c-button pf-m-primary pf-m-block btn-lg" name="login" id="kc-login" type="submit" value="Sign In"/>
+                      </div>
+                </form>
+            </div>
+        </div>
+        <script type="module" src="/resources/pt04b/login/keycloak/js/passwordVisibility.js"></script>
+
+
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
